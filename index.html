@@ -10,6 +10,7 @@
         :root {
             --cor-primaria: #4A90E2;
             --cor-secundaria: #50E3C2;
+            --cor-terciaria: #FFA726; /* Laranja para o novo botão */
             --cor-fundo: #F4F7FA;
             --cor-texto: #333;
             --cor-branco: #FFFFFF;
@@ -66,14 +67,15 @@
             text-decoration: none;
             color: var(--cor-texto);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: popIn 1.2s ease-out forwards; /* 'forwards' mantém o estado final */
-            opacity: 0; /* Inicia invisível para a animação */
+            animation: popIn 1.2s ease-out forwards;
+            opacity: 0;
         }
 
-        /* Adicionando delay na animação para cada card */
+        /* Animação com delay */
         .game-card:nth-child(1) { animation-delay: 0.2s; }
         .game-card:nth-child(2) { animation-delay: 0.4s; }
         .game-card:nth-child(3) { animation-delay: 0.6s; }
+        .game-card:nth-child(4) { animation-delay: 0.8s; } /* Delay para o novo botão */
 
 
         .game-card:hover {
@@ -97,7 +99,7 @@
             font-size: 0.9em;
             color: #555;
             margin-bottom: 25px;
-            min-height: 55px; /* Garante que os botões fiquem alinhados */
+            min-height: 55px;
         }
 
         .play-button {
@@ -109,27 +111,22 @@
             font-weight: 600;
             transition: background-color 0.3s ease;
         }
-
+        
+        .game-card.anos-iniciais .play-button {
+            background-color: var(--cor-terciaria);
+        }
+        
         .game-card:hover .play-button {
-            background-color: #24d4b1;
+            filter: brightness(1.1);
         }
         
         /* Animações */
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes popIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
+        @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+        @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
 
-        @media (max-width: 1100px) {
-             body { overflow-y: auto; } /* Permite rolagem em telas menores se necessário */
+        @media (max-width: 1400px) {
+             body { overflow-y: auto; height: auto; padding: 20px 0;} 
         }
 
         @media (max-width: 768px) {
@@ -144,7 +141,7 @@
     <div class="portal-container">
         <header class="portal-header">
             <h1>Portal de Jogos Educacionais</h1>
-            <p>Escolha um desafio e comece a aprender de forma divertida!</p>
+            <p>Escolha uma atividade e comece a aprender de forma divertida!</p>
         </header>
 
         <div class="games-grid">
@@ -153,21 +150,28 @@
                 <div class="icon">🛡️</div>
                 <h2>Desafio ECA</h2>
                 <p>Teste seus conhecimentos sobre os direitos e deveres das crianças e adolescentes.</p>
-                <div class="play-button">Conhecer Desafio</div>
+                <div class="play-button">Anos Finais</div>
             </a>
-
+            
             <a href="https://oficina-de-rimas-emefrincao.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
                 <div class="icon">✒️</div>
-                <h2>Oficina de Rimas</h2>
-                <p>Crie poemas incríveis com um assistente de inteligência artificial e solte sua criatividade.</p>
-                <div class="play-button">Acessar Oficina</div>
+                <h2>Oficina de Poemas</h2>
+                <p>Crie poemas incríveis com um assistente de IA e solte sua criatividade literária.</p>
+                <div class="play-button">Anos Finais</div>
             </a>
             
             <a href="https://oficinadenoticia-emefrincao.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
                 <div class="icon">📰</div>
                 <h2>Oficina de Notícias</h2>
                 <p>Aprenda a criar uma notícia do zero, desde o título até a imagem da reportagem.</p>
-                <div class="play-button">Acessar Oficina</div>
+                <div class="play-button">Anos Finais</div>
+            </a>
+            
+            <a href="anos-iniciais.html" class="game-card anos-iniciais">
+                <div class="icon">🧩</div>
+                <h2>Anos Iniciais</h2>
+                <p>Jogos e desafios de matemática e lógica para os primeiros anos do fundamental.</p>
+                <div class="play-button">Acessar Jogos</div>
             </a>
 
         </div>
