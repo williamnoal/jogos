@@ -3,315 +3,407 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Laboratório de Medidas - Jogo da Régua</title>
+    <title>Laboratório de Medidas</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
-
-        :root {
-            --cor-primaria: #FFA726; /* Laranja principal */
-            --cor-secundaria: #FFCC80; /* Laranja mais claro */
-            --cor-acao: #50E3C2; /* Verde água para botões de ação */
-            --cor-texto: #333;
-            --cor-texto-claro: #666;
-            --cor-fundo: #FFF3E0; /* Fundo creme */
-            --cor-branco: #FFFFFF;
-            --sombra: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        html, body {
-            height: 100%;
-            margin: 0;
-            overflow: hidden; /* Evita barra de rolagem */
-            font-family: 'Poppins', sans-serif;
-            color: var(--cor-texto);
+        /* Estilo geral com tema moderno e limpo */
+        body {
+            font-family: 'Segoe UI', 'Roboto', 'Helvetica Neue', Arial, sans-serif;
+            background-color: #f0f2f5; /* Fundo cinza claro e suave */
             display: flex;
-            align-items: center;
             justify-content: center;
-            background-color: var(--cor-fundo);
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            -webkit-user-select: none;
+            -ms-user-select: none;
+            user-select: none;
         }
 
-        .back-button {
-            position: absolute;
-            top: 30px;
-            left: 30px;
-            font-size: 1.2em;
-            color: var(--cor-primaria);
-            text-decoration: none;
-            font-weight: 700;
-            transition: transform 0.3s ease;
-            z-index: 100;
-        }
-
-        .back-button:hover {
-            transform: scale(1.1);
-        }
-
-        .game-container {
-            background-color: var(--cor-branco);
-            border-radius: 20px;
-            box-shadow: var(--sombra);
-            padding: 40px;
-            width: 90%;
-            max-width: 900px;
+        /* Container principal com design flat */
+        .container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 12px;
+            box-shadow: 0 8px 25px rgba(0,0,0,0.1);
             text-align: center;
-            display: flex;
-            flex-direction: column;
-            gap: 25px;
-            animation: fadeIn 0.8s ease-out;
+            width: 90%;
+            max-width: 800px;
+            border: 1px solid #e0e0e0;
+            position: relative;
+            transition: all 0.3s ease;
         }
 
         h1 {
-            color: var(--cor-primaria);
+            color: #1a237e; /* Azul escuro e moderno */
             font-size: 2.5em;
-            margin: 0;
-            font-weight: 800;
+            margin-bottom: 10px;
         }
 
-        .instructions {
-            font-size: 1.1em;
-            color: var(--cor-texto-claro);
-            margin-top: -15px;
+        h2 {
+            color: #3f51b5; /* Azul índigo */
+            font-size: 1.8em;
+            margin-top: 0;
+            border-bottom: 2px solid #f0f2f5;
+            padding-bottom: 10px;
         }
 
-        #gameCanvas {
-            border: 2px solid #EEE;
-            background-color: #F9F9F9;
-            border-radius: 10px;
-            margin: 0 auto;
+        .hidden { display: none !important; }
+
+        /* --- TELA DE INTRODUÇÃO --- */
+        #tela-introducao p {
+            font-size: 1.3em;
+            color: #555;
+        }
+
+        .botoes-modos {
+            margin-top: 30px;
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+        }
+
+        .modo-btn {
+            padding: 15px 25px;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #fff;
+            background-color: #3498db; /* Azul vibrante */
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .modo-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(52, 152, 219, 0.4);
+            background-color: #2980b9;
+        }
+
+        /* --- TELA DO JOGO --- */
+        #instrucao {
+            font-size: 1.6em;
+            color: #0d47a1;
+            margin: 20px 0;
+            font-weight: bold;
+            min-height: 50px;
+        }
+
+        /* Área de medida com fundo limpo */
+        .area-de-medida {
+            position: relative;
+            height: 150px;
+            margin-top: 20px;
+            border: 2px solid #e0e0e0;
+            background-color: #f9f9f9;
+            border-radius: 8px;
+            overflow: hidden; /* Garante que os filhos fiquem dentro das bordas arredondadas */
+        }
+        
+        #objeto-container {
+            position: absolute;
+            top: 30px; /* Posição ajustada para melhor visualização */
+            height: 40px; /* Lápis um pouco mais fino */
+        }
+
+        #lapis-svg {
+            width: 100%;
+            height: 100%;
             display: block;
-            cursor: ew-resize; /* Cursor de arrastar horizontal */
+            filter: drop-shadow(2px 2px 3px rgba(0,0,0,0.15));
         }
 
-        .controls {
+        /* Estilos para as partes do lápis SVG */
+        #lapis-svg .ponta-lapis { fill: #d1b7a0; } /* Cor de madeira da ponta */
+        #lapis-svg .corpo-lapis { fill: #f1c40f; } /* Amarelo vibrante */
+        #lapis-svg .grafite-lapis { fill: #333; } /* Grafite escuro */
+        #lapis-svg .metal-borracha { fill: #bdc3c7; } /* Metal cinza */
+        #lapis-svg .borracha-lapis { fill: #e74c3c; } /* Borracha vermelha */
+
+        /* Resizer invisível na ponta do lápis */
+        #resizer {
+            width: 30px; /* Área de toque */
+            height: 100%;
+            position: absolute;
+            right: -15px; /* Posicionado na extremidade */
+            top: 0;
+            cursor: ew-resize;
+            z-index: 10;
+            /* O resizer agora é invisível */
+        }
+
+        /* Régua com visual moderno */
+        #regua {
+            width: 100%; height: 60px; /* Um pouco mais alta */
+            background-color: #ffffff;
+            border-top: 2px solid #e0e0e0;
+            position: absolute;
+            bottom: 0;
+            display: flex;
+            align-items: flex-end;
+            padding: 0 5px;
+            box-sizing: border-box;
+        }
+        
+        .tick { position: absolute; bottom: 0; width: 2px; background-color: #555; }
+        .tick-cm { height: 30px; }
+        .tick-half-cm { height: 18px; background-color: #888; }
+        .tick-label { position: absolute; bottom: 35px; font-size: 14px; font-weight: bold; color: #333; transform: translateX(-50%); }
+
+        .controles-jogo {
+            margin-top: 30px;
             display: flex;
             justify-content: center;
+            align-items: center;
             gap: 20px;
         }
 
-        .btn {
-            background-color: var(--cor-acao);
-            color: var(--cor-branco);
-            border: none;
-            padding: 15px 30px;
-            border-radius: 50px;
-            font-size: 1.1em;
-            font-weight: 700;
-            cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease, box-shadow 0.3s ease;
-            box-shadow: 0 5px 15px rgba(80, 227, 194, 0.4);
+        #input-estimativa {
+            padding: 10px;
+            font-size: 1.5em;
+            width: 100px;
+            text-align: center;
+            border-radius: 8px;
+            border: 2px solid #ccc;
+            transition: border-color 0.2s, box-shadow 0.2s;
         }
-
-        .btn:hover {
-            background-color: #24d4b1;
-            transform: translateY(-3px);
-            box-shadow: 0 8px 20px rgba(80, 227, 194, 0.6);
+        #input-estimativa:focus {
+            border-color: #3498db;
+            box-shadow: 0 0 8px rgba(52, 152, 219, 0.3);
+            outline: none;
         }
         
-        .btn:disabled {
-            background-color: #ccc;
-            cursor: not-allowed;
-            transform: translateY(0);
+        #verificarBtn {
+            padding: 15px 40px; font-size: 1.5em; font-weight: bold;
+            color: white; background-color: #2ecc71; /* Verde para ação positiva */
+            border: none; border-radius: 8px; cursor: pointer;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+        #verificarBtn:hover {
+            background-color: #27ae60;
+            transform: scale(1.05);
+        }
+        
+        #voltarBtn {
+            position: absolute;
+            top: 15px;
+            left: 15px;
+            padding: 8px 16px; 
+            font-size: 1em; 
+            background-color: #95a5a6; 
+            color: white;
+            font-weight: normal;
+        }
+        #voltarBtn:hover {
+            background-color: #7f8c8d;
             box-shadow: none;
+            transform: translateY(-2px);
         }
 
-        #result {
-            font-size: 1.3em;
-            font-weight: 600;
-            color: var(--cor-texto);
-            min-height: 1.5em;
-        }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        @media (max-width: 768px) {
-            body { overflow-y: auto; height: auto; padding: 20px 0;}
-            .game-container { padding: 25px; gap: 15px; width: 85%; }
-            h1 { font-size: 1.8em; }
-            .instructions { font-size: 1em; }
-            .controls { flex-direction: column; gap: 10px; }
-            .btn { padding: 12px 25px; font-size: 1em; }
-            #gameCanvas { width: 100%; height: auto; }
-        }
+        #feedback { font-size: 2em; font-weight: bold; height: 40px; margin-top: 20px; }
+        .correto { color: #2ecc71; }
+        .errado { color: #e74c3c; }
     </style>
 </head>
 <body>
 
-    <a href="anos-iniciais.html" class="back-button" title="Voltar para Jogos dos Anos Iniciais">‹ Voltar</a>
-
-    <div class="game-container">
-        <h1>Laboratório de Medidas 📏</h1>
-        <p class="instructions">Arraste a **ponta do lápis** até o final do objeto para medir seu comprimento.</p>
-
-        <canvas id="gameCanvas"></canvas>
-
-        <div id="result">Comece a medir!</div>
-
-        <div class="controls">
-            <button class="btn" id="checkButton">Verificar</button>
-            <button class="btn" id="nextButton" disabled>Próxima Medida</button>
+<div class="container">
+    <div id="tela-introducao">
+        <h1>Laboratório de Medidas</h1>
+        <p>Escolha uma atividade para começar!</p>
+        <div class="botoes-modos">
+            <button class="modo-btn" data-modo="exato">Tamanho Exato</button>
+            <button class="modo-btn" data-modo="estimativa">Qual é a Medida?</button>
+            <button class="modo-btn" data-modo="distancia">Qual a Distância?</button>
         </div>
     </div>
 
-    <script>
-        const canvas = document.getElementById('gameCanvas');
-        const ctx = canvas.getContext('2d');
-        const checkButton = document.getElementById('checkButton');
-        const nextButton = document.getElementById('nextButton');
-        const resultDiv = document.getElementById('result');
+    <div id="tela-jogo" class="hidden">
+        <button id="voltarBtn" class="modo-btn">Voltar</button>
+        <h2 id="titulo-modo">Modo de Jogo</h2>
+        <p id="instrucao">Carregando...</p>
 
-        const canvasWidth = 800;
-        const canvasHeight = 350;
-        canvas.width = canvasWidth;
-        canvas.height = canvasHeight;
+        <div class="area-de-medida">
+            <div id="objeto-container">
+                 <svg id="lapis-svg" viewBox="0 0 250 50" preserveAspectRatio="none">
+                    <rect x="25" y="0" width="185" height="50" class="corpo-lapis"/> 
+                    <polygon points="210,0 220,0 220,50 210,50" class="metal-borracha"/>
+                    <polygon points="220,0 250,0 250,50 220,50" class="borracha-lapis"/>
+                    <polygon points="25,0 0,25 25,50" class="ponta-lapis"/>
+                    <polygon points="5,20 0,25 5,30" class="grafite-lapis"/>
+                </svg>
+                <div id="resizer"></div>
+            </div>
+            <div id="regua"></div>
+        </div>
 
-        const rulerHeight = 60;
-        const rulerStartY = canvasHeight - rulerHeight;
-        const rulerScale = 20; // 20 pixels por cm
-
-        let currentObject = {};
-        let pencilX = 50;
-        let isDragging = false;
+        <div class="controles-jogo">
+            <input type="number" id="input-estimativa" class="hidden" placeholder="cm">
+            <button id="verificarBtn">Verificar!</button>
+        </div>
         
-        function drawRuler() {
-            ctx.fillStyle = '#f0eada';
-            ctx.fillRect(0, rulerStartY, canvasWidth, rulerHeight);
-            ctx.strokeStyle = '#333';
-            ctx.lineWidth = 2;
-            ctx.strokeRect(0, rulerStartY, canvasWidth, rulerHeight);
+        <p id="feedback"></p>
+    </div>
+</div>
 
-            ctx.font = '14px Poppins';
-            ctx.fillStyle = '#333';
-            ctx.textAlign = 'center';
+<script>
+    const pixelsPorCm = 25; 
+    const maxCm = 30;
 
-            for (let i = 0; i * rulerScale <= canvasWidth; i++) {
-                const x = i * rulerScale;
-                
-                // Marca de centímetro
-                ctx.beginPath();
-                ctx.moveTo(x, rulerStartY);
-                ctx.lineTo(x, rulerStartY + 25);
-                ctx.lineWidth = 2;
-                ctx.stroke();
-                ctx.fillText(i, x, rulerStartY + 45);
+    const telaIntroducao = document.getElementById('tela-introducao');
+    const telaJogo = document.getElementById('tela-jogo');
+    const tituloModoEl = document.getElementById('titulo-modo');
+    const instrucaoEl = document.getElementById('instrucao');
+    const objetoContainerEl = document.getElementById('objeto-container');
+    const resizerEl = document.getElementById('resizer');
+    const reguaEl = document.getElementById('regua');
+    const verificarBtn = document.getElementById('verificarBtn');
+    const inputEstimativaEl = document.getElementById('input-estimativa');
+    const feedbackEl = document.getElementById('feedback');
+    const voltarBtn = document.getElementById('voltarBtn');
+    
+    let modoAtual = '';
+    let respostaCorreta = 0;
 
-                // Marca de meio centímetro
-                if ((i + 0.5) * rulerScale <= canvasWidth) {
-                    ctx.beginPath();
-                    ctx.moveTo(x + rulerScale / 2, rulerStartY);
-                    ctx.lineTo(x + rulerScale / 2, rulerStartY + 15);
-                    ctx.lineWidth = 1;
-                    ctx.stroke();
-                }
-            }
+    document.querySelectorAll('.modo-btn[data-modo]').forEach(button => {
+        button.addEventListener('click', () => {
+            modoAtual = button.getAttribute('data-modo');
+            iniciarJogo(modoAtual);
+        });
+    });
+
+    voltarBtn.addEventListener('click', () => {
+        telaJogo.classList.add('hidden');
+        telaIntroducao.classList.remove('hidden');
+    });
+
+    function iniciarJogo(modo) {
+        telaIntroducao.classList.add('hidden');
+        telaJogo.classList.remove('hidden');
+        gerarRegua();
+        novaRodada();
+    }
+
+    function novaRodada() {
+        feedbackEl.textContent = '';
+        feedbackEl.className = '';
+        inputEstimativaEl.value = '';
+        resizerEl.classList.remove('hidden');
+        inputEstimativaEl.classList.add('hidden');
+        objetoContainerEl.style.left = '0px';
+
+        if (modoAtual === 'exato') {
+            tituloModoEl.textContent = 'Atividade: Tamanho Exato';
+            respostaCorreta = Math.floor(Math.random() * 20) + 1;
+            instrucaoEl.textContent = `Ajuste o lápis para medir ${respostaCorreta} cm!`;
+            objetoContainerEl.style.width = '80px';
+        } else if (modoAtual === 'estimativa') {
+            tituloModoEl.textContent = 'Atividade: Qual é a Medida?';
+            resizerEl.classList.add('hidden');
+            inputEstimativaEl.classList.remove('hidden');
+            let larguraSorteada = Math.floor(Math.random() * 20) + 2;
+            respostaCorreta = larguraSorteada;
+            objetoContainerEl.style.width = `${larguraSorteada * pixelsPorCm}px`;
+            instrucaoEl.textContent = `Quantos centímetros o lápis mede?`;
+        } else if (modoAtual === 'distancia') {
+            tituloModoEl.textContent = 'Atividade: Qual a Distância?';
+            resizerEl.classList.add('hidden');
+            inputEstimativaEl.classList.remove('hidden');
+            let inicioCm, tamanhoCm;
+            do {
+                inicioCm = Math.floor(Math.random() * 20);
+                tamanhoCm = Math.floor(Math.random() * 10) + 3;
+            } while (inicioCm + tamanhoCm > maxCm - 1);
+            respostaCorreta = tamanhoCm;
+            objetoContainerEl.style.left = `${inicioCm * pixelsPorCm}px`;
+            objetoContainerEl.style.width = `${tamanhoCm * pixelsPorCm}px`;
+            instrucaoEl.innerHTML = `Calcule a distância entre o início e o fim do lápis.`;
         }
+    }
 
-        function generateNewObject() {
-            const objectLengthCm = Math.floor(Math.random() * 25) + 5; // Entre 5 e 29 cm
-            const objectWidth = objectLengthCm * rulerScale;
-            currentObject = {
-                x: 0,
-                y: rulerStartY - 50,
-                width: objectWidth,
-                height: 30,
-                color: `hsl(${Math.random() * 360}, 60%, 70%)`,
-                length: objectLengthCm
-            };
-        }
+    function verificarResposta() {
+        const larguraAtualEmCm = objetoContainerEl.offsetWidth / pixelsPorCm;
+        const chute = parseFloat(inputEstimativaEl.value);
 
-        function drawPencil() {
-            const pencilY = rulerStartY - 80;
-            const pencilHeight = 60;
-            
-            // Corpo do lápis
-            ctx.fillStyle = '#FFD700'; // Amarelo
-            ctx.fillRect(pencilX - 150, pencilY, 150, 15);
-            
-            // Ponta de madeira
-            ctx.fillStyle = '#F4A460'; // Cor de madeira
-            ctx.beginPath();
-            ctx.moveTo(pencilX, pencilY + 7.5);
-            ctx.lineTo(pencilX - 20, pencilY);
-            ctx.lineTo(pencilX - 20, pencilY + 15);
-            ctx.closePath();
-            ctx.fill();
-
-            // *** ALTERAÇÃO AQUI: Apenas a ponta preta, sem o círculo ***
-            ctx.fillStyle = '#222'; // Grafite
-            ctx.beginPath();
-            ctx.moveTo(pencilX, pencilY + 7.5);
-            ctx.lineTo(pencilX + 5, pencilY + 5);
-            ctx.lineTo(pencilX + 5, pencilY + 10);
-            ctx.closePath();
-            ctx.fill();
-        }
-
-        function drawObject() {
-            ctx.fillStyle = currentObject.color;
-            ctx.fillRect(currentObject.x, currentObject.y, currentObject.width, currentObject.height);
-        }
-
-        function draw() {
-            ctx.clearRect(0, 0, canvasWidth, canvasHeight);
-            drawRuler();
-            drawObject();
-            drawPencil();
-        }
-
-        function checkAnswer() {
-            const userMeasurementPx = pencilX;
-            const correctMeasurementPx = currentObject.width;
-            const tolerance = rulerScale / 4; // Tolerância de 2.5mm
-
-            if (Math.abs(userMeasurementPx - correctMeasurementPx) <= tolerance) {
-                resultDiv.textContent = `Perfeito! O objeto mede ${currentObject.length} cm. 🎉`;
-                resultDiv.style.color = '#2E7D32';
-                nextButton.disabled = false;
-                checkButton.disabled = true;
+        if (modoAtual === 'exato') {
+            if (Math.abs(larguraAtualEmCm - respostaCorreta) < 0.5) {
+                feedbackCorreto();
             } else {
-                resultDiv.textContent = 'Quase lá! Tente ajustar a ponta do lápis. 🤔';
-                resultDiv.style.color = '#D32F2F';
+                feedbackErrado();
+            }
+        } else if (modoAtual === 'estimativa' || modoAtual === 'distancia') {
+            if (!chute && chute !== 0) {
+                feedbackErrado("Digite um número na caixa de resposta.");
+                return;
+            }
+            if (Math.abs(chute - respostaCorreta) < 0.1) {
+                feedbackCorreto(`Correto! A resposta era ${respostaCorreta} cm.`);
+            } else {
+                feedbackErrado("Quase! Calcule novamente com atenção.");
             }
         }
-        
-        function newRound() {
-            generateNewObject();
-            pencilX = 50;
-            resultDiv.textContent = 'Comece a medir!';
-            resultDiv.style.color = 'var(--cor-texto)';
-            nextButton.disabled = true;
-            checkButton.disabled = false;
-            draw();
+    }
+
+    function feedbackCorreto(mensagem = "Excelente! Resposta correta!") {
+        feedbackEl.textContent = mensagem;
+        feedbackEl.className = 'correto';
+        setTimeout(novaRodada, 2500);
+    }
+
+    function feedbackErrado(mensagem = "Ops! Tente de novo.") {
+        feedbackEl.textContent = mensagem;
+        feedbackEl.className = 'errado';
+    }
+
+    function gerarRegua() {
+        reguaEl.innerHTML = '';
+        for (let cm = 0; cm <= maxCm; cm++) {
+            const posicao = cm * pixelsPorCm;
+            const tickEl = document.createElement('div');
+            tickEl.className = 'tick tick-cm';
+            tickEl.style.left = `${posicao}px`;
+            const labelEl = document.createElement('span');
+            labelEl.className = 'tick-label';
+            labelEl.textContent = cm;
+            labelEl.style.left = `${posicao}px`;
+            reguaEl.appendChild(tickEl);
+            reguaEl.appendChild(labelEl);
+            if (cm < maxCm) {
+                const halfTickEl = document.createElement('div');
+                halfTickEl.className = 'tick tick-half-cm';
+                halfTickEl.style.left = `${posicao + (pixelsPorCm / 2)}px`;
+                reguaEl.appendChild(halfTickEl);
+            }
         }
+    }
 
-        canvas.addEventListener('mousedown', (e) => {
-            const rect = canvas.getBoundingClientRect();
-            const mouseX = e.clientX - rect.left;
-            if (mouseX > pencilX - 10 && mouseX < pencilX + 10) {
-                 isDragging = true;
+    resizerEl.addEventListener('mousedown', function(e) {
+        if (resizerEl.classList.contains('hidden')) return;
+        e.preventDefault();
+        const startX = e.clientX;
+        const startWidth = objetoContainerEl.offsetWidth;
+        function aoArrastar(e) {
+            const novaLargura = startWidth + (e.clientX - startX);
+            if (novaLargura > 20) {
+                objetoContainerEl.style.width = `${novaLargura}px`;
             }
-        });
+        }
+        function aoSoltar() {
+            document.removeEventListener('mousemove', aoArrastar);
+            document.removeEventListener('mouseup', aoSoltar);
+        }
+        document.addEventListener('mousemove', aoArrastar);
+        document.addEventListener('mouseup', aoSoltar);
+    });
 
-        canvas.addEventListener('mousemove', (e) => {
-            if (isDragging) {
-                const rect = canvas.getBoundingClientRect();
-                pencilX = e.clientX - rect.left;
-                if (pencilX < 0) pencilX = 0;
-                if (pencilX > canvasWidth) pencilX = canvasWidth;
-                draw();
-            }
-        });
-        
-        window.addEventListener('mouseup', () => {
-            isDragging = false;
-        });
+    verificarBtn.addEventListener('click', verificarResposta);
+    inputEstimativaEl.addEventListener('keyup', function(event) {
+        if (event.key === 'Enter') {
+            verificarResposta();
+        }
+    });
 
-        checkButton.addEventListener('click', checkAnswer);
-        nextButton.addEventListener('click', newRound);
-
-        newRound();
-    </script>
+</script>
 </body>
 </html>
