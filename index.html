@@ -66,8 +66,15 @@
             text-decoration: none;
             color: var(--cor-texto);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: popIn 1.2s ease-out;
+            animation: popIn 1.2s ease-out forwards; /* 'forwards' mantém o estado final */
+            opacity: 0; /* Inicia invisível para a animação */
         }
+
+        /* Adicionando delay na animação para cada card */
+        .game-card:nth-child(1) { animation-delay: 0.2s; }
+        .game-card:nth-child(2) { animation-delay: 0.4s; }
+        .game-card:nth-child(3) { animation-delay: 0.6s; }
+
 
         .game-card:hover {
             transform: translateY(-15px) scale(1.03);
@@ -90,6 +97,7 @@
             font-size: 0.9em;
             color: #555;
             margin-bottom: 25px;
+            min-height: 55px; /* Garante que os botões fiquem alinhados */
         }
 
         .play-button {
@@ -120,6 +128,10 @@
             to { opacity: 1; transform: scale(1); }
         }
 
+        @media (max-width: 1100px) {
+             body { overflow-y: auto; } /* Permite rolagem em telas menores se necessário */
+        }
+
         @media (max-width: 768px) {
             .portal-header h1 { font-size: 2.5em; }
             .portal-header p { font-size: 1em; }
@@ -140,11 +152,25 @@
             <a href="desafio-eca.html" class="game-card">
                 <div class="icon">🛡️</div>
                 <h2>Desafio ECA</h2>
-                <p>Teste seus conhecimentos sobre os direitos e deveres das crianças e adolescentes em um quiz dinâmico.</p>
+                <p>Teste seus conhecimentos sobre os direitos e deveres das crianças e adolescentes.</p>
                 <div class="play-button">Conhecer Desafio</div>
             </a>
 
-            </div>
+            <a href="https://oficina-de-rimas-emefrincao.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
+                <div class="icon">✒️</div>
+                <h2>Oficina de Rimas</h2>
+                <p>Crie poemas incríveis com um assistente de inteligência artificial e solte sua criatividade.</p>
+                <div class="play-button">Acessar Oficina</div>
+            </a>
+            
+            <a href="https://oficinadenoticia-emefrincao.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
+                <div class="icon">📰</div>
+                <h2>Oficina de Notícias</h2>
+                <p>Aprenda a criar uma notícia do zero, desde o título até a imagem da reportagem.</p>
+                <div class="play-button">Acessar Oficina</div>
+            </a>
+
+        </div>
     </div>
 
 </body>
