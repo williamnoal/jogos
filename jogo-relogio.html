@@ -1,0 +1,260 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>A Oficina do Relojoeiro - Jogo Moderno</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+
+        :root {
+            --cor-primaria: #FFA726; /* Laranja principal */
+            --cor-secundaria: #FF7043; /* Laranja mais forte */
+            --cor-fundo: #FFF3E0; /* Fundo creme */
+            --cor-texto: #5D4037; /* Marrom escuro */
+            --cor-branco: #FFFFFF;
+            --cor-sucesso: #2E7D32;
+            --cor-erro: #D32F2F;
+            --sombra: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Evita a barra de rolagem */
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: var(--cor-fundo);
+        }
+
+        .back-button {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 1.2em;
+            color: var(--cor-primaria);
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s ease;
+            z-index: 100;
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+        }
+        
+        .game-container {
+            width: 90%;
+            max-width: 1000px;
+            height: 90vh;
+            max-height: 700px;
+            background: var(--cor-branco);
+            border-radius: 20px;
+            box-shadow: var(--sombra);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-around;
+            align-items: center;
+            padding: 30px;
+            text-align: center;
+            animation: fadeIn 0.8s ease-out;
+        }
+
+        #instruction {
+            font-size: clamp(1.2em, 4vw, 2em); /* Tamanho de fonte responsivo */
+            font-weight: 700;
+            color: var(--cor-primaria);
+        }
+        
+        #clocks-container {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            align-items: center;
+            gap: 20px;
+            width: 100%;
+        }
+
+        .clock {
+            width: 150px;
+            height: 150px;
+            border: 5px solid var(--cor-secundaria);
+            border-radius: 50%;
+            position: relative;
+            background-color: #fffaf0;
+            cursor: pointer;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .clock:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 25px rgba(255, 167, 38, 0.5);
+        }
+
+        .hour-hand, .minute-hand {
+            position: absolute;
+            background-color: var(--cor-texto);
+            transform-origin: bottom center;
+            left: 50%;
+            margin-left: -2px;
+            border-radius: 2px;
+        }
+
+        .hour-hand {
+            width: 4px;
+            height: 40px;
+            top: 35px;
+        }
+
+        .minute-hand {
+            width: 4px;
+            height: 55px;
+            top: 20px;
+        }
+
+        .center-dot {
+            width: 10px;
+            height: 10px;
+            background-color: var(--cor-texto);
+            border-radius: 50%;
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+        }
+
+        #feedback {
+            font-size: 1.5em;
+            font-weight: 600;
+            min-height: 1.5em;
+        }
+        
+        #nextButton {
+            background-color: var(--cor-primaria);
+            color: var(--cor-branco);
+            border: none;
+            padding: 15px 40px;
+            border-radius: 50px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.3s ease, transform 0.2s ease;
+            display: none; /* Inicia oculto */
+        }
+
+        #nextButton:hover {
+            background-color: var(--cor-secundaria);
+            transform: translateY(-3px);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            body { overflow-y: auto; height: auto; }
+            .game-container { height: auto; padding: 20px; }
+            .clock { width: 120px; height: 120px; }
+            .hour-hand { height: 30px; top: 30px; }
+            .minute-hand { height: 45px; top: 15px; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <a href="anos-iniciais.html" class="back-button" title="Voltar para Jogos dos Anos Iniciais">‹ Voltar</a>
+
+    <div class="game-container">
+        <h1 id="instruction">Encontre o relógio que marca X:00</h1>
+        <div id="clocks-container"></div>
+        <div id="feedback"></div>
+        <button id="nextButton">Próxima Rodada</button>
+    </div>
+
+    <script>
+        const instructionEl = document.getElementById('instruction');
+        const clocksContainerEl = document.getElementById('clocks-container');
+        const feedbackEl = document.getElementById('feedback');
+        const nextButtonEl = document.getElementById('nextButton');
+        
+        let correctHour;
+
+        function getRandomHour() {
+            return Math.floor(Math.random() * 12) + 1;
+        }
+
+        function createClock(hour) {
+            const clock = document.createElement('div');
+            clock.className = 'clock';
+
+            const hourHand = document.createElement('div');
+            hourHand.className = 'hour-hand';
+            hourHand.style.transform = `rotate(${hour * 30}deg)`; // 360/12 = 30
+
+            const minuteHand = document.createElement('div');
+            minuteHand.className = 'minute-hand';
+            minuteHand.style.transform = 'rotate(0deg)'; // Sempre em 00
+
+            const centerDot = document.createElement('div');
+            centerDot.className = 'center-dot';
+
+            clock.appendChild(hourHand);
+            clock.appendChild(minuteHand);
+            clock.appendChild(centerDot);
+
+            clock.addEventListener('click', () => checkAnswer(hour, clock));
+            return clock;
+        }
+
+        function newRound() {
+            feedbackEl.textContent = '';
+            clocksContainerEl.innerHTML = '';
+            nextButtonEl.style.display = 'none';
+
+            correctHour = getRandomHour();
+            
+            let options = [correctHour];
+            while (options.length < 5) { // 5 relógios por rodada
+                let randomOption = getRandomHour();
+                if (!options.includes(randomOption)) {
+                    options.push(randomOption);
+                }
+            }
+
+            options.sort(() => Math.random() - 0.5);
+
+            instructionEl.textContent = `Encontre o relógio que marca ${correctHour}:00`;
+
+            options.forEach(hour => {
+                const clock = createClock(hour);
+                clocksContainerEl.appendChild(clock);
+            });
+        }
+
+        function checkAnswer(selectedHour, clockElement) {
+            // Evita múltiplos cliques após uma resposta
+            if (feedbackEl.textContent !== '') return; 
+
+            if (selectedHour === correctHour) {
+                feedbackEl.textContent = 'Mecanismo Perfeito! Acertou! 🎉';
+                feedbackEl.style.color = 'var(--cor-sucesso)';
+                clockElement.style.borderColor = 'var(--cor-sucesso)';
+                nextButtonEl.style.display = 'block';
+            } else {
+                feedbackEl.textContent = 'Engrenagem emperrada! Tente de novo! 🤔';
+                feedbackEl.style.color = 'var(--cor-erro)';
+                clockElement.style.borderColor = 'var(--cor-erro)';
+            }
+        }
+
+        nextButtonEl.addEventListener('click', newRound);
+
+        // Inicia o jogo
+        newRound();
+    </script>
+</body>
+</html>
