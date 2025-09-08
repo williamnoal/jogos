@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Portal de Jogos Educacionais</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+
+        :root {
+            --cor-primaria: #4A90E2;
+            --cor-secundaria: #50E3C2;
+            --cor-fundo: #F4F7FA;
+            --cor-texto: #333;
+            --cor-branco: #FFFFFF;
+            --sombra: 0 10px 30px rgba(0, 0, 0, 0.1);
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Remove a barra de rolagem */
+            font-family: 'Poppins', sans-serif;
+        }
+
+        body {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, var(--cor-fundo) 0%, #d8e6f3 100%);
+        }
+
+        .portal-container {
+            text-align: center;
+            padding: 40px;
+        }
+
+        .portal-header h1 {
+            font-size: 3.5em;
+            font-weight: 800;
+            color: var(--cor-primaria);
+            margin-bottom: 10px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        .portal-header p {
+            font-size: 1.2em;
+            color: #666;
+            margin-bottom: 50px;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        .games-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            flex-wrap: wrap; /* Permite que os jogos quebrem a linha em telas menores */
+        }
+
+        .game-card {
+            background: var(--cor-branco);
+            width: 320px;
+            padding: 30px;
+            border-radius: 20px;
+            box-shadow: var(--sombra);
+            text-decoration: none;
+            color: var(--cor-texto);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            animation: popIn 1.2s ease-out;
+        }
+
+        .game-card:hover {
+            transform: translateY(-15px) scale(1.03);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        }
+
+        .game-card .icon {
+            font-size: 4em;
+            line-height: 1;
+        }
+
+        .game-card h2 {
+            font-size: 1.8em;
+            font-weight: 700;
+            margin: 15px 0;
+            color: var(--cor-primaria);
+        }
+
+        .game-card p {
+            font-size: 0.9em;
+            color: #555;
+            margin-bottom: 25px;
+        }
+
+        .play-button {
+            display: inline-block;
+            background-color: var(--cor-secundaria);
+            color: var(--cor-branco);
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: background-color 0.3s ease;
+        }
+
+        .game-card:hover .play-button {
+            background-color: #24d4b1;
+        }
+        
+        /* Animações */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes popIn {
+            from { opacity: 0; transform: scale(0.8); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 768px) {
+            .portal-header h1 { font-size: 2.5em; }
+            .portal-header p { font-size: 1em; }
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="portal-container">
+        <header class="portal-header">
+            <h1>Portal de Jogos Educacionais</h1>
+            <p>Escolha um desafio e comece a aprender de forma divertida!</p>
+        </header>
+
+        <div class="games-grid">
+            
+            <a href="desafio-eca.html" class="game-card">
+                <div class="icon">🛡️</div>
+                <h2>Desafio ECA</h2>
+                <p>Teste seus conhecimentos sobre os direitos e deveres das crianças e adolescentes em um quiz dinâmico.</p>
+                <div class="play-button">Conhecer Desafio</div>
+            </a>
+
+            </div>
+    </div>
+
+</body>
+</html>

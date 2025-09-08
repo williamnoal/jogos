@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introdução - Desafio ECA</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+        
+        :root {
+            --cor-primaria: #4A90E2;
+            --cor-secundaria: #50E3C2;
+            --cor-fundo: #F4F7FA;
+            --cor-texto: #333;
+            --cor-branco: #FFFFFF;
+        }
+
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden; /* Remove a barra de rolagem */
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--cor-fundo);
+        }
+
+        .intro-container {
+            display: flex;
+            height: 100%;
+            width: 100%;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .intro-card {
+            display: flex;
+            width: 90%;
+            max-width: 1100px;
+            height: 80vh;
+            max-height: 600px;
+            background: var(--cor-branco);
+            border-radius: 25px;
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
+            overflow: hidden;
+            animation: zoomIn 0.8s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+        }
+
+        .intro-content {
+            flex: 1;
+            padding: 50px 60px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .intro-image {
+            flex: 1;
+            background: linear-gradient(160deg, var(--cor-primaria), var(--cor-secundaria));
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .intro-image svg {
+            width: 80%;
+            max-width: 400px;
+            height: auto;
+        }
+
+        .back-button {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 1.5em;
+            color: var(--cor-primaria);
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s ease;
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+        }
+
+        h1 {
+            font-size: 3em;
+            font-weight: 800;
+            color: var(--cor-primaria);
+            line-height: 1.2;
+            margin-bottom: 15px;
+        }
+
+        .subtitle {
+            font-size: 1.1em;
+            color: #666;
+            margin-bottom: 30px;
+        }
+
+        .rules-list {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 40px;
+        }
+        
+        .rules-list li {
+            display: flex;
+            align-items: center;
+            margin-bottom: 15px;
+            font-size: 1.0em;
+        }
+
+        .rules-list .icon {
+            font-size: 1.5em;
+            margin-right: 15px;
+            color: var(--cor-secundaria);
+        }
+
+        .cta-button {
+            background-image: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria));
+            color: var(--cor-branco);
+            text-decoration: none;
+            padding: 15px 35px;
+            font-size: 1.1em;
+            font-weight: 700;
+            border-radius: 50px;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            display: inline-block;
+            align-self: flex-start;
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+        }
+
+        .cta-button:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(80, 227, 194, 0.5);
+        }
+        
+        @keyframes zoomIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        @media (max-width: 992px) {
+            .intro-card { flex-direction: column; height: auto; max-height: none; margin: 20px; }
+            .intro-image { display: none; /* Em telas menores, a imagem é removida para focar no conteúdo */ }
+            .intro-content { padding: 40px; }
+            h1 { font-size: 2.2em; }
+        }
+
+    </style>
+</head>
+<body>
+    
+    <a href="index.html" class="back-button" title="Voltar ao Portal">‹ Voltar</a>
+
+    <div class="intro-container">
+        <div class="intro-card">
+            <div class="intro-content">
+                <h1>Desafio ECA</h1>
+                <p class="subtitle">Uma jornada de conhecimento sobre os seus direitos e deveres. Prepare sua equipe e vamos começar!</p>
+                
+                <ul class="rules-list">
+                    <li><span class="icon">🚀</span><strong>Forme as Equipes:</strong> A turma se divide em três grandes times.</li>
+                    <li><span class="icon">🤔</span><strong>Responda as Questões:</strong> Debatam e escolham a resposta certa para cada pergunta.</li>
+                    <li><span class="icon">🏆</span><strong>Conquiste a Vitória:</strong> Acumule pontos e leve sua equipe ao pódio!</li>
+                </ul>
+
+                <a href="eca.html" class="cta-button">Começar a Aventura!</a>
+            </div>
+            <div class="intro-image">
+                <svg viewBox="0 0 579 464" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M57.9737 464H0V395.77C0 370.43 20.1423 350.287 45.4827 350.287H126.177C138.804 350.287 150.814 355.27 159.432 363.888L183.659 388.114C192.277 396.732 204.287 401.715 216.914 401.715H422.569C447.909 401.715 468.051 381.572 468.051 356.232V301.751C468.051 292.836 475.32 285.567 484.235 285.567H533.517C558.858 285.567 579 265.425 579 240.085V45.4827C579 20.1423 558.858 0 533.517 0H200.73C175.39 0 155.247 20.1423 155.247 45.4827V126.177" fill="#FFFFFF" fill-opacity="0.1"/>
+                    <g filter="url(#filter0_d)">
+                    <rect x="58" y="58" width="400" height="250" rx="20" fill="white"/>
+                    </g>
+                    <rect x="91" y="103" width="120" height="15" rx="7.5" fill="#4A90E2"/>
+                    <rect x="91" y="143" width="280" height="10" rx="5" fill="#E8F0F7"/>
+                    <rect x="91" y="168" width="280" height="10" rx="5" fill="#E8F0F7"/>
+                    <rect x="91" y="193" width="230" height="10" rx="5" fill="#E8F0F7"/>
+                    <circle cx="399" cy="249" r="40" fill="#50E3C2"/>
+                    <path d="M390.333 255.433L384 249.1L385.867 247.233C386.4 246.7 387.233 246.7 387.767 247.233L389.233 248.7L397.6 240.333C398.133 239.8 398.967 239.8 399.5 240.333L401.367 242.2L390.333 253.233V255.433Z" fill="white"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+
+</body>
+</html>
