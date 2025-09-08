@@ -1,0 +1,864 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio ECA: Jogo Moderno</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@400;600;700;800&display=swap');
+
+        /* --- Variáveis CSS para Cores e Estilos --- */
+        :root {
+            --cor-primaria: #4A90E2; /* Azul vibrante */
+            --cor-secundaria: #6B7B8F; /* Cinza azulado */
+            --cor-sucesso: #7ED321; /* Verde limão */
+            --cor-perigo: #D0021B; /* Vermelho intenso */
+            --cor-fundo: #E8F0F7; /* Azul claro de fundo */
+            --cor-texto-principal: #333333;
+            --cor-texto-claro: #FFFFFF;
+            --sombra-leve: 0 4px 15px rgba(0, 0, 0, 0.1);
+            --sombra-intensa: 0 10px 30px rgba(0, 0, 0, 0.2);
+
+            --time1-bg: #FF6B6B; /* Vermelho claro */
+            --time2-bg: #4ECDC4; /* Azul esverdeado */
+            --time3-bg: #FFC107; /* Amarelo ouro */
+
+            --ouro: #FFD700;
+            --prata: #C0C0C0;
+            --bronze: #CD7F32;
+        }
+
+        /* --- Reset Básico e Fontes --- */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        html, body {
+            height: 100%;
+            font-family: 'Montserrat', sans-serif;
+            color: var(--cor-texto-principal);
+            overflow: hidden; /* Evita qualquer barra de rolagem */
+        }
+
+        body {
+            background-color: var(--cor-fundo);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+        }
+
+        .container {
+            background-color: var(--cor-texto-claro);
+            border-radius: 25px;
+            box-shadow: var(--sombra-intensa);
+            padding: 30px 40px;
+            width: 100%;
+            max-width: 1280px; /* Aumentado para melhor visualização */
+            height: 95%; /* Ocupa a maior parte da altura */
+            display: flex;
+            flex-direction: column;
+            text-align: center;
+        }
+
+        /* --- Header Geral --- */
+        header {
+            margin-bottom: 20px;
+            flex-shrink: 0;
+        }
+        header h1 {
+            color: var(--cor-primaria);
+            font-size: 2.8em;
+            font-weight: 800;
+            margin-bottom: 5px;
+            letter-spacing: -1px;
+        }
+        header p {
+            font-size: 1.1em;
+            color: var(--cor-secundaria);
+        }
+
+        /* --- Botões de Controle --- */
+        .btn-controle {
+            background-color: var(--cor-primaria);
+            color: var(--cor-texto-claro);
+            border: none;
+            padding: 14px 35px;
+            font-size: 1.15em;
+            font-weight: 700;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--sombra-leve);
+            margin-top: 20px;
+        }
+        .btn-controle:hover {
+            background-color: darken(var(--cor-primaria), 10%); /* Exemplo, escurece a cor */
+            transform: translateY(-3px) scale(1.02);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.25);
+        }
+        .btn-controle:active {
+            transform: translateY(0);
+            box-shadow: var(--sombra-leve);
+        }
+
+        /* --- Telas Escondidas/Visíveis --- */
+        #tela-inicial, #tela-final { display: block; flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center;}
+        .painel-jogo { display: none; flex-grow: 1; flex-direction: column; }
+
+
+        /* --- TELA INICIAL --- */
+        #tela-inicial h2 {
+            color: var(--cor-texto-principal);
+            font-size: 2.2em;
+            margin-bottom: 25px;
+            font-weight: 700;
+        }
+        #tela-inicial .instrucoes {
+            background-color: #f0f8ff; /* Azul muito claro */
+            border: 1px solid #d0e0f0;
+            border-left: 5px solid var(--cor-primaria);
+            padding: 20px;
+            border-radius: 12px;
+            text-align: left;
+            max-width: 700px;
+            margin: 20px auto 40px auto;
+            line-height: 1.7;
+            font-size: 1.05em;
+            box-shadow: var(--sombra-leve);
+        }
+        #tela-inicial .instrucoes strong { color: var(--cor-primaria); }
+        .cadastro-times {
+            display: flex;
+            justify-content: center;
+            gap: 30px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        .cadastro-times div {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .cadastro-times label {
+            font-weight: 700;
+            margin-bottom: 8px;
+            font-size: 1.1em;
+            color: var(--cor-secundaria);
+        }
+        .cadastro-times input[type="text"] {
+            padding: 12px 15px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            font-size: 1.1em;
+            text-align: center;
+            width: 200px;
+            transition: all 0.3s ease;
+            box-shadow: inset 0 2px 5px rgba(0, 0, 0, 0.05);
+        }
+        .cadastro-times input[type="text"]:focus {
+            border-color: var(--cor-primaria);
+            box-shadow: 0 0 0 3px rgba(74, 144, 226, 0.3);
+            outline: none;
+        }
+
+        /* Cores dos labels dos times para cadastro */
+        .cadastro-times div:nth-child(1) label { color: var(--time1-bg); }
+        .cadastro-times div:nth-child(2) label { color: var(--time2-bg); }
+        .cadastro-times div:nth-child(3) label { color: var(--time3-bg); }
+
+
+        /* --- PAINEL DE JOGO --- */
+        #jogo-container {
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+            min-height: 0; /* Permite que o flex item encolha */
+        }
+
+        #info-superior {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background-color: #f0f8ff;
+            border-radius: 15px;
+            padding: 12px 25px;
+            margin-bottom: 20px;
+            flex-shrink: 0;
+            box-shadow: var(--sombra-leve);
+        }
+        .identificador-time {
+            font-size: 1.1em;
+            font-weight: 700;
+            padding: 8px 15px;
+            border-radius: 8px;
+            color: var(--cor-texto-claro);
+            background-color: var(--cor-secundaria); /* Fallback */
+            box-shadow: inset 0 -3px 0 rgba(0,0,0,0.2);
+        }
+        /* Cores específicas para os identificadores de time */
+        #identificadores-times > div:nth-child(1) { background-color: var(--time1-bg); }
+        #identificadores-times > div:nth-child(2) { background-color: var(--time2-bg); }
+        #identificadores-times > div:nth-child(3) { background-color: var(--time3-bg); }
+
+        #contador-pergunta {
+            font-weight: 700;
+            color: var(--cor-secundaria);
+            font-size: 1.25em;
+        }
+
+        #jogo-principal {
+            display: grid;
+            grid-template-columns: 3fr 4fr; /* Ajuste das colunas */
+            gap: 30px;
+            flex-grow: 1;
+            min-height: 0;
+        }
+
+        #pergunta-container {
+            background-color: var(--cor-fundo); /* Fundo mais claro para a pergunta */
+            border-radius: 18px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: var(--sombra-leve);
+            border: 1px solid #e0eaf3;
+        }
+        #pergunta-texto {
+            font-size: 1.7em;
+            font-weight: 700;
+            line-height: 1.4;
+            color: var(--cor-texto-principal);
+        }
+
+        #interacao-container {
+            display: flex;
+            flex-direction: column;
+            gap: 15px; /* Espaçamento entre os elementos */
+        }
+        
+        #painel-registro {
+            background-color: #fff;
+            padding: 15px 20px;
+            border-radius: 15px;
+            box-shadow: var(--sombra-leve);
+            flex-shrink: 0; /* Não encolhe */
+            border: 1px solid #e0eaf3;
+        }
+        #painel-registro p {
+            font-weight: 600;
+            color: var(--cor-secundaria);
+            font-size: 1em;
+            margin-bottom: 12px;
+        }
+        .botoes-selecao-time {
+            display: flex;
+            justify-content: center;
+            gap: 12px;
+            flex-wrap: wrap; /* Para telas menores */
+        }
+        .btn-time-selecionar {
+            border: 2px solid;
+            color: var(--cor-texto-claro);
+            padding: 10px 18px;
+            font-size: 0.95em;
+            font-weight: 600;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        .btn-time-selecionar:disabled { opacity: 0.6; cursor: not-allowed; filter: grayscale(50%); }
+        .btn-time-selecionar.selecionado {
+            transform: translateY(-3px) scale(1.05);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+            border-width: 4px;
+        }
+        /* Cores específicas dos botões de seleção de time */
+        #btn-selecionar-0 { background-color: var(--time1-bg); border-color: var(--time1-bg); }
+        #btn-selecionar-1 { background-color: var(--time2-bg); border-color: var(--time2-bg); }
+        #btn-selecionar-2 { background-color: var(--time3-bg); border-color: var(--time3-bg); }
+
+
+        .opcoes-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            flex-grow: 1; /* Permite que as opções ocupem o espaço restante */
+            min-height: 0; /* Para que grid funcione corretamente dentro de flex */
+        }
+        .btn-opcao {
+            background-color: var(--cor-primaria);
+            color: var(--cor-texto-claro);
+            border: none;
+            padding: 18px;
+            font-size: 1.05em;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            box-shadow: var(--sombra-leve);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-align: center;
+            line-height: 1.3;
+        }
+        .btn-opcao:hover:not(:disabled) {
+            transform: translateY(-3px) scale(1.02);
+            background-color: #5a9ce9; /* Levemente mais escuro */
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+        .btn-opcao.correta { background-color: var(--cor-sucesso); animation: pulseGreen 1s ease-out; }
+        .btn-opcao.errada { background-color: var(--cor-perigo); animation: shakeRed 0.5s ease-out; }
+        .btn-opcao:disabled { cursor: not-allowed; opacity: 0.7; filter: grayscale(20%); }
+
+        /* Animações de Feedback */
+        @keyframes pulseGreen {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.05); box-shadow: 0 0 20px var(--cor-sucesso); }
+            100% { transform: scale(1); }
+        }
+        @keyframes shakeRed {
+            0%, 100% { transform: translateX(0); }
+            20%, 60% { transform: translateX(-5px); }
+            40%, 80% { transform: translateX(5px); }
+        }
+
+        #feedback-container {
+            padding: 25px;
+            border-radius: 15px;
+            font-size: 1.05em;
+            text-align: left;
+            line-height: 1.6;
+            flex-grow: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            box-shadow: var(--sombra-leve);
+            border: 1px solid #e0eaf3;
+        }
+        #feedback-container h3 { margin-bottom: 10px; font-size: 1.4em; font-weight: 700; }
+        #feedback-container p { margin-bottom: 8px; }
+        #feedback-container.feedback-sucesso { background-color: #e6ffeb; color: #28a745; border-color: #7ed321; }
+        #feedback-container.feedback-aviso   { background-color: #fff9e6; color: #ffc107; border-color: #ffc107; }
+        #feedback-container.feedback-erro    { background-color: #ffe6e6; color: #d0021b; border-color: #d0021b; }
+
+        #controles-finais {
+            flex-shrink: 0;
+            padding-top: 20px;
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+        }
+        #btn-revelar { background-color: var(--cor-secundaria); }
+        #btn-revelar:hover { background-color: darken(var(--cor-secundaria), 10%); }
+        #btn-proxima { background-color: var(--cor-sucesso); }
+        #btn-proxima:hover { background-color: darken(var(--cor-sucesso), 10%); }
+
+
+        /* --- TELA FINAL (Pódio) --- */
+        #tela-final {
+            display: none;
+            flex-grow: 1;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+        }
+        #tela-final h2 {
+            color: var(--cor-primaria);
+            font-size: 2.5em;
+            margin-bottom: 25px;
+            font-weight: 800;
+        }
+
+        .podio-container {
+            display: flex;
+            justify-content: center;
+            align-items: flex-end; /* Alinha na base */
+            gap: 20px;
+            height: 250px; /* Altura fixa para o pódio */
+            margin: 30px auto 40px auto;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .podio-item {
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            align-items: center;
+            padding: 20px 15px;
+            border-radius: 15px 15px 0 0;
+            color: var(--cor-texto-principal);
+            font-weight: 700;
+            width: 180px;
+            text-align: center;
+            box-shadow: var(--sombra-intensa);
+            animation: fadeInScale 0.8s ease-out forwards;
+        }
+
+        /* Animação para o pódio */
+        @keyframes fadeInScale {
+            from { opacity: 0; transform: scale(0.8) translateY(50px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+
+        .podio-rank {
+            font-size: 1.6em;
+            font-weight: 800;
+            color: var(--cor-texto-claro);
+            background-color: rgba(0,0,0,0.3);
+            padding: 5px 12px;
+            border-radius: 8px;
+            margin-bottom: 10px;
+        }
+        .podio-nome {
+            font-size: 1.4em;
+            margin: 10px 0;
+            line-height: 1.2;
+            color: var(--cor-texto-claro);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.2);
+        }
+        .podio-pontos {
+            font-size: 2.2em;
+            font-weight: 800;
+            color: var(--cor-texto-claro);
+            text-shadow: 2px 2px 3px rgba(0,0,0,0.3);
+        }
+
+        /* Cores e alturas específicas do pódio */
+        .primeiro-lugar { height: 200px; background-color: var(--ouro); order: 2; animation-delay: 0.2s; }
+        .segundo-lugar { height: 160px; background-color: var(--prata); order: 1; animation-delay: 0s; }
+        .terceiro-lugar { height: 120px; background-color: var(--bronze); order: 3; animation-delay: 0.4s; }
+        
+        /* Cor de texto para os itens do pódio dependendo do fundo */
+        .primeiro-lugar .podio-rank, .primeiro-lugar .podio-nome, .primeiro-lugar .podio-pontos { color: var(--cor-texto-principal); text-shadow: none; }
+        .segundo-lugar .podio-rank, .segundo-lugar .podio-nome, .segundo-lugar .podio-pontos { color: var(--cor-texto-principal); text-shadow: none; }
+        .terceiro-lugar .podio-rank, .terceiro-lugar .podio-nome, .terceiro-lugar .podio-pontos { color: var(--cor-texto-claro); text-shadow: 1px 1px 2px rgba(0,0,0,0.2); }
+
+
+        .resumo-container {
+            display: flex;
+            justify-content: center;
+            gap: 25px;
+            margin-top: 40px;
+            flex-wrap: wrap; /* Para telas menores */
+            width: 100%;
+            max-width: 1000px;
+        }
+        .resumo-time {
+            padding: 20px;
+            border: 3px solid;
+            border-radius: 15px;
+            width: 30%; /* Ajuste para caber 3 em uma linha */
+            min-width: 250px; /* Garante que não fiquem muito pequenos */
+            box-shadow: var(--sombra-leve);
+            background-color: #fff;
+            transition: transform 0.3s ease;
+        }
+        .resumo-time:hover { transform: translateY(-5px); }
+
+        .resumo-time h3 { margin-top: 0; font-size: 1.5em; font-weight: 700; margin-bottom: 10px; }
+        .resumo-time p { margin: 8px 0; font-size: 1.1em; color: var(--cor-secundaria); }
+        .resumo-time p strong { color: var(--cor-texto-principal); }
+
+        /* Cores da borda do resumo por time */
+        .resumo-time:nth-child(1) { border-color: var(--time1-bg); }
+        .resumo-time:nth-child(1) h3 { color: var(--time1-bg); }
+        .resumo-time:nth-child(2) { border-color: var(--time2-bg); }
+        .resumo-time:nth-child(2) h3 { color: var(--time2-bg); }
+        .resumo-time:nth-child(3) { border-color: var(--time3-bg); }
+        .resumo-time:nth-child(3) h3 { color: var(--time3-bg); }
+
+
+        /* Media Queries para Responsividade */
+        @media (max-width: 1024px) {
+            .container { padding: 20px; }
+            header h1 { font-size: 2.2em; }
+            #pergunta-texto { font-size: 1.4em; }
+            #jogo-principal { grid-template-columns: 1fr; /* Uma coluna em telas menores */
+                              gap: 20px; }
+            .opcoes-grid { grid-template-columns: 1fr; }
+            .btn-opcao { padding: 15px; font-size: 1em; }
+            .resumo-container { flex-direction: column; align-items: center; }
+            .resumo-time { width: 80%; }
+        }
+
+        @media (max-width: 768px) {
+            body { padding: 10px; }
+            .container { height: auto; min-height: 95vh; padding: 20px; }
+            header h1 { font-size: 1.8em; }
+            #tela-inicial h2 { font-size: 1.8em; }
+            .instrucoes { font-size: 0.95em; padding: 15px; }
+            .cadastro-times { flex-direction: column; gap: 15px; margin-bottom: 30px; }
+            .cadastro-times input { width: 180px; font-size: 1em; }
+            #info-superior { flex-direction: column; gap: 10px; padding: 10px 15px; }
+            #identificadores-times { flex-wrap: wrap; justify-content: center; }
+            #contador-pergunta { font-size: 1em; }
+            #pergunta-texto { font-size: 1.2em; min-height: 80px; }
+            #painel-registro p { font-size: 0.9em; margin-bottom: 10px; }
+            .botoes-selecao-time { gap: 8px; }
+            .btn-time-selecionar { padding: 8px 15px; font-size: 0.9em; }
+            .btn-controle { padding: 10px 25px; font-size: 1em; }
+            .podio-container { flex-direction: column; align-items: center; height: auto; gap: 10px; }
+            .podio-item { width: 80%; max-width: 250px; height: auto !important; padding: 15px; border-radius: 15px; }
+            .podio-rank { font-size: 1.2em; padding: 3px 10px; }
+            .podio-nome { font-size: 1.1em; }
+            .podio-pontos { font-size: 1.6em; }
+            .resumo-time { width: 90%; min-width: unset; }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div id="tela-inicial">
+            <header>
+                <h1>Desafio ECA</h1>
+                <p>Direitos e Deveres do Cidadão Mirim</p>
+            </header>
+            <h2>Preparar, Apontar... ECA!</h2>
+            <div class="instrucoes">
+                <p>1. Divida a turma em <strong>3 times</strong> e personalize os nomes abaixo.</p>
+                <p>2. A cada pergunta, os times debatem e escolhem uma única resposta.</p>
+                <p>3. Professor(a), **selecione o(s) time(s)** que votou(votaram) e clique na opção escolhida.</p>
+                <p>4. O placar ficará <strong>secreto</strong>! A grande revelação será no pódio final.</p>
+            </div>
+            <div class="cadastro-times">
+                 <div><label for="time1-nome">Time 1</label><input type="text" id="time1-nome" value="Guardiões do ECA"></div>
+                 <div><label for="time2-nome">Time 2</label><input type="text" id="time2-nome" value="Cidadãos do Amanhã"></div>
+                 <div><label for="time3-nome">Time 3</label><input type="text" id="time3-nome" value="Defensores da Lei"></div>
+            </div>
+            <button class="btn-controle" id="btn-iniciar">Começar o Desafio!</button>
+        </div>
+
+        <div class="painel-jogo" id="painel-jogo">
+            <div id="jogo-container">
+                <div id="info-superior">
+                    <div id="identificadores-times" style="display: flex; gap: 10px;"></div>
+                    <div id="contador-pergunta"></div>
+                </div>
+
+                <div id="jogo-principal">
+                    <div id="pergunta-container">
+                        <p id="pergunta-texto">Carregando pergunta...</p>
+                    </div>
+                    <div id="interacao-container">
+                        </div>
+                </div>
+                <div id="controles-finais">
+                     <button class="btn-controle" id="btn-revelar" style="display: none;">Revelar Resposta</button>
+                     <button class="btn-controle" id="btn-proxima" style="display: none;">Próxima Pergunta</button>
+                </div>
+            </div>
+        </div>
+        
+        <div id="tela-final" style="display: none;">
+            <header>
+                <h2>Resultado Final: O Pódio do Conhecimento!</h2>
+            </header>
+            <div id="resultado-final-container">
+                </div>
+            <button class="btn-controle" id="btn-reiniciar">Jogar Novamente</button>
+        </div>
+    </div>
+
+    <script>
+        // --- BANCO DE DADOS DE PERGUNTAS ---
+        const perguntas = [
+            { pergunta: "Toda criança tem direito a ter um nome e sobrenome. Isso faz parte do direito à...", opcoes: ["Identidade", "Saúde", "Moradia", "Diversão"], resposta: 0, explicacao: "Correto! O direito à identidade, garantido pelo ECA, assegura que toda criança seja registrada logo após o nascimento, tendo nome, sobrenome e nacionalidade." },
+            { pergunta: "Quando a professora pede silêncio para explicar a matéria, é um dever do aluno...", opcoes: ["Ignorar o pedido", "Conversar mais baixo", "Respeitar e colaborar", "Sair da sala"], resposta: 2, explicacao: "Isso mesmo! Respeitar os professores e os colegas é um dever fundamental para um bom ambiente de aprendizado na escola." },
+            { pergunta: "Quando uma criança expressa sua opinião em uma conversa em família, ela está exercendo seu direito à...", opcoes: ["Desobediência", "Liberdade de expressão", "Educação", "Preguiça"], resposta: 1, explicacao: "Isso mesmo! O Art. 16 do ECA garante o direito à liberdade, que inclui o de opinião e expressão. É muito importante que as crianças sejam ouvidas." },
+            { pergunta: "Manter seu quarto organizado e ajudar a guardar a louça são exemplos do dever de...", opcoes: ["Trabalhar em casa", "Colaborar com a família", "Fazer o que não gosta", "Ser adulto"], resposta: 1, explicacao: "Exato! Colaborar nas tarefas de casa, de acordo com sua idade, é um dever que ensina responsabilidade e o senso de comunidade familiar." },
+            { pergunta: "Ir à escola todos os dias é um...", opcoes: ["Castigo", "Favor dos pais", "Direito à educação", "Passatempo"], resposta: 2, explicacao: "Perfeito! O direito à educação é um dos mais importantes do ECA (Art. 53), sendo um dever da família e do Estado garantir a vaga e a frequência." },
+            { pergunta: "Cuidar dos seus materiais escolares, como livros e cadernos, é um dever...", opcoes: ["Da escola", "Dos pais", "Do aluno", "De ninguém"], resposta: 2, explicacao: "Correto! Zelar por seus pertences é um dever que demonstra responsabilidade. Isso também se aplica a cuidar dos materiais da escola." },
+            { pergunta: "Uma criança indígena tem o direito de aprender sua língua materna e as tradições de seu povo na escola. Isso garante seu direito...", opcoes: ["De não aprender português", "À cultura de origem e identidade", "De viver isolada", "De ter uma escola diferente"], resposta: 1, explicacao: "Correto! O ECA garante o respeito aos valores culturais, artísticos e históricos próprios do contexto social da criança, assegurando a preservação de suas origens." },
+            { pergunta: "Um aluno vê um colega sofrendo bullying no pátio. Qual é o seu dever nessa situação?", opcoes: ["Fingir que não viu para não se envolver", "Participar do bullying para ser popular", "Não fazer nada e deixar que se resolvam", "Procurar um professor ou inspetor e denunciar"], resposta: 3, explicacao: "Correto! É um dever de cidadania não ser conivente com a violência. Ajudar um colega, buscando o auxílio de um adulto, fortalece um ambiente escolar seguro." },
+            { pergunta: "Brincar no parque ou ler um livro são atividades relacionadas ao direito...", opcoes: ["Ao trabalho", "De ficar em casa", "Ao lazer e à cultura", "De não estudar"], resposta: 2, explicacao: "Exato! O ECA assegura o direito de brincar, praticar esportes e divertir-se (Art. 16), além do acesso à cultura, que são fundamentais para um desenvolvimento saudável." },
+            { pergunta: "Se uma criança fica doente, ela tem o direito de ser levada a um médico e receber cuidados. Este é o direito à...", opcoes: ["Vida e à saúde", "Faltar da aula", "Moradia", "Alimentação"], resposta: 0, explicacao: "Correto! O Art. 7º do ECA garante o direito à vida e à saúde, com atendimento prioritário no sistema de saúde público para crianças e adolescentes." },
+            { pergunta: "Ao usar o parquinho da praça, um dever importante é...", opcoes: ["Ser o primeiro a usar o brinquedo", "Não deixar os outros brincarem", "Pichar o escorregador", "Preservar os brinquedos e o espaço"], resposta: 3, explicacao: "Perfeito! Preservar os espaços públicos, como praças e parques, é um dever de todos. Assim, outras crianças também poderão se divertir." },
+            { pergunta: "Ouvir os conselhos dos pais ou responsáveis e obedecê-los é um dever de...", opcoes: ["Respeito e obediência", "Medo", "Fraqueza", "Escolha"], resposta: 0, explicacao: "Isso! O ECA prevê o dever de obedecer e respeitar pais e responsáveis, pois eles são os principais cuidadores e buscam o melhor para seu desenvolvimento." },
+            { pergunta: "Se os pais de um adolescente de 13 anos decidem se separar, ele tem o direito de ser ouvido pelo juiz para opinar sobre com quem gostaria de morar?", opcoes: ["Não, apenas maiores de 18 anos opinam", "Sim, ele tem direito de ser ouvido e sua opinião será considerada", "Não, a decisão é exclusivamente dos pais", "Sim, mas a opinião dele é o que decide tudo"], resposta: 1, explicacao: "Exato! O Art. 28 do ECA estabelece que, sempre que possível, a criança ou o adolescente será ouvido, e sua opinião será devidamente considerada pelo juiz." },
+            { pergunta: "Um canal de TV exibe um filme com cenas de violência às 15h. Isso viola o direito da criança de...", opcoes: ["Escolher o que assistir", "Ser protegida de conteúdos inadequados", "Ter TV em casa", "Não gostar de violência"], resposta: 1, explicacao: "Isso mesmo! O ECA (Art. 76) regula que as emissoras só exibam programas em horários recomendados para o público infanto-juvenil, protegendo-os." },
+            { pergunta: "Ao navegar na internet, um adolescente de 14 anos tem o dever de...", opcoes: ["Compartilhar senhas com amigos", "Aceitar amizade de qualquer pessoa", "Respeitar os outros e não compartilhar notícias falsas", "Inventar uma idade maior para acessar qualquer site"], resposta: 2, explicacao: "Exato! A cidadania digital envolve deveres. Respeitar as pessoas online, não praticar cyberbullying e ter responsabilidade com o que se compartilha são deveres de todos." },
+            { pergunta: "Uma turma do 6º ano vai a um museu. Qual é um dever importante do grupo durante a visita?", opcoes: ["Falar alto para todos ouvirem", "Tocar em todas as obras de arte", "Seguir as regras do museu e as orientações do professor", "Correr pelas salas para ver tudo mais rápido"], resposta: 2, explicacao: "Perfeito! Ao representar a escola, os alunos têm o dever de seguir as regras do local e manter um comportamento respeitoso, valorizando o patrimônio cultural." },
+            { pergunta: "Um adolescente de 16 anos cometeu um ato infracional (um crime). De acordo com o ECA, qual é o seu direito?", opcoes: ["Ser tratado e julgado como um adulto", "Não receber nenhuma punição por ser menor de idade", "Receber medida socioeducativa e ter direito a advogado", "Ser expulso da escola e da cidade"], resposta: 2, explicacao: "Correto. O ECA prevê que adolescentes que cometem atos infracionais recebem medidas socioeducativas. Eles têm direito a um processo justo, com advogado e a oportunidade de se reeducar." },
+            { pergunta: "A 'Lei da Palmada' (Lei 13.010/2014) alterou o ECA para estabelecer o direito da criança de...", opcoes: ["Ser educada sem o uso de castigos físicos ou tratamento cruel", "Desobedecer aos pais sem consequências", "Escolher se querem ou não apanhar", "Processar os pais por qualquer 'não' que recebam"], resposta: 0, explicacao: "Exato! Esta lei reforçou o direito de serem educados sem o uso de castigo físico ou tratamento cruel, promovendo uma educação baseada no respeito." },
+            { pergunta: "O ECA prevê o direito à participação em grêmios estudantis. Ao participar, qual é o principal dever de um representante de turma?", opcoes: ["Fazer apenas o que ele quer para a turma", "Representar os interesses e as opiniões dos colegas", "Cancelar as provas e aumentar o recreio", "Criticar os professores sem apresentar soluções"], resposta: 1, explicacao: "Isso! Participar da vida escolar é um direito, mas a representação traz deveres. O principal dever é ouvir os colegas e levar suas necessidades de forma organizada e respeitosa." },
+            { pergunta: "O Art. 22 do ECA diz que aos pais incumbe o dever de sustento, guarda e educação. Qual é o dever correspondente do filho em relação a esse esforço?", opcoes: ["Apenas exigir seus direitos sem contrapartida", "Valorizar a educação e o cuidado, esforçando-se nos estudos", "Achar que tudo é obrigação e não precisa agradecer", "Não ter nenhuma responsabilidade com a vida escolar"], resposta: 1, explicacao: "Correto. Embora o ECA foque nos deveres dos pais, há uma relação de reciprocidade. O dever do filho é aproveitar as oportunidades de estudo e cuidado, demonstrando responsabilidade." }
+        ];
+
+        // --- SELETORES DE ELEMENTOS ---
+        const telaInicial = document.getElementById('tela-inicial');
+        const painelJogo = document.getElementById('painel-jogo');
+        const telaFinal = document.getElementById('tela-final');
+        const resultadoFinalContainer = document.getElementById('resultado-final-container');
+        const btnIniciar = document.getElementById('btn-iniciar');
+        const btnRevelar = document.getElementById('btn-revelar');
+        const btnProxima = document.getElementById('btn-proxima');
+        const btnReiniciar = document.getElementById('btn-reiniciar');
+        const identificadoresTimesEl = document.getElementById('identificadores-times');
+        const contadorPerguntaEl = document.getElementById('contador-pergunta');
+        const perguntaTextoEl = document.getElementById('pergunta-texto');
+        const interacaoContainer = document.getElementById('interacao-container');
+
+        // --- ESTADO DO JOGO ---
+        const NUM_TIMES = 3;
+        let nomesDosTimes = [];
+        let pontuacoes = []; // Guarda a pontuação total (acumulada)
+        let acertosPorTime = []; // Guarda o número de acertos por time para o resumo final
+        let perguntaAtualIndex;
+        let timesSelecionados = [];
+        let respostasDosTimesNaRodada = []; // Respostas dos times na rodada atual
+
+        // --- FUNÇÕES AUXILIARES DE RENDERIZAÇÃO ---
+        function criarConteudoInteracaoPadrao() {
+            return `
+                <div id="painel-registro">
+                    <p>1º: Selecione o(s) time(s).</p>
+                    <p>2º: Clique na resposta escolhida.</p>
+                    <div class="botoes-selecao-time" id="botoes-selecao-time"></div>
+                </div>
+                <div class="opcoes-grid" id="opcoes-container"></div>
+            `;
+        }
+
+        function montarIdentificadoresTimes() {
+            identificadoresTimesEl.innerHTML = '';
+            nomesDosTimes.forEach((nome, index) => {
+                const divId = document.createElement('div');
+                divId.className = 'identificador-time';
+                divId.textContent = nome;
+                divId.style.backgroundColor = `var(--time${index + 1}-bg)`;
+                identificadoresTimesEl.appendChild(divId);
+            });
+        }
+
+        // --- FLUXO DO JOGO ---
+        function iniciarJogo() {
+            nomesDosTimes = [
+                document.getElementById('time1-nome').value || "Guardiões do ECA",
+                document.getElementById('time2-nome').value || "Cidadãos do Amanhã",
+                document.getElementById('time3-nome').value || "Defensores da Lei"
+            ];
+            pontuacoes = Array(NUM_TIMES).fill(0);
+            acertosPorTime = Array(NUM_TIMES).fill(0); // Zera os acertos também
+            perguntaAtualIndex = 0;
+
+            // Transição de telas
+            telaInicial.style.display = 'none';
+            telaFinal.style.display = 'none';
+            painelJogo.style.display = 'flex';
+            
+            montarIdentificadoresTimes();
+            mostrarPergunta();
+        }
+
+        function mostrarPergunta() {
+            resetarEstadoDaRodada(); // Limpa estado e injeta o HTML padrão de interação
+            const perguntaAtual = perguntas[perguntaAtualIndex];
+
+            contadorPerguntaEl.textContent = `Pergunta ${perguntaAtualIndex + 1} / ${perguntas.length}`;
+            perguntaTextoEl.textContent = perguntaAtual.pergunta;
+            
+            // Renderiza botões de seleção de time
+            const botoesSelecaoTimeEl = document.getElementById('botoes-selecao-time');
+            nomesDosTimes.forEach((nome, index) => {
+                const button = document.createElement('button');
+                button.innerText = nome;
+                button.className = 'btn-time-selecionar';
+                button.id = `btn-selecionar-${index}`;
+                button.style.backgroundColor = `var(--time${index + 1}-bg)`;
+                button.style.borderColor = `var(--time${index + 1}-bg)`;
+                button.addEventListener('click', () => toggleSelecaoTime(index));
+                botoesSelecaoTimeEl.appendChild(button);
+            });
+
+            // Renderiza opções de resposta
+            const opcoesContainer = document.getElementById('opcoes-container');
+            perguntaAtual.opcoes.forEach((opcao, index) => {
+                const button = document.createElement('button');
+                button.innerText = opcao;
+                button.className = 'btn-opcao';
+                button.addEventListener('click', () => registrarRespostaParaTimes(index));
+                opcoesContainer.appendChild(button);
+            });
+        }
+        
+        function registrarRespostaParaTimes(opcaoIndex) {
+            if (timesSelecionados.length === 0) {
+                alert("Por favor, selecione pelo menos um time antes de clicar em uma resposta.");
+                return;
+            }
+
+            timesSelecionados.forEach(timeIndex => {
+                respostasDosTimesNaRodada[timeIndex] = opcaoIndex;
+                const btnTime = document.getElementById(`btn-selecionar-${timeIndex}`);
+                if (btnTime) { // Garante que o botão exista
+                    btnTime.disabled = true;
+                    btnTime.innerText = `${nomesDosTimes[timeIndex]} - Registrado!`;
+                }
+            });
+            
+            timesSelecionados = []; // Limpa a seleção após registrar
+            document.querySelectorAll('.btn-time-selecionar.selecionado').forEach(btn => btn.classList.remove('selecionado'));
+
+            // Se todos os times já responderam, exibe o botão de revelar
+            if (respostasDosTimesNaRodada.filter(r => r !== null).length === NUM_TIMES) {
+                btnRevelar.style.display = 'inline-block';
+            }
+        }
+
+        function revelarRespostas() {
+            btnRevelar.style.display = 'none';
+            const perguntaAtual = perguntas[perguntaAtualIndex];
+            const respostaCorreta = perguntaAtual.resposta;
+            let totalAcertosNestaRodada = 0;
+
+            // 1. CALCULAR PONTOS E ACERTOS
+            for (let i = 0; i < NUM_TIMES; i++) {
+                if (respostasDosTimesNaRodada[i] === respostaCorreta) {
+                    pontuacoes[i] += 10;
+                    acertosPorTime[i] += 1;
+                    totalAcertosNestaRodada++;
+                }
+            }
+
+            // 2. MOSTRAR FEEDBACK VISUAL NOS BOTÕES DE OPÇÃO
+            document.querySelectorAll('.btn-opcao').forEach((btn, index) => {
+                btn.disabled = true; // Desabilita todos os botões de opção
+                if (index === respostaCorreta) {
+                    btn.classList.add('correta');
+                } else if (respostasDosTimesNaRodada.includes(index)) {
+                    // Marca as opções erradas que foram escolhidas por algum time
+                    btn.classList.add('errada');
+                }
+            });
+            
+            // 3. GERAR E EXIBIR O FEEDBACK DETALHADO
+            const textoRespostaCorreta = perguntaAtual.opcoes[respostaCorreta];
+            let tituloFeedback = '', classeFeedback = '';
+            
+            if (totalAcertosNestaRodada === NUM_TIMES) {
+                tituloFeedback = 'Sensacional! Todos Acertaram!';
+                classeFeedback = 'feedback-sucesso';
+            } else if (totalAcertosNestaRodada > 0) {
+                tituloFeedback = 'Bom esforço! Vamos aprender com a resposta.';
+                classeFeedback = 'feedback-aviso';
+            } else {
+                tituloFeedback = 'Essa foi desafiadora! Ninguém acertou, vamos revisar.';
+                classeFeedback = 'feedback-erro';
+            }
+
+            interacaoContainer.innerHTML = `
+                <div id="feedback-container" class="${classeFeedback}">
+                    <h3>${tituloFeedback}</h3>
+                    <p>A resposta correta era: <strong>"${textoRespostaCorreta}"</strong>.</p>
+                    <p><strong>Por quê?</strong> ${perguntaAtual.explicacao}</p>
+                </div>
+            `;
+            
+            // 4. CONTROLAR O FLUXO PARA A PRÓXIMA PERGUNTA OU FIM DE JOGO
+            if (perguntas.length > perguntaAtualIndex + 1) {
+                btnProxima.style.display = 'inline-block';
+            } else {
+                setTimeout(mostrarTelaFinal, 5000); // Dá um tempo para ler o último feedback
+            }
+        }
+        
+        function proximaPergunta() {
+            perguntaAtualIndex++;
+            mostrarPergunta();
+        }
+
+        function mostrarTelaFinal() {
+            painelJogo.style.display = 'none';
+            telaFinal.style.display = 'flex'; // Torna a tela final visível
+            resultadoFinalContainer.innerHTML = ''; // Limpa o conteúdo anterior
+            
+            // Preparar dados para o pódio e resumo
+            const timesComDados = nomesDosTimes.map((nome, index) => ({
+                nome: nome,
+                pontuacao: pontuacoes[index],
+                cor: `var(--time${index + 1}-bg)`,
+                acertos: acertosPorTime[index] // Usamos acertosPorTime aqui
+            }));
+
+            // Ordena os times por pontuação para o pódio
+            const timesOrdenados = [...timesComDados].sort((a, b) => b.pontuacao - a.pontuacao);
+
+            // Gerar HTML do Pódio
+            let podioHTML = '<div class="podio-container">';
+            const classesPodio = ['primeiro-lugar', 'segundo-lugar', 'terceiro-lugar'];
+            const ranksPodio = ['1º Lugar', '2º Lugar', '3º Lugar'];
+            timesOrdenados.forEach((time, index) => {
+                if (index < NUM_TIMES) { // Garante que só os 3 primeiros sejam exibidos
+                    podioHTML += `
+                        <div class="podio-item ${classesPodio[index]}">
+                            <span class="podio-rank">${ranksPodio[index]}</span>
+                            <span class="podio-nome">${time.nome}</span>
+                            <span class="podio-pontos">${time.pontuacao} pts</span>
+                        </div>
+                    `;
+                }
+            });
+            podioHTML += '</div>';
+
+            // Gerar HTML do Resumo de Desempenho
+            let resumoHTML = '<h2 style="font-size: 1.8em; color: var(--cor-texto-principal); margin-top: 40px;">Desempenho Geral</h2><div class="resumo-container">';
+            // Mantém a ordem original dos times no resumo para fácil identificação
+            timesComDados.forEach((time, index) => {
+                const aproveitamento = ((time.acertos / perguntas.length) * 100).toFixed(0);
+                resumoHTML += `
+                    <div class="resumo-time" style="border-color: ${time.cor};">
+                        <h3 style="color: ${time.cor};">${time.nome}</h3>
+                        <p><strong>Pontuação Final:</strong> ${time.pontuacao}</p>
+                        <p><strong>Acertos:</strong> ${time.acertos} de ${perguntas.length}</p>
+                        <p><strong>Aproveitamento:</strong> ${aproveitamento}%</p>
+                    </div>
+                `;
+            });
+            resumoHTML += '</div>';
+
+            resultadoFinalContainer.innerHTML = podioHTML + resumoHTML;
+        }
+
+        // --- FUNÇÕES DE CONTROLE DE ESTADO ---
+        function resetarEstadoDaRodada() {
+            timesSelecionados = [];
+            respostasDosTimesNaRodada = Array(NUM_TIMES).fill(null); // Reseta as respostas da rodada
+            interacaoContainer.innerHTML = criarConteudoInteracaoPadrao(); // Restaura o HTML padrão
+            btnRevelar.style.display = 'none';
+            btnProxima.style.display = 'none';
+        }
+
+        function toggleSelecaoTime(timeIndex) {
+            const btn = document.getElementById(`btn-selecionar-${timeIndex}`);
+            if (!btn || btn.disabled) return; // Não permite selecionar times já desabilitados
+
+            const indexNoArray = timesSelecionados.indexOf(timeIndex);
+
+            if (indexNoArray > -1) {
+                timesSelecionados.splice(indexNoArray, 1);
+                btn.classList.remove('selecionado');
+            } else {
+                timesSelecionados.push(timeIndex);
+                btn.classList.add('selecionado');
+            }
+        }
+        
+        // --- EVENT LISTENERS GERAIS ---
+        btnIniciar.addEventListener('click', iniciarJogo);
+        btnRevelar.addEventListener('click', revelarRespostas);
+        btnProxima.addEventListener('click', proximaPergunta);
+        btnReiniciar.addEventListener('click', () => {
+            telaFinal.style.display = 'none';
+            telaInicial.style.display = 'flex'; // Volta para a tela inicial
+        });
+    </script>
+</body>
+</html>
