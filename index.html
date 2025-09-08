@@ -3,179 +3,141 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Portal de Jogos Educacionais</title>
+    <title>Portal Educacional - Bem-vindo!</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;700;800&display=swap');
 
         :root {
-            --cor-primaria: #4A90E2;
-            --cor-secundaria: #50E3C2;
-            --cor-terciaria: #FFA726; /* Laranja para o novo botão */
             --cor-fundo: #F4F7FA;
             --cor-texto: #333;
-            --cor-branco: #FFFFFF;
-            --sombra: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --sombra: 0 10px 40px rgba(0, 0, 0, 0.1);
+
+            /* Cores Anos Iniciais */
+            --cor-iniciais-bg: #FFF3E0;
+            --cor-iniciais-principal: #FFA726;
+
+            /* Cores Anos Finais */
+            --cor-finais-bg: #E8F0F7;
+            --cor-finais-principal: #4A90E2;
         }
 
         html, body {
             height: 100%;
             margin: 0;
-            overflow: hidden; /* Remove a barra de rolagem */
+            overflow: hidden;
             font-family: 'Poppins', sans-serif;
+            background-color: var(--cor-fundo);
         }
 
-        body {
+        .main-container {
             display: flex;
+            height: 100%;
+            width: 100%;
             align-items: center;
             justify-content: center;
-            background: linear-gradient(135deg, var(--cor-fundo) 0%, #d8e6f3 100%);
-        }
-
-        .portal-container {
             text-align: center;
-            padding: 40px;
+            padding: 20px;
+            box-sizing: border-box;
         }
 
-        .portal-header h1 {
-            font-size: 3.5em;
+        .selection-container {
+            width: 100%;
+            max-width: 1200px;
+        }
+
+        header h1 {
+            font-size: clamp(2em, 5vw, 3.5em);
             font-weight: 800;
-            color: var(--cor-primaria);
-            margin-bottom: 10px;
+            color: var(--cor-texto);
+            margin-bottom: 50px;
             animation: fadeInDown 1s ease-out;
         }
 
-        .portal-header p {
-            font-size: 1.2em;
-            color: #666;
-            margin-bottom: 50px;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        .games-grid {
+        .level-options {
             display: flex;
             justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap; /* Permite que os jogos quebrem a linha em telas menores */
+            gap: 50px;
+            flex-wrap: wrap;
         }
 
-        .game-card {
-            background: var(--cor-branco);
-            width: 320px;
-            padding: 30px;
-            border-radius: 20px;
-            box-shadow: var(--sombra);
+        .level-card {
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            width: 350px;
+            height: 400px;
             text-decoration: none;
             color: var(--cor-texto);
+            border-radius: 25px;
+            box-shadow: var(--sombra);
             transition: transform 0.3s ease, box-shadow 0.3s ease;
-            animation: popIn 1.2s ease-out forwards;
+            padding: 30px;
+            box-sizing: border-box;
+        }
+        
+        #card-iniciais {
+            background-color: var(--cor-iniciais-bg);
+            border-bottom: 8px solid var(--cor-iniciais-principal);
+            animation: popIn 1s ease-out 0.2s forwards;
             opacity: 0;
         }
 
-        /* Animação com delay */
-        .game-card:nth-child(1) { animation-delay: 0.2s; }
-        .game-card:nth-child(2) { animation-delay: 0.4s; }
-        .game-card:nth-child(3) { animation-delay: 0.6s; }
-        .game-card:nth-child(4) { animation-delay: 0.8s; } /* Delay para o novo botão */
-
-
-        .game-card:hover {
-            transform: translateY(-15px) scale(1.03);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+        #card-finais {
+            background-color: var(--cor-finais-bg);
+            border-bottom: 8px solid var(--cor-finais-principal);
+            animation: popIn 1s ease-out 0.4s forwards;
+            opacity: 0;
         }
 
-        .game-card .icon {
-            font-size: 4em;
-            line-height: 1;
+        .level-card:hover {
+            transform: translateY(-15px);
+            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.15);
         }
 
-        .game-card h2 {
-            font-size: 1.8em;
-            font-weight: 700;
-            margin: 15px 0;
-            color: var(--cor-primaria);
+        .level-card .icon {
+            font-size: 6em;
+            margin-bottom: 20px;
         }
 
-        .game-card p {
-            font-size: 0.9em;
-            color: #555;
-            margin-bottom: 25px;
-            min-height: 55px;
-        }
-
-        .play-button {
-            display: inline-block;
-            background-color: var(--cor-secundaria);
-            color: var(--cor-branco);
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
+        .level-card h2 {
+            font-size: 2.2em;
+            font-weight: 800;
+            margin: 0;
         }
         
-        .game-card.anos-iniciais .play-button {
-            background-color: var(--cor-terciaria);
+        #card-iniciais h2 { color: var(--cor-iniciais-principal); }
+        #card-finais h2 { color: var(--cor-finais-principal); }
+
+        .level-card p {
+            font-size: 1.1em;
+            color: #666;
+            margin-top: 10px;
         }
         
-        .game-card:hover .play-button {
-            filter: brightness(1.1);
-        }
-        
-        /* Animações */
         @keyframes fadeInDown { from { opacity: 0; transform: translateY(-30px); } to { opacity: 1; transform: translateY(0); } }
-        @keyframes fadeInUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
         @keyframes popIn { from { opacity: 0; transform: scale(0.8); } to { opacity: 1; transform: scale(1); } }
-
-        @media (max-width: 1400px) {
-             body { overflow-y: auto; height: auto; padding: 20px 0;} 
-        }
-
-        @media (max-width: 768px) {
-            .portal-header h1 { font-size: 2.5em; }
-            .portal-header p { font-size: 1em; }
-        }
-
     </style>
 </head>
 <body>
-
-    <div class="portal-container">
-        <header class="portal-header">
-            <h1>Portal de Jogos Educacionais</h1>
-            <p>Escolha uma atividade e comece a aprender de forma divertida!</p>
-        </header>
-
-        <div class="games-grid">
-            
-            <a href="desafio-eca.html" class="game-card">
-                <div class="icon">🛡️</div>
-                <h2>Desafio ECA</h2>
-                <p>Teste seus conhecimentos sobre os direitos e deveres das crianças e adolescentes.</p>
-                <div class="play-button">Anos Finais</div>
-            </a>
-            
-            <a href="https://oficina-de-rimas-emefrincao.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
-                <div class="icon">✒️</div>
-                <h2>Oficina de Poemas</h2>
-                <p>Crie poemas incríveis com um assistente de IA e solte sua criatividade literária.</p>
-                <div class="play-button">Anos Finais</div>
-            </a>
-            
-            <a href="https://oficinadenoticia-emefrincao.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
-                <div class="icon">📰</div>
-                <h2>Oficina de Notícias</h2>
-                <p>Aprenda a criar uma notícia do zero, desde o título até a imagem da reportagem.</p>
-                <div class="play-button">Anos Finais</div>
-            </a>
-            
-            <a href="anos-iniciais.html" class="game-card anos-iniciais">
-                <div class="icon">🧩</div>
-                <h2>Anos Iniciais</h2>
-                <p>Jogos e desafios de matemática e lógica para os primeiros anos do fundamental.</p>
-                <div class="play-button">Acessar Jogos</div>
-            </a>
-
+    <div class="main-container">
+        <div class="selection-container">
+            <header>
+                <h1>Selecione o seu nível de ensino</h1>
+            </header>
+            <div class="level-options">
+                <a href="anos-iniciais.html" class="level-card" id="card-iniciais">
+                    <div class="icon">🧩</div>
+                    <h2>Anos Iniciais</h2>
+                    <p>Jogos de matemática e lógica para aprender brincando.</p>
+                </a>
+                <a href="anos-finais.html" class="level-card" id="card-finais">
+                    <div class="icon">🚀</div>
+                    <h2>Anos Finais</h2>
+                    <p>Desafios de cidadania, português e criatividade.</p>
+                </a>
+            </div>
         </div>
     </div>
-
 </body>
 </html>
