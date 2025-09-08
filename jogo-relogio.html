@@ -3,222 +3,285 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A Oficina do Relojoeiro - Jogo Moderno</title>
+    <title>A Oficina do Relojoeiro - Jogo Steampunk</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Crete+Round&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Slab:wght@400;700&display=swap');
 
-        :root {
-            --cor-primaria: #FFA726; /* Laranja principal */
-            --cor-secundaria: #FF7043; /* Laranja mais forte */
-            --cor-fundo: #FFF3E0; /* Fundo creme */
-            --cor-texto: #5D4037; /* Marrom escuro */
-            --cor-branco: #FFFFFF;
-            --cor-sucesso: #2E7D32;
-            --cor-erro: #D32F2F;
-            --sombra: 0 10px 30px rgba(0, 0, 0, 0.1);
-        }
-
-        html, body {
-            height: 100%;
-            margin: 0;
-            overflow: hidden; /* Evita a barra de rolagem */
-            font-family: 'Poppins', sans-serif;
+        body {
+            font-family: 'Roboto Slab', serif;
+            background-color: #2e2e2e;
+            color: #e0e0e0;
             display: flex;
-            align-items: center;
             justify-content: center;
-            background-color: var(--cor-fundo);
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            position: relative;
         }
 
-        .back-button {
+        .background-gears {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+            overflow: hidden;
+        }
+
+        .gear {
             position: absolute;
-            top: 30px;
-            left: 30px;
-            font-size: 1.2em;
-            color: var(--cor-primaria);
-            text-decoration: none;
-            font-weight: 700;
-            transition: transform 0.3s ease;
-            z-index: 100;
+            width: 200px;
+            height: 200px;
+            opacity: 0.15;
+            animation: spin linear infinite;
         }
 
-        .back-button:hover {
-            transform: scale(1.1);
+        #gear1 { top: -50px; left: -80px; width: 250px; height: 250px; animation-duration: 40s; }
+        #gear2 { bottom: -100px; right: -100px; width: 300px; height: 300px; animation-duration: 35s; animation-direction: reverse; }
+        #gear3 { top: 10%; right: -50px; width: 150px; height: 150px; animation-duration: 25s; }
+        #gear4 { bottom: 5%; left: -70px; width: 220px; height: 220px; animation-duration: 30s; animation-direction: reverse; }
+
+        @keyframes spin {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .game-container {
+            background-color: rgba(74, 58, 46, 0.95);
+            border: 5px solid #8b4513;
+            border-radius: 20px;
+            box-shadow: 0 0 30px rgba(0, 0, 0, 0.8);
+            padding: 40px;
+            text-align: center;
+            width: 90%;
+            max-width: 1050px; /* Aumentado para 5 relógios */
+            position: relative;
+            z-index: 1;
+        }
+
+        h1 {
+            font-family: 'Crete Round', serif;
+            color: #ffaa00;
+            font-size: 3em;
+            text-shadow: 3px 3px 5px rgba(0,0,0,0.5);
+            margin-bottom: 10px;
         }
         
-        .game-container {
-            width: 90%;
-            max-width: 1000px;
-            height: 90vh;
-            max-height: 700px;
-            background: var(--cor-branco);
-            border-radius: 20px;
-            box-shadow: var(--sombra);
-            display: flex;
-            flex-direction: column;
-            justify-content: space-around;
-            align-items: center;
-            padding: 30px;
-            text-align: center;
-            animation: fadeIn 0.8s ease-out;
+        p {
+            font-size: 1.1em;
+            color: #c0c0c0;
+            margin-bottom: 20px;
         }
 
         #instruction {
-            font-size: clamp(1.2em, 4vw, 2em); /* Tamanho de fonte responsivo */
-            font-weight: 700;
-            color: var(--cor-primaria);
+            font-size: 2em;
+            font-weight: bold;
+            color: #e6b800;
+            text-shadow: 2px 2px 3px rgba(0,0,0,0.4);
+            margin: 20px 0 30px 0;
         }
-        
+
         #clocks-container {
             display: flex;
-            flex-wrap: wrap;
             justify-content: center;
             align-items: center;
-            gap: 20px;
-            width: 100%;
+            margin-top: 30px;
+            flex-wrap: wrap;
+            gap: 25px;
         }
 
         .clock {
-            width: 150px;
-            height: 150px;
-            border: 5px solid var(--cor-secundaria);
+            width: 160px;
+            height: 160px;
+            background-color: #f5f5dc;
+            border: 8px solid #8b4513;
             border-radius: 50%;
             position: relative;
-            background-color: #fffaf0;
             cursor: pointer;
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            box-shadow: 0 0 15px rgba(0,0,0,0.5), inset 0 0 10px rgba(0,0,0,0.3);
+            transition: transform 0.2s, box-shadow 0.2s;
         }
         
         .clock:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 25px rgba(255, 167, 38, 0.5);
+            transform: scale(1.08);
+            box-shadow: 0 0 25px rgba(255,170,0,0.6), inset 0 0 15px rgba(0,0,0,0.5);
         }
-
-        .hour-hand, .minute-hand {
-            position: absolute;
-            background-color: var(--cor-texto);
-            transform-origin: bottom center;
-            left: 50%;
-            margin-left: -2px;
-            border-radius: 2px;
-        }
-
-        .hour-hand {
-            width: 4px;
-            height: 40px;
-            top: 35px;
-        }
-
-        .minute-hand {
-            width: 4px;
-            height: 55px;
-            top: 20px;
-        }
-
-        .center-dot {
-            width: 10px;
-            height: 10px;
-            background-color: var(--cor-texto);
+        
+        .clock-center {
+            width: 14px;
+            height: 14px;
+            background-color: #4a3a2e;
+            border: 2px solid #ffaa00;
             border-radius: 50%;
             position: absolute;
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
+            z-index: 10;
         }
 
-        #feedback {
-            font-size: 1.5em;
-            font-weight: 600;
-            min-height: 1.5em;
+        .hour-hand, .minute-hand {
+            position: absolute;
+            left: calc(50% - 4px); /* Centraliza a base do ponteiro */
+            bottom: 50%;
+            transform-origin: center bottom;
+        }
+
+        .hour-hand {
+            width: 8px;
+            height: 50px;
+            background: #6B4F4B; /* Cor de bronze mais escuro */
+            border-radius: 4px 4px 0 0;
+            z-index: 8;
+        }
+
+        .minute-hand {
+            left: calc(50% - 2px);
+            width: 4px;
+            height: 65px;
+            background: #4a3a2e;
+            border-radius: 2px 2px 0 0;
+            z-index: 9;
+        }
+
+        .number {
+            position: absolute;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #4a3a2e;
+            transform: translate(-50%, -50%);
         }
         
-        #nextButton {
-            background-color: var(--cor-primaria);
-            color: var(--cor-branco);
-            border: none;
-            padding: 15px 40px;
-            border-radius: 50px;
-            font-size: 1.2em;
-            font-weight: 700;
+        #feedback {
+            font-size: 1.6em;
+            font-weight: bold;
+            margin-top: 30px;
+            height: 35px;
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.3);
+        }
+
+        /* --- NOVO: Botão Steampunk Aprimorado --- */
+        #next-button {
+            font-family: 'Crete Round', serif;
+            background: linear-gradient(145deg, #A98778, #6B4F4B); /* Gradiente de bronze */
+            color: #fff;
+            border: 2px solid #4a3a2e;
+            padding: 15px 35px;
+            font-size: 1.3em;
+            letter-spacing: 1px;
+            border-radius: 8px;
             cursor: pointer;
-            transition: background-color 0.3s ease, transform 0.2s ease;
-            display: none; /* Inicia oculto */
+            margin-top: 20px;
+            display: none;
+            position: relative;
+            transition: all 0.2s ease;
+            box-shadow: inset 0 0 5px rgba(0,0,0,0.5), 
+                        3px 3px 5px rgba(0,0,0,0.4);
+            text-shadow: 1px 1px 2px rgba(0,0,0,0.5);
         }
 
-        #nextButton:hover {
-            background-color: var(--cor-secundaria);
-            transform: translateY(-3px);
+        #next-button:hover {
+            background: linear-gradient(145deg, #b99889, #7c5f5a);
         }
 
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.95); }
-            to { opacity: 1; transform: scale(1); }
+        #next-button:active {
+            transform: translateY(2px);
+            box-shadow: inset 0 0 8px rgba(0,0,0,0.6), 
+                        1px 1px 3px rgba(0,0,0,0.4);
         }
-
-        @media (max-width: 768px) {
-            body { overflow-y: auto; height: auto; }
-            .game-container { height: auto; padding: 20px; }
-            .clock { width: 120px; height: 120px; }
-            .hour-hand { height: 30px; top: 30px; }
-            .minute-hand { height: 45px; top: 15px; }
-        }
-
+        /* --- FIM DO BOTÃO --- */
     </style>
 </head>
 <body>
 
-    <a href="anos-iniciais.html" class="back-button" title="Voltar para Jogos dos Anos Iniciais">‹ Voltar</a>
+    <div class="background-gears">
+        <img class="gear" id="gear1" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,4 A46,46 0 0,1 50,96 A46,46 0 0,1 50,4 M50,16 A34,34 0 0,0 50,84 A34,34 0 0,0 50,16' fill='%23ffaa00'/%3E%3Cpath d='M50,20 A30,30 0 0,1 50,80 A30,30 0 0,1 50,20' fill='%232e2e2e'/%3E%3Cg transform='translate(50,50)'%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(0)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(30)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(60)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(90)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(120)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(150)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(180)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(210)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(240)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(270)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(300)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(330)'/%3E%3C/g%3E%3C/svg%3E" alt="gear">
+        <img class="gear" id="gear2" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,4 A46,46 0 0,1 50,96 A46,46 0 0,1 50,4 M50,16 A34,34 0 0,0 50,84 A34,34 0 0,0 50,16' fill='%23ffaa00'/%3E%3Cpath d='M50,20 A30,30 0 0,1 50,80 A30,30 0 0,1 50,20' fill='%232e2e2e'/%3E%3Cg transform='translate(50,50)'%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(0)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(30)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(60)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(90)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(120)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(150)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(180)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(210)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(240)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(270)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(300)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(330)'/%3E%3C/g%3E%3C/svg%3E" alt="gear">
+        <img class="gear" id="gear3" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,4 A46,46 0 0,1 50,96 A46,46 0 0,1 50,4 M50,16 A34,34 0 0,0 50,84 A34,34 0 0,0 50,16' fill='%23ffaa00'/%3E%3Cpath d='M50,20 A30,30 0 0,1 50,80 A30,30 0 0,1 50,20' fill='%232e2e2e'/%3E%3Cg transform='translate(50,50)'%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(0)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(30)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(60)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(90)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(120)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(150)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(180)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(210)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(240)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(270)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(300)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(330)'/%3E%3C/g%3E%3C/svg%3E" alt="gear">
+        <img class="gear" id="gear4" src="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Cpath d='M50,4 A46,46 0 0,1 50,96 A46,46 0 0,1 50,4 M50,16 A34,34 0 0,0 50,84 A34,34 0 0,0 50,16' fill='%23ffaa00'/%3E%3Cpath d='M50,20 A30,30 0 0,1 50,80 A30,30 0 0,1 50,20' fill='%232e2e2e'/%3E%3Cg transform='translate(50,50)'%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(0)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(30)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(60)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(90)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(120)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(150)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(180)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(210)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(240)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(270)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(300)'/%3E%3Cpath d='M-5,-42 H5 V-50 H-5 V-42' fill='%23ffaa00' transform='rotate(330)'/%3E%3C/g%3E%3C/svg%3E" alt="gear">
+    </div>
 
     <div class="game-container">
-        <h1 id="instruction">Encontre o relógio que marca X:00</h1>
+        <h1>A Oficina do Relojoeiro ⚙️</h1>
+        <p>Inspecione os cronômetros e selecione o mecanismo com o horário correto!</p>
+        
+        <div id="instruction"></div>
+        
         <div id="clocks-container"></div>
+
         <div id="feedback"></div>
-        <button id="nextButton">Próxima Rodada</button>
+        
+        <button id="next-button">Próxima Calibragem</button>
     </div>
 
     <script>
         const instructionEl = document.getElementById('instruction');
         const clocksContainerEl = document.getElementById('clocks-container');
         const feedbackEl = document.getElementById('feedback');
-        const nextButtonEl = document.getElementById('nextButton');
-        
-        let correctHour;
+        const nextButtonEl = document.getElementById('next-button');
+
+        let correctHour = 0;
 
         function getRandomHour() {
             return Math.floor(Math.random() * 12) + 1;
         }
 
         function createClock(hour) {
-            const clock = document.createElement('div');
-            clock.className = 'clock';
+            const clockDiv = document.createElement('div');
+            clockDiv.className = 'clock';
+            clockDiv.dataset.hour = hour; 
+            
+            const clockSize = 160;
+            const radius = clockSize / 2 - 20;
+            for (let i = 1; i <= 12; i++) {
+                const numberDiv = document.createElement('div');
+                numberDiv.className = 'number';
+                numberDiv.textContent = i;
+                
+                const angle = (i * 30 - 90) * (Math.PI / 180); 
+                const x = (clockSize / 2) + radius * Math.cos(angle);
+                const y = (clockSize / 2) + radius * Math.sin(angle);
+                
+                numberDiv.style.left = `${x}px`;
+                numberDiv.style.top = `${y}px`;
+                clockDiv.appendChild(numberDiv);
+            }
+
+            const centerDot = document.createElement('div');
+            centerDot.className = 'clock-center';
 
             const hourHand = document.createElement('div');
             hourHand.className = 'hour-hand';
-            hourHand.style.transform = `rotate(${hour * 30}deg)`; // 360/12 = 30
+            const hourRotation = hour * 30;
+            hourHand.style.transform = `rotate(${hourRotation}deg)`;
 
             const minuteHand = document.createElement('div');
             minuteHand.className = 'minute-hand';
-            minuteHand.style.transform = 'rotate(0deg)'; // Sempre em 00
+            minuteHand.style.transform = 'rotate(0deg)';
 
-            const centerDot = document.createElement('div');
-            centerDot.className = 'center-dot';
+            clockDiv.appendChild(hourHand);
+            clockDiv.appendChild(minuteHand);
+            clockDiv.appendChild(centerDot);
+            
+            clockDiv.addEventListener('click', () => checkAnswer(hour));
 
-            clock.appendChild(hourHand);
-            clock.appendChild(minuteHand);
-            clock.appendChild(centerDot);
-
-            clock.addEventListener('click', () => checkAnswer(hour, clock));
-            return clock;
+            return clockDiv;
         }
 
         function newRound() {
             feedbackEl.textContent = '';
+            feedbackEl.style.color = '';
             clocksContainerEl.innerHTML = '';
             nextButtonEl.style.display = 'none';
 
             correctHour = getRandomHour();
             
             let options = [correctHour];
-            while (options.length < 5) { // 5 relógios por rodada
+            // Agora gera 5 opções no total
+            while (options.length < 5) {
                 let randomOption = getRandomHour();
                 if (!options.includes(randomOption)) {
                     options.push(randomOption);
@@ -235,26 +298,22 @@
             });
         }
 
-        function checkAnswer(selectedHour, clockElement) {
-            // Evita múltiplos cliques após uma resposta
+        function checkAnswer(selectedHour) {
             if (feedbackEl.textContent !== '') return; 
 
             if (selectedHour === correctHour) {
                 feedbackEl.textContent = 'Mecanismo Perfeito! Acertou! 🎉';
-                feedbackEl.style.color = 'var(--cor-sucesso)';
-                clockElement.style.borderColor = 'var(--cor-sucesso)';
+                feedbackEl.style.color = '#76ff03';
                 nextButtonEl.style.display = 'block';
             } else {
                 feedbackEl.textContent = 'Engrenagem emperrada! Tente de novo! 🤔';
-                feedbackEl.style.color = 'var(--cor-erro)';
-                clockElement.style.borderColor = 'var(--cor-erro)';
+                feedbackEl.style.color = '#ff1744';
             }
         }
 
         nextButtonEl.addEventListener('click', newRound);
-
-        // Inicia o jogo
         newRound();
     </script>
+
 </body>
 </html>
