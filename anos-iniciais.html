@@ -38,57 +38,81 @@
             color: var(--cor-primaria);
             text-decoration: none;
             font-weight: 700;
-            transition: transform 0.3s ease;
-            z-index: 100;
+            transition: transform 0.3s;
         }
-
+        
         .back-button:hover {
             transform: scale(1.1);
         }
 
         .portal-container {
+            width: 90%;
+            max-width: 1200px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .portal-header {
             text-align: center;
-            padding: 40px;
+            margin-bottom: 40px;
+            animation: fadeInDown 1s ease-out;
+        }
+
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .portal-header h1 {
             font-size: 3.5em;
             font-weight: 800;
             color: var(--cor-primaria);
+            margin: 0;
         }
 
         .portal-header p {
             font-size: 1.2em;
-            color: #666;
-            margin-bottom: 50px;
+            color: var(--cor-secundaria);
+            margin: 5px 0 0;
+        }
+        
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 30px;
+            width: 100%;
+            padding: 20px;
+            box-sizing: border-box;
+            animation: fadeInUp 1s ease-out;
         }
 
-        .games-grid {
-            display: flex;
-            justify-content: center;
-            gap: 40px;
-            flex-wrap: wrap;
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .game-card {
-            background: var(--cor-branco);
-            width: 320px;
-            padding: 30px;
+            background-color: var(--cor-branco);
             border-radius: 20px;
+            padding: 30px;
+            text-align: center;
             box-shadow: var(--sombra);
             text-decoration: none;
             color: var(--cor-texto);
-            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            transition: transform 0.3s, box-shadow 0.3s;
         }
-
+        
         .game-card:hover {
-            transform: translateY(-15px) scale(1.03);
+            transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
-        .game-card .icon { font-size: 4em; line-height: 1; }
-        .game-card h2 { font-size: 1.8em; font-weight: 700; margin: 15px 0; color: var(--cor-primaria); }
-        .game-card p { font-size: 0.9em; color: #555; margin-bottom: 25px; min-height: 55px; }
+        .game-card .icon { font-size: 4em; line-height: 1; margin-bottom: 15px; }
+        .game-card h2 { font-size: 1.5em; margin: 0 0 10px; }
+        .game-card p { font-size: 0.9em; line-height: 1.6; color: #666; margin-bottom: 25px; min-height: 55px; }
         
         .play-button { display: inline-block; background-color: var(--cor-secundaria); color: var(--cor-branco); padding: 12px 30px; border-radius: 50px; font-weight: 600; }
         .game-card:hover .play-button { background-color: #F4511E; }
@@ -101,21 +125,30 @@
     <div class="portal-container">
         <header class="portal-header">
             <h1>Jogos dos Anos Iniciais</h1>
-            <p>Atividades de matemática e raciocínio para aprender brincando!</p>
+            <p>Atividades de matemática e raciocínio para aprender a brincar!</p>
         </header>
         <div class="games-grid">
             <a href="jogo-relogio.html" class="game-card">
                 <div class="icon">🕰️</div>
                 <h2>A Oficina do Relojoeiro</h2>
-                <p>Aprenda a ver as horas em relógios analógicos em um desafio com tema steampunk.</p>
+                <p>Aprenda a ver as horas em relógios analógicos num desafio com tema steampunk.</p>
                 <div class="play-button">Jogar Agora</div>
             </a>
+            
             <a href="jogo-regua.html" class="game-card">
                 <div class="icon">📏</div>
-                <h2>Laboratório de Medidas</h2>
-                <p>Use uma régua virtual para descobrir o comprimento de objetos misteriosos.</p>
+                <h2>A Medida Certa</h2>
+                <p>Use a sua régua para medir objetos e resolver quebra-cabeças de precisão.</p>
                 <div class="play-button">Jogar Agora</div>
             </a>
+            
+            <a href="https://williamnoal.github.io/narrativas/" target="_blank" class="game-card">
+                <div class="icon">📚</div>
+                <h2>Fábrica de Narrativas</h2>
+                <p>Crie as suas próprias histórias interativas! Escolha os caminhos e veja a sua aventura a desdobrar-se.</p>
+                <div class="play-button">Jogar Agora</div>
+            </a>
+            
         </div>
     </div>
 </body>
