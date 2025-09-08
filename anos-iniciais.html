@@ -8,9 +8,9 @@
         @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700;800&display=swap');
 
         :root {
-            --cor-primaria: #FFA726; /* Laranja como cor principal desta seção */
-            --cor-secundaria: #FF7043; /* Laranja mais forte para detalhes */
-            --cor-fundo: #FFF3E0; /* Fundo em tom creme claro */
+            --cor-primaria: #FFA726;
+            --cor-secundaria: #FF7043;
+            --cor-fundo: #FFF3E0;
             --cor-texto: #333;
             --cor-branco: #FFFFFF;
             --sombra: 0 10px 30px rgba(0, 0, 0, 0.1);
@@ -39,6 +39,7 @@
             text-decoration: none;
             font-weight: 700;
             transition: transform 0.3s ease;
+            z-index: 100;
         }
 
         .back-button:hover {
@@ -54,7 +55,6 @@
             font-size: 3.5em;
             font-weight: 800;
             color: var(--cor-primaria);
-            margin-bottom: 10px;
         }
 
         .portal-header p {
@@ -86,75 +86,37 @@
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
-        .game-card .icon {
-            font-size: 4em;
-            line-height: 1;
-        }
+        .game-card .icon { font-size: 4em; line-height: 1; }
+        .game-card h2 { font-size: 1.8em; font-weight: 700; margin: 15px 0; color: var(--cor-primaria); }
+        .game-card p { font-size: 0.9em; color: #555; margin-bottom: 25px; min-height: 55px; }
+        
+        .play-button { display: inline-block; background-color: var(--cor-secundaria); color: var(--cor-branco); padding: 12px 30px; border-radius: 50px; font-weight: 600; }
+        .game-card:hover .play-button { background-color: #F4511E; }
 
-        .game-card h2 {
-            font-size: 1.8em;
-            font-weight: 700;
-            margin: 15px 0;
-            color: var(--cor-primaria);
-        }
-
-        .game-card p {
-            font-size: 0.9em;
-            color: #555;
-            margin-bottom: 25px;
-            min-height: 55px;
-        }
-
-        .play-button {
-            display: inline-block;
-            background-color: var(--cor-secundaria);
-            color: var(--cor-branco);
-            padding: 12px 30px;
-            border-radius: 50px;
-            font-weight: 600;
-            transition: background-color 0.3s ease;
-        }
-
-        .game-card:hover .play-button {
-            background-color: #F4511E;
-        }
-
-        @media (max-width: 768px) {
-            body { overflow-y: auto; }
-            .portal-header h1 { font-size: 2.5em; }
-            .portal-header p { font-size: 1em; }
-        }
-
+        @media (max-width: 768px) { body { overflow-y: auto; } .portal-header h1 { font-size: 2.5em; } .portal-header p { font-size: 1em; } }
     </style>
 </head>
 <body>
-
     <a href="index.html" class="back-button" title="Voltar ao Portal Principal">‹ Voltar</a>
-
     <div class="portal-container">
         <header class="portal-header">
             <h1>Jogos dos Anos Iniciais</h1>
             <p>Atividades de matemática e raciocínio para aprender brincando!</p>
         </header>
-
         <div class="games-grid">
-            
             <a href="jogo-relogio.html" class="game-card">
                 <div class="icon">🕰️</div>
                 <h2>A Oficina do Relojoeiro</h2>
                 <p>Aprenda a ver as horas em relógios analógicos em um desafio com tema steampunk.</p>
                 <div class="play-button">Jogar Agora</div>
             </a>
-
             <a href="jogo-regua.html" class="game-card">
                 <div class="icon">📏</div>
                 <h2>Laboratório de Medidas</h2>
                 <p>Use uma régua virtual para descobrir o comprimento de objetos misteriosos.</p>
                 <div class="play-button">Jogar Agora</div>
             </a>
-
         </div>
     </div>
-
 </body>
 </html>
