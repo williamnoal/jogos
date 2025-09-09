@@ -1,0 +1,333 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projeto Civitas: Decifrando Direitos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;700&family=JetBrains+Mono:wght@700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --glass-bg: rgba(255, 255, 255, 0.45);
+            --blur-effect: backdrop-filter: blur(12px);
+            --border-color: rgba(255, 255, 255, 0.7);
+            --primary-text: #1a202c;
+            --secondary-text: #4a5568;
+            --accent-blue: #3b82f6;
+            --accent-green: #10b981;
+            --accent-purple: #8b5cf6;
+            --accent-red: #ef4444;
+            --panel-padding: 35px;
+        }
+
+        * { box-sizing: border-box; }
+
+        html, body {
+            margin: 0;
+            padding: 0;
+            width: 100vw;
+            height: 100vh;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background-image: linear-gradient(135deg, #a8c0ff 0%, #fbc2eb 100%);
+            /* Técnica de centralização definitiva */
+            display: grid;
+            place-items: center;
+        }
+        
+        /* Ambos os containers principais são colocados na mesma célula do grid */
+        #start-screen, #game-container {
+            grid-area: 1 / 1;
+        }
+
+        #start-screen {
+            text-align: center; color: white; transition: opacity 0.5s ease-out, visibility 0.5s;
+        }
+        #start-screen h1 {
+            font-family: 'JetBrains Mono', monospace; font-size: 3.5em; text-shadow: 0 4px 15px rgba(0,0,0,0.2);
+        }
+        #start-screen p {
+            font-size: 1.2em; max-width: 500px; margin-bottom: 40px; text-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        #start-btn {
+            padding: 20px 40px; font-size: 1.5em; font-family: 'JetBrains Mono';
+            color: var(--primary-text); background: rgba(255,255,255,0.8);
+            border: 1px solid white; border-radius: 15px; cursor: pointer; transition: all 0.3s;
+        }
+        #start-btn:hover { transform: scale(1.05); box-shadow: 0 10px 30px rgba(0,0,0,0.2); background: white; }
+        
+        #game-container {
+            width: 95%; max-width: 1400px; height: 95vh; max-height: 850px;
+            background: var(--glass-bg);
+            -webkit-backdrop-filter: var(--blur-effect); backdrop-filter: var(--blur-effect);
+            border-radius: 24px; border: 1px solid var(--border-color);
+            box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.2);
+            display: flex; flex-direction: column;
+            opacity: 0; transform: scale(0.95); transition: opacity 0.8s ease-out, transform 0.8s ease-out;
+        }
+
+        header {
+            padding: 20px var(--panel-padding); border-bottom: 1px solid var(--border-color);
+            display: flex; justify-content: space-between; align-items: center; flex-shrink: 0;
+        }
+        .metrics-container { display: flex; gap: 30px; }
+        .metric { display: flex; align-items: center; gap: 10px; position: relative; }
+        .metric-icon { font-size: 1.5em; }
+        .progress-bar-container { width: 150px; height: 8px; background-color: rgba(0,0,0,0.1); border-radius: 4px; }
+        .progress-bar { height: 100%; border-radius: 4px; transition: width 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+        #rights-bar { background: var(--accent-blue); }
+        #duties-bar { background: var(--accent-purple); }
+        #community-bar { background: var(--accent-green); }
+
+        .tooltip {
+            position: absolute; bottom: 125%; left: 50%; transform: translateX(-50%);
+            background-color: var(--primary-text); color: white;
+            padding: 5px 10px; border-radius: 6px; font-size: 0.8em; font-weight: 500;
+            white-space: nowrap; opacity: 0; visibility: hidden; transition: opacity 0.2s, visibility 0.2s; z-index: 10;
+        }
+        .metric:hover .tooltip { opacity: 1; visibility: visible; }
+
+        main {
+            display: grid; grid-template-columns: 58% 42%; flex-grow: 1; overflow: hidden;
+        }
+        
+        .panel-title { font-family: 'JetBrains Mono', monospace; color: var(--primary-text); margin: 0 0 20px 0; font-size: 1.4em; }
+
+        #case-file-panel {
+            padding: var(--panel-padding); border-right: 1px solid var(--border-color);
+            display: flex; flex-direction: column; overflow-y: auto;
+        }
+        #visual-panel {
+            width: 100%; height: 50%; flex-shrink: 0;
+            background-size: cover; background-position: center;
+            border-radius: 16px; margin-bottom: var(--panel-padding);
+            transition: background-image 0.7s ease-in-out;
+        }
+        #dossier-panel p { color: var(--secondary-text); line-height: 1.8; font-size: 1.05em; margin-top: 0; }
+        .eca-reference { background: rgba(255,255,255,0.5); border-left: 4px solid var(--accent-blue); padding: 15px; border-radius: 8px; margin-top: 20px; }
+
+        #action-panel {
+            padding: var(--panel-padding); display: flex; flex-direction: column; overflow-y: auto;
+        }
+        #choices-container { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
+        .choice-btn {
+            background-color: var(--glass-bg); border: 1px solid var(--border-color);
+            border-radius: 12px; padding: 20px; width: 100%;
+            font-size: 1em; text-align: left; font-weight: 500;
+            cursor: pointer; transition: all 0.2s ease;
+            display: flex; align-items: center; gap: 15px;
+        }
+        .choice-btn:hover { border-color: var(--accent-blue); background-color: rgba(255,255,255,0.8); transform: translateY(-3px); }
+        .choice-icon { font-size: 1.5em; }
+        
+        #analysis-container { opacity: 0; transform: translateY(10px); transition: opacity 0.5s ease-out, transform 0.5s ease-out; }
+        #analysis-container h3 { margin: 20px 0; }
+        .analysis-item { display: flex; align-items: center; gap: 10px; margin-bottom: 10px; font-size: 0.9em; }
+        .impact-icon { font-weight: bold; font-size: 1.2em; }
+        .impact-icon.positive { color: var(--accent-green); }
+        .impact-icon.negative { color: var(--accent-red); }
+        .impact-icon.neutral { color: var(--secondary-text); }
+
+        #next-case-btn {
+            background-color: var(--accent-purple); color: white; border: none;
+            padding: 20px; font-size: 1.1em; font-weight: bold; border-radius: 12px;
+            cursor: pointer; margin-top: auto; transition: background-color 0.2s; flex-shrink: 0;
+        }
+        #next-case-btn:hover { background-color: #7c4dff; }
+    </style>
+</head>
+<body>
+
+<div id="start-screen">
+    <h1>Projeto Civitas</h1>
+    <p>Sua missão é analisar casos complexos e tomar decisões que irão moldar o futuro. Decifre os direitos, equilibre os deveres e entenda seu impacto na comunidade.</p>
+    <button id="start-btn" onclick="initializeGame()">Iniciar Projeto</button>
+</div>
+
+<div id="game-container" style="display:none;">
+    <header>
+        <div style="font-family: 'JetBrains Mono'; font-size: 1.5em;">PROJETO CIVITAS</div>
+        <div class="metrics-container">
+            <div class="metric">
+                <span class="metric-icon">👤</span>
+                <div class="progress-bar-container"><div class="progress-bar" id="rights-bar"></div></div>
+                <span class="tooltip">Direitos Individuais</span>
+            </div>
+            <div class="metric">
+                <span class="metric-icon">🛡️</span>
+                <div class="progress-bar-container"><div class="progress-bar" id="duties-bar"></div></div>
+                <span class="tooltip">Deveres e Responsabilidade</span>
+            </div>
+            <div class="metric">
+                <span class="metric-icon">🌍</span>
+                <div class="progress-bar-container"><div class="progress-bar" id="community-bar"></div></div>
+                <span class="tooltip">Impacto Comunitário</span>
+            </div>
+        </div>
+    </header>
+    <main>
+        <div id="case-file-panel">
+            <div id="visual-panel"></div>
+            <div id="dossier-panel">
+                <h2 class="panel-title" id="case-title"></h2>
+                <p id="case-description"></p>
+                <div class="eca-reference" id="eca-container">
+                    <h3 id="eca-title"></h3>
+                    <p id="eca-description"></p>
+                </div>
+            </div>
+        </div>
+        <div id="action-panel">
+            <div>
+                <h2 class="panel-title">Terminal de Decisão</h2>
+                <div id="choices-container"></div>
+                <div id="analysis-container" style="display:none;">
+                    <h3 class="panel-title">Análise de Impacto</h3>
+                    <div id="analysis-results"></div>
+                </div>
+            </div>
+            <button id="next-case-btn" style="display: none;"></button>
+        </div>
+    </main>
+</div>
+
+<script>
+const cases = [
+    {
+        caseId: 0,
+        title: "Caso #101: O Gabarito Vazado",
+        description: "Um colega conseguiu uma cópia do gabarito da prova final e oferece para compartilhar com você e seus amigos mais próximos. Recusar coloca você em desvantagem, mas aceitar fere seus princípios. O que você faz?",
+        image: "https://img.freepik.com/free-vector/cheating-concept-illustration_114360-7615.jpg",
+        eca: { title: "Art. 53: Direito à Educação", description: "O direito à educação inclui a igualdade de condições e o respeito por parte de educadores e colegas." },
+        choices: [
+            { text: "Recusar e estudar por conta própria.", icon: "📚", analysis: [{metric: 'rights', impact: 0, text: "Você manteve seu direito a uma avaliação justa, mas não agiu sobre a injustiça para com os outros."}, {metric: 'duties', impact: 15, text: "Sua integridade e responsabilidade pessoal foram exemplares."}, {metric: 'community', impact: -5, text: "A omissão permitiu que a injustiça afetasse o restante da turma."} ]},
+            { text: "Aceitar o gabarito para não ficar para trás.", icon: "🤫", analysis: [{metric: 'rights', impact: -15, text: "Você violou o direito de todos a uma avaliação justa e com igualdade de condições."}, {metric: 'duties', impact: -20, text: "Sua honestidade foi comprometida, ferindo um dever fundamental."}, {metric: 'community', impact: -15, text: "Sua ação contribuiu para um ambiente de desconfiança e injustiça na comunidade escolar."} ]},
+            { text: "Recusar e informar a coordenação sobre o vazamento, sem citar nomes.", icon: "⚖️", analysis: [{metric: 'rights', impact: 15, text: "Você agiu para proteger o direito de toda a turma a uma avaliação justa."}, {metric: 'duties', impact: 10, text: "Você cumpriu seu dever cívico de zelar pela integridade do processo educacional."}, {metric: 'community', impact: 15, text: "Sua atitude corajosa protegeu a isonomia e a confiança na comunidade escolar."} ]}
+        ]
+    },
+    {
+        caseId: 1,
+        title: "Caso #102: O Comentário Ofensivo",
+        description: "Em uma rede social da escola, um aluno posta um 'meme' que faz piada com a deficiência de um colega. Muitos estão rindo, mas você percebe que o colega alvo da piada ficou visivelmente constrangido.",
+        image: "https://img.freepik.com/free-vector/cyberbullying-concept-with-person-being-bullied-online_23-2148590669.jpg",
+        eca: { title: "Art. 17: Inviolabilidade da Integridade", description: "O direito ao respeito consiste na inviolabilidade da integridade física, psíquica e moral da criança e do adolescente." },
+        choices: [
+            { text: "Denunciar a postagem para a rede social e avisar um professor.", icon: "🚩", analysis: [{metric: 'rights', impact: 20, text: "Ação exemplar na defesa da integridade e respeito do colega (Art. 17)."}, {metric: 'duties', impact: 15, text: "Você cumpriu seu dever de não ser conivente com a humilhação."}, {metric: 'community', impact: 10, text: "Sua atitude ajuda a construir uma comunidade online mais segura e respeitosa para todos."} ]},
+            { text: "Responder ao post defendendo o colega publicamente.", icon: "💬", analysis: [{metric: 'rights', impact: 10, text: "Você defendeu o direito do colega, mas a exposição pode aumentar o conflito."}, {metric: 'duties', impact: 5, text: "Você cumpriu o dever de se posicionar, mas a estratégia pode não ser a mais eficaz."}, {metric: 'community', impact: -5, text: "O debate público pode escalar o conflito e aumentar o constrangimento do colega."} ]},
+            { text: "Ignorar a situação para não se envolver em confusão.", icon: "🚶", analysis: [{metric: 'rights', impact: -10, text: "Sua omissão permitiu que a violação ao direito de respeito (Art. 17) continuasse."}, {metric: 'duties', impact: -15, text: "Você falhou no seu dever de solidariedade e proteção mútua."}, {metric: 'community', impact: -10, text: "A passividade diante do bullying enfraquece a segurança e o respeito na comunidade."} ]}
+        ]
+    }
+];
+
+const startScreen = document.getElementById('start-screen');
+const gameContainer = document.getElementById('game-container');
+const rightsBar = document.getElementById('rights-bar');
+const dutiesBar = document.getElementById('duties-bar');
+const communityBar = document.getElementById('community-bar');
+const caseTitle = document.getElementById('case-title');
+const caseDescription = document.getElementById('case-description');
+const ecaContainer = document.getElementById('eca-container');
+const ecaTitle = document.getElementById('eca-title');
+const ecaDescription = document.getElementById('eca-description');
+const visualPanel = document.getElementById('visual-panel');
+const choicesContainer = document.getElementById('choices-container');
+const analysisContainer = document.getElementById('analysis-container');
+const analysisResults = document.getElementById('analysis-results');
+const nextCaseBtn = document.getElementById('next-case-btn');
+
+let currentCaseIndex = 0;
+let scores = { rights: 50, duties: 50, community: 50 };
+
+function updateMetrics() {
+    for (const key in scores) {
+        scores[key] = Math.max(0, Math.min(100, scores[key]));
+        document.getElementById(`${key}-bar`).style.width = `${scores[key]}%`;
+    }
+}
+
+function showCase(caseData) {
+    caseTitle.textContent = caseData.title;
+    caseDescription.textContent = caseData.description;
+    ecaTitle.textContent = caseData.eca.title;
+    ecaDescription.textContent = caseData.eca.description;
+    visualPanel.style.backgroundImage = `url('${caseData.image}')`;
+    
+    choicesContainer.innerHTML = '';
+    caseData.choices.forEach(choice => {
+        const btn = document.createElement('button');
+        btn.className = 'choice-btn';
+        btn.innerHTML = `<span class="choice-icon">${choice.icon}</span> <span>${choice.text}</span>`;
+        btn.onclick = () => selectChoice(choice);
+        choicesContainer.appendChild(btn);
+    });
+
+    analysisContainer.style.display = 'none';
+    nextCaseBtn.style.display = 'none';
+    choicesContainer.style.display = 'flex';
+}
+
+function selectChoice(choice) {
+    analysisResults.innerHTML = '';
+    choice.analysis.forEach(item => {
+        scores[item.metric] += item.impact;
+        const resultEl = document.createElement('div');
+        resultEl.className = 'analysis-item';
+        const icon = item.impact > 0 ? '+' : (item.impact < 0 ? '-' : '~');
+        const iconClass = item.impact > 0 ? 'positive' : (item.impact < 0 ? 'negative' : 'neutral');
+        resultEl.innerHTML = `<span class="impact-icon ${iconClass}">${icon}</span> <div>${item.text}</div>`;
+        analysisResults.appendChild(resultEl);
+    });
+    updateMetrics();
+
+    choicesContainer.style.display = 'none';
+    analysisContainer.style.display = 'block';
+    analysisContainer.style.opacity = '1';
+    analysisContainer.style.transform = 'translateY(0)';
+    
+    currentCaseIndex++;
+    if (currentCaseIndex < cases.length) {
+        nextCaseBtn.textContent = 'Próximo Caso';
+        nextCaseBtn.onclick = () => showCase(cases[currentCaseIndex]);
+    } else {
+        nextCaseBtn.textContent = 'Finalizar Análise';
+        nextCaseBtn.onclick = showEndScreen;
+    }
+    nextCaseBtn.style.display = 'block';
+}
+
+function showEndScreen() {
+    caseTitle.textContent = "Relatório Final";
+    caseDescription.textContent = "Sua análise dos casos foi concluída. A cidadania é um exercício diário de equilíbrio entre direitos, deveres e o bem-estar da comunidade. Continue aprimorando sua capacidade de análise.";
+    visualPanel.style.backgroundImage = `url('https://img.freepik.com/free-vector/group-people-illustration-set_52683-33806.jpg')`;
+    ecaContainer.style.display = 'none';
+    analysisContainer.style.display = 'none';
+    nextCaseBtn.textContent = 'Reiniciar Análise';
+    nextCaseBtn.onclick = () => window.location.reload();
+}
+
+function startGame() {
+    currentCaseIndex = 0;
+    scores = { rights: 50, duties: 50, community: 50 };
+    updateMetrics();
+    showCase(cases[currentCaseIndex]);
+}
+
+function initializeGame() {
+    // Esconde a tela de início
+    startScreen.style.opacity = '0';
+    startScreen.style.visibility = 'hidden';
+    startScreen.style.display = 'none'; // Garante que saia do fluxo do documento
+    
+    // Mostra o container do jogo
+    gameContainer.style.display = 'flex';
+    setTimeout(() => {
+        gameContainer.style.opacity = '1';
+        gameContainer.style.transform = 'scale(1)';
+        startGame();
+    }, 100); // Reduzi o tempo para uma transição mais rápida
+}
+</script>
+
+</body>
+</html>
