@@ -36,128 +36,109 @@
             position: absolute;
             top: 30px;
             left: 30px;
-            font-size: 1.2em;
-            color: var(--cor-primaria);
+            font-size: 2em;
             text-decoration: none;
-            font-weight: 700;
-            transition: transform 0.3s;
+            color: var(--cor-primaria);
+            transition: transform 0.2s;
         }
-        
+
         .back-button:hover {
             transform: scale(1.1);
         }
 
-        .portal-container {
-            width: 90%;
-            max-width: 1400px; /* Aumentado para acomodar 4 cartões confortavelmente */
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-        }
-        
-        .portal-header {
+        .container {
             text-align: center;
-            margin-bottom: 40px;
-            animation: fadeInDown 1s ease-out;
+            padding: 40px;
         }
 
-        @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-
-        .portal-header h1 {
-            font-size: 3.5em;
+        h1 {
+            font-size: 3em;
             font-weight: 800;
             color: var(--cor-primaria);
-            margin: 0;
+            margin-bottom: 40px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
-        .portal-header p {
-            font-size: 1.2em;
-            color: var(--cor-secundaria);
-            margin: 5px 0 0;
-        }
-        
-        .games-grid {
-            display: grid;
-            /* Código alterado para forçar 4 colunas */
-            grid-template-columns: repeat(4, 1fr);
+        .game-grid {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
             gap: 30px;
-            width: 100%;
-            padding: 20px;
-            box-sizing: border-box;
-            animation: fadeInUp 1s ease-out;
-        }
-
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
-            to { opacity: 1; transform: translateY(0); }
+            max-width: 1200px;
         }
 
         .game-card {
             background-color: var(--cor-branco);
             border-radius: 20px;
+            width: 250px;
             padding: 30px;
-            text-align: center;
             box-shadow: var(--sombra);
+            text-align: center;
             text-decoration: none;
             color: var(--cor-texto);
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
             transition: transform 0.3s, box-shadow 0.3s;
         }
-        
+
         .game-card:hover {
             transform: translateY(-10px);
             box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
         }
 
-        .game-card .icon { font-size: 4em; line-height: 1; margin-bottom: 15px; }
-        .game-card h2 { font-size: 1.5em; margin: 0 0 10px; }
-        .game-card p { font-size: 0.9em; line-height: 1.6; color: #666; margin-bottom: 25px; min-height: 55px; }
-        
-        .play-button { 
-            display: inline-block; 
-            background-color: var(--cor-secundaria); 
-            color: var(--cor-branco); 
-            padding: 12px 30px; 
-            border-radius: 50px; 
-            font-weight: 600; 
-            transition: background-color 0.3s;
-        }
-        .game-card:hover .play-button { background-color: #42c4a8; }
-
-        /* Ajustes para telas menores */
-        @media (max-width: 1200px) {
-            .games-grid {
-                grid-template-columns: repeat(2, 1fr); /* 2 colunas em tablets */
-            }
+        .game-card .icon {
+            font-size: 3.5em;
+            margin-bottom: 20px;
         }
 
-        @media (max-width: 768px) {
-            body { overflow-y: auto; height: auto; }
-            .games-grid {
-                grid-template-columns: 1fr; /* 1 coluna em telemóveis */
-            }
-            .portal-header h1 { font-size: 2.5em; }
-            .portal-header p { font-size: 1em; }
+        .game-card h2 {
+            font-size: 1.5em;
+            margin-bottom: 10px;
+            color: var(--cor-primaria);
+        }
+
+        .game-card p {
+            font-size: 0.9em;
+            line-height: 1.5;
+            margin-bottom: 30px;
+            flex-grow: 1;
+        }
+
+        .play-button {
+            background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria));
+            color: var(--cor-branco);
+            padding: 12px 20px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.2s, box-shadow 0.2s;
+        }
+
+        .game-card:hover .play-button {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
         }
     </style>
 </head>
 <body>
-    <a href="index.html" class="back-button" title="Voltar ao Portal Principal">‹ Voltar</a>
-    <div class="portal-container">
-        <header class="portal-header">
-            <h1>Jogos dos Anos Finais</h1>
-            <p>Atividades de cidadania, leitura e produção de texto.</p>
-        </header>
-        <div class="games-grid">
-            <a href="desafio-eca.html" class="game-card">
+    <a href="../index.html" class="back-button">←</a>
+    <div class="container">
+        <h1>Jogos Educacionais</h1>
+        <div class="game-grid">
+            <a href="https://desafio-eca.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
                 <div class="icon">🛡️</div>
                 <h2>Desafio ECA</h2>
                 <p>Teste os seus conhecimentos sobre os direitos e deveres das crianças e adolescentes.</p>
                 <div class="play-button">Jogar Agora</div>
             </a>
+            
+            <a href="civitas.html" target="_blank" rel="noopener noreferrer" class="game-card">
+                <div class="icon">⚖️</div>
+                <h2>Projeto Civitas</h2>
+                <p>Analise casos complexos baseados no ECA e tome decisões que impactam a sociedade.</p>
+                <div class="play-button">Iniciar Projeto</div>
+            </a>
+            
             <a href="https://oficina-de-rimas-emefrincao.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
                 <div class="icon">✒️</div>
                 <h2>Oficina de Poemas</h2>
