@@ -95,18 +95,31 @@
 
         #case-file-panel {
             padding: var(--panel-padding); border-right: 1px solid var(--border-color);
-            display: flex; flex-direction: column; overflow-y: auto;
+            display: flex; flex-direction: column;
+            /* overflow-y: auto; -> REMOVIDO para eliminar a barra de rolagem */
         }
         #visual-panel {
             width: 100%; 
-            height: 35%; /* Reduzido de 50% para 35% */
+            height: 35%; /* Altura da imagem mantida em 35% */
             flex-shrink: 0;
             background-size: cover; background-position: center;
-            border-radius: 16px; margin-bottom: var(--panel-padding);
+            border-radius: 16px; margin-bottom: 20px; /* Espaçamento reduzido */
             transition: background-image 0.7s ease-in-out;
         }
-        #dossier-panel p { color: var(--secondary-text); line-height: 1.8; font-size: 1.05em; margin-top: 0; }
-        .eca-reference { background: rgba(255,255,255,0.5); border-left: 4px solid var(--accent-blue); padding: 15px; border-radius: 8px; margin-top: 20px; }
+        #dossier-panel p { 
+            color: var(--secondary-text); 
+            line-height: 1.6; /* Altura de linha reduzida para compactar o texto */
+            font-size: 1em; /* Tamanho da fonte levemente reduzido */
+            margin-top: 0; 
+        }
+        .eca-reference { 
+            background: rgba(255,255,255,0.5); 
+            border-left: 4px solid var(--accent-blue); 
+            padding: 12px; /* Padding reduzido */
+            border-radius: 8px; 
+            margin-top: 15px; /* Espaçamento reduzido */
+            flex-shrink: 0; /* Impede que o quadro do ECA encolha */
+        }
 
         #action-panel {
             padding: var(--panel-padding); display: flex; flex-direction: column; overflow-y: auto;
