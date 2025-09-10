@@ -98,7 +98,9 @@
             display: flex; flex-direction: column; overflow-y: auto;
         }
         #visual-panel {
-            width: 100%; height: 50%; flex-shrink: 0;
+            width: 100%; 
+            height: 35%; /* Reduzido de 50% para 35% */
+            flex-shrink: 0;
             background-size: cover; background-position: center;
             border-radius: 16px; margin-bottom: var(--panel-padding);
             transition: background-image 0.7s ease-in-out;
@@ -134,6 +136,54 @@
             cursor: pointer; margin-top: auto; transition: background-color 0.2s; flex-shrink: 0;
         }
         #next-case-btn:hover { background-color: #7c4dff; }
+
+        /* --- ESTILOS DA NOVA TELA DE RELATÓRIO --- */
+        #report-screen {
+            display: flex;
+            flex-direction: column;
+            padding: var(--panel-padding);
+            width: 100%;
+            height: 100%;
+        }
+        .report-header h1 {
+            font-family: 'JetBrains Mono', monospace; color: var(--primary-text);
+            text-align: center; font-size: 2.2em; margin-bottom: 20px;
+        }
+        .report-scores-summary {
+            display: flex; justify-content: center; gap: 20px;
+            padding: 15px; margin-bottom: 20px;
+            background: rgba(255,255,255,0.6); border-radius: 16px;
+        }
+        .summary-metric { text-align: center; }
+        .summary-metric .label { font-weight: 600; color: var(--secondary-text); font-size: 0.9em; }
+        .summary-metric .score { font-size: 1.8em; font-weight: 700; color: var(--primary-text); }
+
+        .report-commentary {
+            text-align: center; font-size: 1.1em; color: var(--primary-text);
+            margin-bottom: 25px; padding: 0 20px;
+        }
+        .report-review-section {
+            flex-grow: 1; /* Faz esta seção ocupar o espaço restante */
+            overflow-y: auto;
+            padding: 10px 20px;
+            background: rgba(255,255,255,0.4);
+            border-radius: 16px;
+        }
+        .report-review-section h3 {
+            color: var(--accent-red); font-family: 'JetBrains Mono', monospace;
+            text-align: center; margin-top: 10px;
+        }
+        .review-item {
+            background: rgba(255, 255, 255, 0.7); border-radius: 12px;
+            padding: 15px; margin-bottom: 15px;
+        }
+        .review-item strong { color: var(--primary-text); }
+        .review-item p { font-size: 0.9em; color: var(--secondary-text); margin: 5px 0 0 0; }
+        .restart-button-container {
+            text-align: center;
+            margin-top: 20px;
+            flex-shrink: 0;
+        }
     </style>
 </head>
 <body>
@@ -165,6 +215,7 @@
             </div>
         </div>
     </header>
+    
     <main>
         <div id="case-file-panel">
             <div id="visual-panel"></div>
@@ -189,6 +240,9 @@
             <button id="next-case-btn" style="display: none;"></button>
         </div>
     </main>
+
+    <div id="report-screen" style="display:none;">
+        </div>
 </div>
 
 <script>
@@ -209,11 +263,11 @@ const cases = [
         caseId: 1,
         title: "Caso #102: O Comentário Ofensivo",
         description: "Em uma rede social da escola, um aluno posta um 'meme' que faz piada com a deficiência de um colega. Muitos estão rindo, mas você percebe que o colega alvo da piada ficou visivelmente constrangido.",
-        image: "https://img.freepik.com/free-vector/cyberbullying-concept-with-person-being-bullied-online_23-2148590669.jpg",
+        image: "https://img.freepik.com/free-vector/cyberbullying-concept-illustration_114360-2911.jpg",
         eca: { title: "Art. 17: Inviolabilidade da Integridade", description: "O direito ao respeito consiste na inviolabilidade da integridade física, psíquica e moral da criança e do adolescente." },
         choices: [
             { text: "Denunciar a postagem para a rede social e avisar um professor.", icon: "🚩", analysis: [{metric: 'rights', impact: 20, text: "Ação exemplar na defesa da integridade e respeito do colega (Art. 17)."}, {metric: 'duties', impact: 15, text: "Você cumpriu seu dever de não ser conivente com a humilhação."}, {metric: 'community', impact: 10, text: "Sua atitude ajuda a construir uma comunidade online mais segura e respeitosa para todos."} ]},
-            { text: "Responder ao post defendendo o colega publicamente.", icon: "💬", analysis: [{metric: 'rights', impact: 10, text: "Você defendeu o direito do colega, mas a exposição pode aumentar o conflito."}, {metric: 'duties', impact: 5, text: "Você cumpriu o dever de se posicionar, mas a estratégia pode não ser a mais eficaz."}, {metric: 'community', impact: -5, text: "O debate público pode escalar o conflito e aumentar o constrangimento do colega."} ]},
+            { text: "Responder ao post defendendo o colega publicamente.", icon: "💬", analysis: [{metric: 'rights', impact: 10, text: "Você defendeu o direito do colega, mas a exposição pode aumentar o conflito."}, {metric: 'duties', impact: 5, text: "Você cumpriu o dever de se posicionar, mas a estratégia pode não ser a mais eficaz."}, {metric: 'community', impact: -5, text: "O debate público pode escalonar o conflito e aumentar o constrangimento do colega."} ]},
             { text: "Ignorar a situação para não se envolver em confusão.", icon: "🚶", analysis: [{metric: 'rights', impact: -10, text: "Sua omissão permitiu que a violação ao direito de respeito (Art. 17) continuasse."}, {metric: 'duties', impact: -15, text: "Você falhou no seu dever de solidariedade e proteção mútua."}, {metric: 'community', impact: -10, text: "A passividade diante do bullying enfraquece a segurança e o respeito na comunidade."} ]}
         ]
     },
@@ -233,7 +287,7 @@ const cases = [
         caseId: 3,
         title: "Caso #104: A Expressão de Fé",
         description: "Um colega de uma religião diferente da sua começa a usar um acessório religioso visível. Outros alunos fazem piadas e dizem que ele não deveria usar aquilo na escola.",
-        image: "https://img.freepik.com/free-vector/multicultural-people-standing-together_74855-6583.jpg",
+        image: "https://img.freepik.com/free-vector/multiethnic-group-people-together_1308-54201.jpg",
         eca: { title: "Art. 16: Direito à Liberdade", description: "O direito à liberdade compreende, entre outros, os aspectos de crença e culto religioso." },
         choices: [
             { text: "Dizer ao colega que é melhor tirar o acessório para evitar problemas.", icon: "🤐", analysis: [{metric: 'rights', impact: -15, text: "Você está sugerindo que ele abra mão de seu direito à liberdade religiosa por conveniência."}, {metric: 'duties', impact: -10, text: "Seu dever de respeitar a diversidade não foi cumprido."}, {metric: 'community', impact: -10, text: "Sua atitude reforça a intolerância e enfraquece a diversidade na comunidade."} ]},
@@ -249,7 +303,7 @@ const cases = [
         eca: { title: "Art. 60 a 67: Direito à Profissionalização e Proteção no Trabalho", description: "O trabalho é proibido para menores de 14 anos, salvo na condição de aprendiz. A proteção ao trabalho do adolescente é um dever de todos." },
         choices: [
             { text: "Oferecer ajuda com as matérias perdidas, mas não se envolver.", icon: "📖", analysis: [{metric: 'rights', impact: 0, text: "Ajudar é bom, mas não resolve a violação do direito à proteção contra o trabalho infantil."}, {metric: 'duties', impact: 5, text: "Você demonstra solidariedade, um dever importante, mas de forma limitada."}, {metric: 'community', impact: -10, text: "A comunidade (escola, conselho tutelar) não fica sabendo do problema e a exploração pode continuar."} ]},
-            { text: "Aconselhar o amigo a parar de trabalhar, pois é ilegal.", icon: "🗣️", analysis: [{metric: 'rights', impact: 5, text: "Você reconhece o direito dele, mas seu conselho ignora a complexa situação financeira da família."}, {metric: 'duties', impact: 5, text: "Você cumpre o dever de alertar, mas sem oferecer uma solução prática."}, {metric: 'community', impact: 0, text: "Sua ação tem pouco impacto prático sem o envolvimento de órgãos de proteção."} ]},
+            { text: "Aconselhar o amigo a parar de trabalhar, pois é ilegal.", icon: "🗣️", analysis: [{metric: 'rights', impact: 5, text: "Você reconhece o direito dele, mas seu conselho ignora a complexa situação financeira da família."}, {metric: 'duties', impact: 5, text: "Você cumpriu o dever de alertar, mas sem oferecer uma solução prática."}, {metric: 'community', impact: 0, text: "Sua ação tem pouco impacto prático sem o envolvimento de órgãos de proteção."} ]},
             { text: "Conversar com a orientadora da escola sobre a situação, em sigilo.", icon: "👩‍🏫", analysis: [{metric: 'rights', impact: 20, text: "Você acionou a pessoa correta para garantir a proteção integral do seu amigo, incluindo seus direitos à educação e à proteção contra o trabalho infantil."}, {metric: 'duties', impact: 15, text: "Você cumpriu o dever de comunicar uma violação de direitos a quem pode de fato ajudar."}, {metric: 'community', impact: 15, text: "Sua atitude permite que a rede de proteção da comunidade atue para ajudar a criança e sua família."} ]}
         ]
     },
@@ -281,7 +335,7 @@ const cases = [
         caseId: 7,
         title: "Caso #108: O Pedido de Socorro",
         description: "Um amigo conta para você, em segredo, que está pensando em fugir de casa por causa de brigas constantes e um ambiente familiar muito opressivo. Ele pede para você não contar a ninguém.",
-        image: "https://img.freepik.com/free-vector/feeling-lonely-concept-illustration_114360-2911.jpg",
+        image: "https://img.freepik.com/free-vector/lonely-unhappy-kid-sitting-floor-home_74855-14479.jpg",
         eca: { title: "Art. 101 e 136: Medidas de Proteção e Atribuições do Conselho Tutelar", description: "O ECA prevê medidas de proteção para crianças em situação de risco, e o Conselho Tutelar é o órgão encarregado de zelar por esses direitos." },
         choices: [
             { text: "Manter o segredo, pois você é um amigo leal.", icon: "🤐", analysis: [{metric: 'rights', impact: -15, text: "A lealdade não pode se sobrepor ao direito à proteção. Seu amigo está em risco, e o silêncio o impede de receber ajuda."}, {metric: 'duties', impact: -10, text: "Seu dever de proteger um amigo em situação de vulnerabilidade não está sendo cumprido."}, {metric: 'community', impact: -15, text: "A falta de comunicação impede que a rede de proteção (escola, conselho tutelar) atue."} ]},
@@ -293,11 +347,11 @@ const cases = [
         caseId: 8,
         title: "Caso #109: O Jogo Perigoso",
         description: "Um novo 'desafio' viral perigoso está circulando na internet. Seus amigos acham engraçado e estão pensando em gravar um vídeo fazendo o desafio para ganhar seguidores.",
-        image: "https://img.freepik.com/free-vector/social-media-addiction-concept-illustration_114360-1847.jpg",
+        image: "https://img.freepik.com/free-vector/young-people-watching-dangerous-online-challenge_23-2149028987.jpg",
         eca: { title: "Art. 7: Direito à Vida e à Saúde", description: "A criança e o adolescente têm direito a proteção à vida e à saúde, mediante a efetivação de políticas sociais públicas que permitam o nascimento e o desenvolvimento sadio e harmonioso." },
         choices: [
             { text: "Participar do desafio para não ser excluído do grupo.", icon: "🤳", analysis: [{metric: 'rights', impact: -20, text: "Você está violando seu próprio direito fundamental à vida e à saúde em troca de aceitação social."}, {metric: 'duties', impact: -20, text: "Você descumpre seu dever de autopreservação e de não incentivar práticas perigosas."}, {metric: 'community', impact: -15, text: "Sua participação ajuda a disseminar um comportamento de risco para toda a comunidade online."} ]},
-            { text: "Não participar, mas não dizer nada para não ser o 'careta'.", icon: "😒", analysis: [{metric: 'rights', impact: 10, text: "Você protegeu seu direito à saúde, o que é positivo."}, {metric: 'duties', impact: -10, text: "Você se omitiu do seu dever de alertar seus amigos sobre o perigo que eles correm."}, {metric: 'community', impact: -5, text: "Sua omissão permite que o comportamento de risco continue no seu círculo social sem nenhuma crítica."} ]},
+            { text: "Não participar, mas não dizer nada para não ser o 'careta'.", icon: "😒", analysis: [{metric: 'rights', impact: 10, text: "Você protegeu seu direito à saúde, o que é positivo."}, {metric: 'duties', impact: -10, text: "Você se omitiu do dever de alertar seus amigos sobre o perigo que eles correm."}, {metric: 'community', impact: -5, text: "Sua omissão permite que o comportamento de risco continue no seu círculo social sem nenhuma crítica."} ]},
             { text: "Tentar convencer seus amigos de que o desafio é perigoso.", icon: "🧠", analysis: [{metric: 'rights', impact: 20, text: "Você protegeu seu direito à saúde e tentou ativamente proteger o de seus amigos."}, {metric: 'duties', impact: 15, text: "Você cumpriu seu dever de cuidar de si mesmo e zelar pelo bem-estar de seus pares."}, {metric: 'community', impact: 15, text: "Sua atitude crítica e responsável ajuda a construir uma comunidade mais consciente e segura."} ]}
         ]
     },
@@ -305,7 +359,7 @@ const cases = [
         caseId: 9,
         title: "Caso #110: A Exclusão Sutil",
         description: "Um aluno novo, que veio de outra região do país e tem um sotaque diferente, entra na turma. Ninguém o maltrata, mas ele nunca é chamado para os grupos de trabalho ou para o time de futebol.",
-        image: "https://img.freepik.com/free-vector/sad-girl-suffering-from-bullying_1308-112327.jpg",
+        image: "https://img.freepik.com/free-vector/lonely-boy-sitting-playground_74855-6627.jpg",
         eca: { title: "Art. 5: Proteção contra Discriminação", description: "Nenhuma criança ou adolescente será objeto de qualquer forma de negligência, discriminação, exploração, violência, crueldade e opressão." },
         choices: [
             { text: "Não fazer nada, pois ele eventualmente vai se enturmar sozinho.", icon: "⏳", analysis: [{metric: 'rights', impact: -10, text: "A omissão permite que uma forma sutil de discriminação e negligência continue, violando o Art. 5."}, {metric: 'duties', impact: -10, text: "Você falha no seu dever de promover um ambiente acolhedor e inclusivo."}, {metric: 'community', impact: -10, text: "A falta de ação de todos cria uma comunidade escolar fragmentada e pouco acolhedora."} ]},
@@ -341,7 +395,7 @@ const cases = [
         caseId: 12,
         title: "Caso #113: A Venda Proibida",
         description: "Você vê o dono de uma loja perto da escola vendendo cigarros eletrônicos (vapes) para adolescentes que parecem ter menos de 18 anos.",
-        image: "https://img.freepik.com/free-vector/vaping-concept-illustration_114360-22 vaping.jpg",
+        image: "https://img.freepik.com/free-vector/no-smoking-concept-illustration_114360-3162.jpg",
         eca: { title: "Art. 243: Venda de Produtos Proibidos", description: "É crime vender, fornecer, servir, ministrar ou entregar a criança ou adolescente produtos cujos componentes possam causar dependência física ou psíquica." },
         choices: [
             { text: "Ignorar, pois a decisão de comprar é dos adolescentes.", icon: "😒", analysis: [{metric: 'rights', impact: -15, text: "Sua omissão ignora o direito à saúde e à proteção desses adolescentes, que são legalmente protegidos contra isso."}, {metric: 'duties', impact: -15, text: "É dever de toda a sociedade proteger crianças de produtos perigosos."}, {metric: 'community', impact: -15, text: "Permitir essa prática cria um ponto de risco para a saúde de todos os jovens da comunidade escolar."} ]},
@@ -353,7 +407,7 @@ const cases = [
         caseId: 13,
         title: "Caso #114: A Necessidade de Cuidado",
         description: "Um colega seu vem para a escola com muita frequência doente ou com pequenos machucados. Ele parece triste e descuidado. Você suspeita que algo está errado em casa.",
-        image: "https://img.freepik.com/free-vector/stop-child-abuse-concept_23-2148689932.jpg",
+        image: "https://img.freepik.com/free-vector/unhappy-children-concept_23-2148756087.jpg",
         eca: { title: "Art. 13: Notificação Compulsória", description: "Os casos de suspeita ou confirmação de castigo físico, de tratamento cruel ou degradante e de maus-tratos contra criança ou adolescente serão obrigatoriamente comunicados ao Conselho Tutelar." },
         choices: [
             { text: "Perguntar diretamente a ele na frente de todos o que está acontecendo.", icon: "🗣️", analysis: [{metric: 'rights', impact: -10, text: "Sua abordagem, embora talvez bem-intencionada, expõe seu colega a um enorme constrangimento, violando seu direito à dignidade."}, {metric: 'duties', impact: -5, text: "Seu dever é ajudar, mas de forma cuidadosa e respeitosa, não expondo a vítima."}, {metric: 'community', impact: -10, text: "A exposição pública pode fazer com que a vítima se feche ainda mais, dificultando o pedido de ajuda."} ]},
@@ -365,7 +419,7 @@ const cases = [
         caseId: 14,
         title: "Caso #115: O Projeto Comunitário",
         description: "A prefeitura abriu uma consulta pública para que os jovens decidam o que construir em um terreno baldio do bairro. Seus amigos querem uma pista de skate, mas um outro grupo quer uma horta comunitária.",
-        image: "https://img.freepik.com/free-vector/people-volunteering-doing-social-work_74855-6627.jpg",
+        image: "https://img.freepik.com/free-vector/urban-community-garden-concept_23-2148670868.jpg",
         eca: { title: "Art. 16, VI: Direito de Participar da Vida Comunitária", description: "O direito à liberdade abrange a participação na vida familiar e comunitária, sem discriminação." },
         choices: [
             { text: "Tentar convencer a todos que a sua ideia (pista de skate) é a única que importa.", icon: "🛹", analysis: [{metric: 'rights', impact: 5, text: "Você exerce seu direito de opinião, mas de forma impositiva, desrespeitando o direito dos outros."}, {metric: 'duties', impact: -10, text: "Você falha no seu dever de buscar o consenso e respeitar a opinião divergente."}, {metric: 'community', impact: -10, text: "Sua atitude gera divisão e conflito, enfraquecendo a capacidade da comunidade de tomar uma decisão conjunta."} ]},
@@ -375,10 +429,13 @@ const cases = [
     }
 ];
 
-// O restante do código JavaScript permanece idêntico.
-
+// VARIÁVEIS DE ELEMENTOS DO DOM
 const startScreen = document.getElementById('start-screen');
 const gameContainer = document.getElementById('game-container');
+const gameHeader = document.querySelector('#game-container header');
+const mainGameContent = document.querySelector('#game-container main');
+const reportScreen = document.getElementById('report-screen');
+
 const rightsBar = document.getElementById('rights-bar');
 const dutiesBar = document.getElementById('duties-bar');
 const communityBar = document.getElementById('community-bar');
@@ -393,9 +450,12 @@ const analysisContainer = document.getElementById('analysis-container');
 const analysisResults = document.getElementById('analysis-results');
 const nextCaseBtn = document.getElementById('next-case-btn');
 
+// VARIÁVEIS DE ESTADO DO JOGO
 let currentCaseIndex = 0;
 let scores = { rights: 50, duties: 50, community: 50 };
+let badChoicesMade = [];
 
+// FUNÇÕES DO JOGO
 function updateMetrics() {
     for (const key in scores) {
         scores[key] = Math.max(0, Math.min(100, scores[key]));
@@ -415,7 +475,7 @@ function showCase(caseData) {
         const btn = document.createElement('button');
         btn.className = 'choice-btn';
         btn.innerHTML = `<span class="choice-icon">${choice.icon}</span> <span>${choice.text}</span>`;
-        btn.onclick = () => selectChoice(choice);
+        btn.onclick = () => selectChoice(caseData, choice);
         choicesContainer.appendChild(btn);
     });
 
@@ -424,10 +484,13 @@ function showCase(caseData) {
     choicesContainer.style.display = 'flex';
 }
 
-function selectChoice(choice) {
+function selectChoice(caseData, choice) {
     analysisResults.innerHTML = '';
+    let totalImpact = 0;
+
     choice.analysis.forEach(item => {
         scores[item.metric] += item.impact;
+        totalImpact += item.impact;
         const resultEl = document.createElement('div');
         resultEl.className = 'analysis-item';
         const icon = item.impact > 0 ? '+' : (item.impact < 0 ? '-' : '~');
@@ -435,6 +498,15 @@ function selectChoice(choice) {
         resultEl.innerHTML = `<span class="impact-icon ${iconClass}">${icon}</span> <div>${item.text}</div>`;
         analysisResults.appendChild(resultEl);
     });
+    
+    if (totalImpact < 0) {
+        badChoicesMade.push({
+            caseTitle: caseData.title,
+            choiceText: choice.text,
+            analysis: choice.analysis
+        });
+    }
+
     updateMetrics();
 
     choicesContainer.style.display = 'none';
@@ -447,25 +519,81 @@ function selectChoice(choice) {
         nextCaseBtn.textContent = 'Próximo Caso';
         nextCaseBtn.onclick = () => showCase(cases[currentCaseIndex]);
     } else {
-        nextCaseBtn.textContent = 'Finalizar Análise';
+        nextCaseBtn.textContent = 'Ver Relatório Final';
         nextCaseBtn.onclick = showEndScreen;
     }
     nextCaseBtn.style.display = 'block';
 }
 
 function showEndScreen() {
-    caseTitle.textContent = "Relatório Final";
-    caseDescription.textContent = "Sua análise dos casos foi concluída. A cidadania é um exercício diário de equilíbrio entre direitos, deveres e o bem-estar da comunidade. Continue aprimorando sua capacidade de análise.";
-    visualPanel.style.backgroundImage = `url('https://img.freepik.com/free-vector/group-people-illustration-set_52683-33806.jpg')`;
-    ecaContainer.style.display = 'none';
-    analysisContainer.style.display = 'none';
-    nextCaseBtn.textContent = 'Reiniciar Análise';
-    nextCaseBtn.onclick = () => window.location.reload();
+    mainGameContent.style.display = 'none';
+    gameHeader.style.display = 'none';
+    
+    let reportHTML = `
+        <div class="report-header">
+            <h1>Relatório Final de Desempenho</h1>
+        </div>
+        <div class="report-scores-summary">
+            <div class="summary-metric">
+                <div class="label">👤 Direitos Individuais</div>
+                <div class="score">${scores.rights}</div>
+            </div>
+            <div class="summary-metric">
+                <div class="label">🛡️ Deveres e Responsabilidade</div>
+                <div class="score">${scores.duties}</div>
+            </div>
+            <div class="summary-metric">
+                <div class="label">🌍 Impacto Comunitário</div>
+                <div class="score">${scores.community}</div>
+            </div>
+        </div>
+    `;
+
+    let generalComments = "";
+    if (scores.rights >= 75) generalComments += "Sua atenção aos direitos individuais foi excelente, demonstrando grande empatia. ";
+    else if (scores.rights < 50) generalComments += "Lembre-se que garantir os direitos de cada um é fundamental para a justiça. ";
+
+    if (scores.duties >= 75) generalComments += "Parabéns pela sua forte noção de responsabilidade e deveres. ";
+    else if (scores.duties < 50) generalComments += "É importante equilibrar direitos com deveres para uma cidadania plena. ";
+
+    if (scores.community >= 75) generalComments += "Seu impacto na comunidade foi muito positivo, mostrando liderança e cuidado com o próximo. ";
+    else if (scores.community < 50) generalComments += "Pense mais em como suas ações afetam o bem-estar de toda a comunidade. ";
+    
+    reportHTML += `<div class="report-commentary"><p>${generalComments || "Sua jornada mostrou um equilíbrio interessante entre as diferentes áreas da cidadania. Continue refletindo!"}</p></div>`;
+
+    if (badChoicesMade.length > 0) {
+        let badChoicesHtml = `<div class="report-review-section"><h3>Pontos para Revisão</h3>`;
+        badChoicesMade.forEach(choice => {
+            badChoicesHtml += `<div class="review-item">
+                <strong>${choice.caseTitle}:</strong>
+                <p>Sua escolha de "${choice.choiceText}" precisa de atenção. Reflita sobre os seguintes impactos:</p>`;
+            choice.analysis.forEach(item => {
+                if(item.impact < 0) {
+                     badChoicesHtml += `<p>• ${item.text}</p>`;
+                }
+            });
+            badChoicesHtml += `</div>`;
+        });
+        badChoicesHtml += `</div>`;
+        reportHTML += badChoicesHtml;
+    } else {
+        reportHTML += `<div class="report-commentary"><p><strong>Parabéns!</strong> Você não fez escolhas com impacto significativamente negativo. Sua capacidade de análise e ponderação é notável!</p></div>`;
+    }
+
+    reportHTML += `<div class="restart-button-container"><button id="next-case-btn" onclick="window.location.reload()">Reiniciar Análise</button></div>`;
+    
+    reportScreen.innerHTML = reportHTML;
+    reportScreen.style.display = 'flex';
 }
 
 function startGame() {
+    mainGameContent.style.display = 'grid';
+    gameHeader.style.display = 'flex';
+    reportScreen.style.display = 'none';
+
     currentCaseIndex = 0;
     scores = { rights: 50, duties: 50, community: 50 };
+    badChoicesMade = [];
     updateMetrics();
     showCase(cases[currentCaseIndex]);
 }
