@@ -31,12 +31,10 @@
             overflow: hidden;
             font-family: 'Inter', sans-serif;
             background-image: linear-gradient(135deg, #a8c0ff 0%, #fbc2eb 100%);
-            /* Técnica de centralização definitiva */
             display: grid;
             place-items: center;
         }
         
-        /* Ambos os containers principais são colocados na mesma célula do grid */
         #start-screen, #game-container {
             grid-area: 1 / 1;
         }
@@ -89,7 +87,8 @@
         .metric:hover .tooltip { opacity: 1; visibility: visible; }
 
         main {
-            display: grid; grid-template-columns: 58% 42%; flex-grow: 1; overflow: hidden;
+            display: grid; grid-template-columns: 58% 42%;
+            flex-grow: 1; overflow: hidden;
         }
         
         .panel-title { font-family: 'JetBrains Mono', monospace; color: var(--primary-text); margin: 0 0 20px 0; font-size: 1.4em; }
@@ -197,7 +196,7 @@ const cases = [
     {
         caseId: 0,
         title: "Caso #101: O Gabarito Vazado",
-        description: "Um colega conseguiu uma cópia do gabarito da prova final e oferece para compartilhar com você e seus amigos mais próximos. Recusar coloca você em desvantagem, mas aceitar fere seus princípios. O que você faz?",
+        description: "Um colega conseguiu uma cópia do gabarito da prova final e oferece para compartilhar com você e seus amigos mais próximos. Recusar coloca você em desvantagem, mas aceitar fere seus princípios.",
         image: "https://img.freepik.com/free-vector/cheating-concept-illustration_114360-7615.jpg",
         eca: { title: "Art. 53: Direito à Educação", description: "O direito à educação inclui a igualdade de condições e o respeito por parte de educadores e colegas." },
         choices: [
@@ -217,8 +216,166 @@ const cases = [
             { text: "Responder ao post defendendo o colega publicamente.", icon: "💬", analysis: [{metric: 'rights', impact: 10, text: "Você defendeu o direito do colega, mas a exposição pode aumentar o conflito."}, {metric: 'duties', impact: 5, text: "Você cumpriu o dever de se posicionar, mas a estratégia pode não ser a mais eficaz."}, {metric: 'community', impact: -5, text: "O debate público pode escalar o conflito e aumentar o constrangimento do colega."} ]},
             { text: "Ignorar a situação para não se envolver em confusão.", icon: "🚶", analysis: [{metric: 'rights', impact: -10, text: "Sua omissão permitiu que a violação ao direito de respeito (Art. 17) continuasse."}, {metric: 'duties', impact: -15, text: "Você falhou no seu dever de solidariedade e proteção mútua."}, {metric: 'community', impact: -10, text: "A passividade diante do bullying enfraquece a segurança e o respeito na comunidade."} ]}
         ]
+    },
+    {
+        caseId: 2,
+        title: "Caso #103: A Atividade Esportiva",
+        description: "A diretoria anuncia o corte do programa de esportes no contraturno para reduzir custos, afetando muitos alunos que não têm outra atividade de lazer. Alguns sugerem um protesto.",
+        image: "https://img.freepik.com/free-vector/kids-playing-football-illustration_23-2148530399.jpg",
+        eca: { title: "Art. 59: Direito à Cultura, ao Esporte e ao Lazer", description: "Os municípios, com apoio dos estados e da União, estimularão e facilitarão a destinação de recursos e espaços para programações culturais, esportivas e de lazer." },
+        choices: [
+            { text: "Aceitar a decisão, pois a escola deve ter seus motivos.", icon: "🤷", analysis: [{metric: 'rights', impact: -10, text: "Sua passividade ignora o direito ao esporte e lazer dos alunos."}, {metric: 'duties', impact: -5, text: "Deixar de participar das decisões da comunidade escolar é uma omissão de seu dever cívico."}, {metric: 'community', impact: -10, text: "A comunidade escolar perde uma oportunidade de se mobilizar por uma causa importante."} ]},
+            { text: "Organizar um abaixo-assinado e apresentar à diretoria.", icon: "📝", analysis: [{metric: 'rights', impact: 15, text: "Você está defendendo ativamente o direito ao esporte e lazer de forma organizada e respeitosa."}, {metric: 'duties', impact: 15, text: "Você exerce seu dever de participação comunitária de maneira construtiva."}, {metric: 'community', impact: 15, text: "Sua ação fortalece a comunidade escolar, mostrando que os alunos podem e devem participar das decisões."} ]},
+            { text: "Participar de um protesto barulhento durante as aulas.", icon: "📢", analysis: [{metric: 'rights', impact: 5, text: "Você está exercendo seu direito de manifestação, mas de uma forma que viola o direito dos outros de assistir à aula."}, {metric: 'duties', impact: -10, text: "Seu dever de respeitar o ambiente de aprendizagem foi quebrado."}, {metric: 'community', impact: -5, text: "A ação pode gerar antipatia da diretoria e de outros alunos, prejudicando a causa."} ]}
+        ]
+    },
+    {
+        caseId: 3,
+        title: "Caso #104: A Expressão de Fé",
+        description: "Um colega de uma religião diferente da sua começa a usar um acessório religioso visível. Outros alunos fazem piadas e dizem que ele não deveria usar aquilo na escola.",
+        image: "https://img.freepik.com/free-vector/multicultural-people-standing-together_74855-6583.jpg",
+        eca: { title: "Art. 16: Direito à Liberdade", description: "O direito à liberdade compreende, entre outros, os aspectos de crença e culto religioso." },
+        choices: [
+            { text: "Dizer ao colega que é melhor tirar o acessório para evitar problemas.", icon: "🤐", analysis: [{metric: 'rights', impact: -15, text: "Você está sugerindo que ele abra mão de seu direito à liberdade religiosa por conveniência."}, {metric: 'duties', impact: -10, text: "Seu dever de respeitar a diversidade não foi cumprido."}, {metric: 'community', impact: -10, text: "Sua atitude reforça a intolerância e enfraquece a diversidade na comunidade."} ]},
+            { text: "Ficar quieto, pois a religião de cada um não é da sua conta.", icon: "😑", analysis: [{metric: 'rights', impact: -5, text: "Sua omissão permite que o direito do seu colega seja desrespeitado pelos outros."}, {metric: 'duties', impact: -5, text: "Você perde a chance de exercer o dever da solidariedade."}, {metric: 'community', impact: -5, text: "O silêncio diante da intolerância pode ser interpretado como consentimento, prejudicando o clima escolar."} ]},
+            { text: "Afirmar para os outros que ele tem o direito de usar o acessório.", icon: "🤝", analysis: [{metric: 'rights', impact: 20, text: "Você defendeu ativamente o direito fundamental à liberdade de crença do seu colega."}, {metric: 'duties', impact: 15, text: "Você cumpriu seu dever de respeito à diversidade e de defender o próximo."}, {metric: 'community', impact: 15, text: "Sua ação educa a comunidade e promove um ambiente de respeito e tolerância."} ]}
+        ]
+    },
+    {
+        caseId: 4,
+        title: "Caso #105: O Trabalho Oculto",
+        description: "Você descobre que um amigo de 13 anos está faltando às aulas para trabalhar em uma oficina em troca de um valor muito baixo. Ele diz que precisa ajudar em casa, mas parece sempre cansado.",
+        image: "https://img.freepik.com/free-vector/sad-overload-child-worker-looking-from-window-factory_1308-112328.jpg",
+        eca: { title: "Art. 60 a 67: Direito à Profissionalização e Proteção no Trabalho", description: "O trabalho é proibido para menores de 14 anos, salvo na condição de aprendiz. A proteção ao trabalho do adolescente é um dever de todos." },
+        choices: [
+            { text: "Oferecer ajuda com as matérias perdidas, mas não se envolver.", icon: "📖", analysis: [{metric: 'rights', impact: 0, text: "Ajudar é bom, mas não resolve a violação do direito à proteção contra o trabalho infantil."}, {metric: 'duties', impact: 5, text: "Você demonstra solidariedade, um dever importante, mas de forma limitada."}, {metric: 'community', impact: -10, text: "A comunidade (escola, conselho tutelar) não fica sabendo do problema e a exploração pode continuar."} ]},
+            { text: "Aconselhar o amigo a parar de trabalhar, pois é ilegal.", icon: "🗣️", analysis: [{metric: 'rights', impact: 5, text: "Você reconhece o direito dele, mas seu conselho ignora a complexa situação financeira da família."}, {metric: 'duties', impact: 5, text: "Você cumpre o dever de alertar, mas sem oferecer uma solução prática."}, {metric: 'community', impact: 0, text: "Sua ação tem pouco impacto prático sem o envolvimento de órgãos de proteção."} ]},
+            { text: "Conversar com a orientadora da escola sobre a situação, em sigilo.", icon: "👩‍🏫", analysis: [{metric: 'rights', impact: 20, text: "Você acionou a pessoa correta para garantir a proteção integral do seu amigo, incluindo seus direitos à educação e à proteção contra o trabalho infantil."}, {metric: 'duties', impact: 15, text: "Você cumpriu o dever de comunicar uma violação de direitos a quem pode de fato ajudar."}, {metric: 'community', impact: 15, text: "Sua atitude permite que a rede de proteção da comunidade atue para ajudar a criança e sua família."} ]}
+        ]
+    },
+    {
+        caseId: 5,
+        title: "Caso #106: A Privacidade Vigiada",
+        description: "Os pais de sua amiga instalaram um aplicativo que espelha todas as mensagens do celular dela no computador deles. Eles dizem que é para protegê-la, mas ela se sente sem privacidade.",
+        image: "https://img.freepik.com/free-vector/parents-spying-their-daughter-s-phone-concept-illustration_114360-8452.jpg",
+        eca: { title: "Art. 15 e 17: Direito à Liberdade e ao Respeito", description: "Garante o direito à liberdade, respeito e dignidade, o que inclui a inviolabilidade da integridade psíquica e moral, abrangendo o direito à privacidade." },
+        choices: [
+            { text: "Concordar com os pais, pois segurança é mais importante.", icon: "👍", analysis: [{metric: 'rights', impact: -15, text: "Você invalida o direito à privacidade e à dignidade da sua amiga, que é garantido pelo ECA."}, {metric: 'duties', impact: 0, text: "Você apoia o dever de cuidado dos pais, mas de uma forma extrema que ignora os direitos dos filhos."}, {metric: 'community', impact: -5, text: "Normalizar a vigilância excessiva pode criar relações de desconfiança entre pais e filhos."} ]},
+            { text: "Ajudar sua amiga a encontrar maneiras de burlar o aplicativo.", icon: "👨‍💻", analysis: [{metric: 'rights', impact: 5, text: "Você tenta proteger o direito à privacidade dela, mas de forma inadequada."}, {metric: 'duties', impact: -15, text: "Você está descumprindo o dever de respeito aos pais dela e incentivando o engano."}, {metric: 'community', impact: -10, text: "Essa atitude gera mais conflito e quebra de confiança, em vez de promover o diálogo."} ]},
+            { text: "Sugerir que sua amiga converse com os pais sobre confiança e limites.", icon: "💬", analysis: [{metric: 'rights', impact: 15, text: "Você incentiva a defesa do direito à privacidade por meio do diálogo e da construção de confiança."}, {metric: 'duties', impact: 15, text: "Você promove o dever do respeito mútuo entre pais e filhos."}, {metric: 'community', impact: 15, text: "Promover o diálogo é a forma mais saudável de equilibrar proteção e privacidade, fortalecendo os laços familiares."} ]}
+        ]
+    },
+    {
+        caseId: 6,
+        title: "Caso #107: A Campanha Eleitoral",
+        description: "Na eleição para o grêmio estudantil, o candidato da chapa concorrente começa a espalhar uma fofoca sobre o candidato da sua chapa para ganhar votos.",
+        image: "https://img.freepik.com/free-vector/gossip-concept-illustration_114360-1533.jpg",
+        eca: { title: "Art. 4 e 17: Dever de Proteção e Direito ao Respeito", description: "É dever de todos prevenir a ocorrência de ameaça ou violação dos direitos da criança e do adolescente, incluindo o direito à honra e imagem." },
+        choices: [
+            { text: "Espalhar uma fofoca ainda pior sobre o candidato concorrente.", icon: "🔥", analysis: [{metric: 'rights', impact: -20, text: "Você viola ativamente o direito ao respeito e à honra de outra pessoa."}, {metric: 'duties', impact: -20, text: "Você descumpre seu dever ético e contribui para um ambiente tóxico."}, {metric: 'community', impact: -20, text: "Sua ação destrói a credibilidade do processo democrático na escola."} ]},
+            { text: "Não fazer nada e deixar que a fofoca se espalhe.", icon: "🙈", analysis: [{metric: 'rights', impact: -10, text: "Sua omissão permite que o direito do seu colega seja violado."}, {metric: 'duties', impact: -10, text: "Você falha no seu dever de prevenir uma injustiça, conforme o Art. 4."}, {metric: 'community', impact: -10, text: "A passividade legitima práticas desonestas e enfraquece a confiança na comunidade."} ]},
+            { text: "Pedir uma reunião com a comissão eleitoral para denunciar a prática.", icon: "🏛️", analysis: [{metric: 'rights', impact: 15, text: "Você defende o direito do seu colega a um processo justo e à proteção de sua imagem."}, {metric: 'duties', impact: 15, text: "Você cumpre seu dever de zelar por um processo eleitoral ético e justo."}, {metric: 'community', impact: 15, text: "Sua atitude fortalece as instituições democráticas da escola e promove a justiça."} ]}
+        ]
+    },
+    {
+        caseId: 7,
+        title: "Caso #108: O Pedido de Socorro",
+        description: "Um amigo conta para você, em segredo, que está pensando em fugir de casa por causa de brigas constantes e um ambiente familiar muito opressivo. Ele pede para você não contar a ninguém.",
+        image: "https://img.freepik.com/free-vector/feeling-lonely-concept-illustration_114360-2911.jpg",
+        eca: { title: "Art. 101 e 136: Medidas de Proteção e Atribuições do Conselho Tutelar", description: "O ECA prevê medidas de proteção para crianças em situação de risco, e o Conselho Tutelar é o órgão encarregado de zelar por esses direitos." },
+        choices: [
+            { text: "Manter o segredo, pois você é um amigo leal.", icon: "🤐", analysis: [{metric: 'rights', impact: -15, text: "A lealdade não pode se sobrepor ao direito à proteção. Seu amigo está em risco, e o silêncio o impede de receber ajuda."}, {metric: 'duties', impact: -10, text: "Seu dever de proteger um amigo em situação de vulnerabilidade não está sendo cumprido."}, {metric: 'community', impact: -15, text: "A falta de comunicação impede que a rede de proteção (escola, conselho tutelar) atue."} ]},
+            { text: "Contar para os pais dele, para que resolvam o problema.", icon: "👨‍👩‍👦", analysis: [{metric: 'rights', impact: -5, text: "Pode ser uma solução, mas se os pais são a fonte do problema, sua ação pode piorar a situação de risco para seu amigo."}, {metric: 'duties', impact: 0, text: "Você tentou cumprir seu dever de ajudar, mas talvez da forma errada."}, {metric: 'community', impact: -5, text: "Acionar a fonte do conflito diretamente pode gerar uma crise maior sem a mediação adequada."} ]},
+            { text: "Procurar o orientador pedagógico ou um professor de confiança.", icon: "💡", analysis: [{metric: 'rights', impact: 20, text: "Você buscou a ajuda de um adulto responsável que pode acionar a rede de proteção correta, garantindo o direito do seu amigo à segurança."}, {metric: 'duties', impact: 15, text: "Você cumpriu seu dever fundamental de zelar pela segurança de um amigo, mesmo que isso signifique quebrar um segredo perigoso."}, {metric: 'community', impact: 20, text: "Sua ação ativa a comunidade escolar como um espaço seguro e de proteção, salvando seu amigo de uma situação de risco."} ]}
+        ]
+    },
+    {
+        caseId: 8,
+        title: "Caso #109: O Jogo Perigoso",
+        description: "Um novo 'desafio' viral perigoso está circulando na internet. Seus amigos acham engraçado e estão pensando em gravar um vídeo fazendo o desafio para ganhar seguidores.",
+        image: "https://img.freepik.com/free-vector/social-media-addiction-concept-illustration_114360-1847.jpg",
+        eca: { title: "Art. 7: Direito à Vida e à Saúde", description: "A criança e o adolescente têm direito a proteção à vida e à saúde, mediante a efetivação de políticas sociais públicas que permitam o nascimento e o desenvolvimento sadio e harmonioso." },
+        choices: [
+            { text: "Participar do desafio para não ser excluído do grupo.", icon: "🤳", analysis: [{metric: 'rights', impact: -20, text: "Você está violando seu próprio direito fundamental à vida e à saúde em troca de aceitação social."}, {metric: 'duties', impact: -20, text: "Você descumpre seu dever de autopreservação e de não incentivar práticas perigosas."}, {metric: 'community', impact: -15, text: "Sua participação ajuda a disseminar um comportamento de risco para toda a comunidade online."} ]},
+            { text: "Não participar, mas não dizer nada para não ser o 'careta'.", icon: "😒", analysis: [{metric: 'rights', impact: 10, text: "Você protegeu seu direito à saúde, o que é positivo."}, {metric: 'duties', impact: -10, text: "Você se omitiu do seu dever de alertar seus amigos sobre o perigo que eles correm."}, {metric: 'community', impact: -5, text: "Sua omissão permite que o comportamento de risco continue no seu círculo social sem nenhuma crítica."} ]},
+            { text: "Tentar convencer seus amigos de que o desafio é perigoso.", icon: "🧠", analysis: [{metric: 'rights', impact: 20, text: "Você protegeu seu direito à saúde e tentou ativamente proteger o de seus amigos."}, {metric: 'duties', impact: 15, text: "Você cumpriu seu dever de cuidar de si mesmo e zelar pelo bem-estar de seus pares."}, {metric: 'community', impact: 15, text: "Sua atitude crítica e responsável ajuda a construir uma comunidade mais consciente e segura."} ]}
+        ]
+    },
+    {
+        caseId: 9,
+        title: "Caso #110: A Exclusão Sutil",
+        description: "Um aluno novo, que veio de outra região do país e tem um sotaque diferente, entra na turma. Ninguém o maltrata, mas ele nunca é chamado para os grupos de trabalho ou para o time de futebol.",
+        image: "https://img.freepik.com/free-vector/sad-girl-suffering-from-bullying_1308-112327.jpg",
+        eca: { title: "Art. 5: Proteção contra Discriminação", description: "Nenhuma criança ou adolescente será objeto de qualquer forma de negligência, discriminação, exploração, violência, crueldade e opressão." },
+        choices: [
+            { text: "Não fazer nada, pois ele eventualmente vai se enturmar sozinho.", icon: "⏳", analysis: [{metric: 'rights', impact: -10, text: "A omissão permite que uma forma sutil de discriminação e negligência continue, violando o Art. 5."}, {metric: 'duties', impact: -10, text: "Você falha no seu dever de promover um ambiente acolhedor e inclusivo."}, {metric: 'community', impact: -10, text: "A falta de ação de todos cria uma comunidade escolar fragmentada e pouco acolhedora."} ]},
+            { text: "Convidá-lo para o seu grupo de trabalho desta vez.", icon: "🙋", analysis: [{metric: 'rights', impact: 15, text: "Você age diretamente para garantir o direito dele à inclusão e combater a discriminação."}, {metric: 'duties', impact: 15, text: "Você cumpre ativamente seu dever de ser inclusivo e solidário."}, {metric: 'community', impact: 15, text: "Sua atitude serve de exemplo e começa a quebrar o padrão de exclusão na comunidade."} ]},
+            { text: "Falar mal dos outros alunos por serem exclusivos.", icon: "😠", analysis: [{metric: 'rights', impact: 0, text: "Você reconhece o erro, mas não age de forma a garantir o direito do colega."}, {metric: 'duties', impact: -5, text: "Criticar sem agir não é uma forma eficaz de cumprir seu dever. A fofoca também é prejudicial."}, {metric: 'community', impact: -5, text: "Sua atitude cria mais conflito e negatividade na comunidade, em vez de construir pontes."} ]}
+        ]
+    },
+    {
+        caseId: 10,
+        title: "Caso #111: A Medida Socioeducativa",
+        description: "Um colega que cometeu um ato infracional e cumpriu medida socioeducativa de prestação de serviços à comunidade volta para a escola. Alguns alunos querem isolá-lo.",
+        image: "https://img.freepik.com/free-vector/community-service-abstract-concept-vector-illustration_335657-2483.jpg",
+        eca: { title: "Art. 112: Medidas Socioeducativas", description: "As medidas socioeducativas têm um caráter pedagógico e visam a reeducação e a reintegração social do adolescente." },
+        choices: [
+            { text: "Participar do isolamento para se proteger.", icon: "👥", analysis: [{metric: 'rights', impact: -15, text: "Você nega ao colega o direito à reintegração social, que é o objetivo da medida socioeducativa."}, {metric: 'duties', impact: -15, text: "Você descumpre seu dever de não discriminar e de acolher."}, {metric: 'community', impact: -15, text: "Sua atitude contribui para o fracasso da medida e para a exclusão, o que é péssimo para a comunidade."} ]},
+            { text: "Tratar o colega normalmente, como faria com qualquer outro.", icon: "✅", analysis: [{metric: 'rights', impact: 20, text: "Você garante o direito dele à dignidade e à reintegração, compreendendo o propósito da medida."}, {metric: 'duties', impact: 15, text: "Você cumpre seu dever de não julgar e de promover um ambiente justo."}, {metric: 'community', impact: 15, text: "Sua atitude é fundamental para o sucesso da reintegração e para uma comunidade mais justa e compassiva."} ]},
+            { text: "Ficar observando para ver se ele 'aprendeu a lição'.", icon: "👀", analysis: [{metric: 'rights', impact: -5, text: "Sua desconfiança e vigilância violam o direito dele à dignidade e a um recomeço."}, {metric: 'duties', impact: -5, text: "Seu dever é acolher, não atuar como um juiz ou vigia."}, {metric: 'community', impact: -5, text: "Essa postura cria um clima de suspeita e dificulta a reintegração, prejudicando a confiança na comunidade."} ]}
+        ]
+    },
+    {
+        caseId: 11,
+        title: "Caso #112: O Conteúdo Impróprio",
+        description: "O algoritmo de uma plataforma de vídeos começa a recomendar para você e seus amigos conteúdos com violência e linguagem que são claramente para maiores de idade.",
+        image: "https://img.freepik.com/free-vector/parental-advisory-abstract-concept-vector-illustration_335657-2346.jpg",
+        eca: { title: "Art. 71 e 76: Acesso à Cultura e Classificação Indicativa", description: "É dever do poder público regular o acesso a diversões e espetáculos, informando sobre sua natureza e a faixa etária recomendada." },
+        choices: [
+            { text: "Continuar assistindo, pois é só um vídeo.", icon: "▶️", analysis: [{metric: 'rights', impact: -10, text: "Você se expõe a um conteúdo que pode ser prejudicial ao seu desenvolvimento, ignorando seu direito à proteção."}, {metric: 'duties', impact: -10, text: "Você tem o dever de se proteger e fazer escolhas de mídia conscientes."}, {metric: 'community', impact: -10, text: "Ao engajar com esse conteúdo, você 'ensina' ao algoritmo que ele é aceitável, podendo recomendá-lo para outras crianças."} ]},
+            { text: "Denunciar o vídeo e buscar ativamente por outros conteúdos.", icon: "👍", analysis: [{metric: 'rights', impact: 15, text: "Você protege seu direito a um conteúdo adequado e seguro."}, {metric: 'duties', impact: 15, text: "Você cumpre seu dever de proteger a si mesmo e de sinalizar conteúdos impróprios."}, {metric: 'community', impact: 15, text: "Sua denúncia ajuda a proteger outras crianças e a melhorar o ambiente digital para toda a comunidade."} ]},
+            { text: "Não assistir, mas não denunciar, apenas fechar a página.", icon: "❌", analysis: [{metric: 'rights', impact: 10, text: "Você protegeu a si mesmo, o que é bom."}, {metric: 'duties', impact: -5, text: "Você se omitiu do dever de ajudar a proteger os outros ao não denunciar o conteúdo."}, {metric: 'community', impact: -5, text: "O conteúdo impróprio permanece na plataforma, representando um risco para outros membros da comunidade."} ]}
+        ]
+    },
+    {
+        caseId: 12,
+        title: "Caso #113: A Venda Proibida",
+        description: "Você vê o dono de uma loja perto da escola vendendo cigarros eletrônicos (vapes) para adolescentes que parecem ter menos de 18 anos.",
+        image: "https://img.freepik.com/free-vector/vaping-concept-illustration_114360-22 vaping.jpg",
+        eca: { title: "Art. 243: Venda de Produtos Proibidos", description: "É crime vender, fornecer, servir, ministrar ou entregar a criança ou adolescente produtos cujos componentes possam causar dependência física ou psíquica." },
+        choices: [
+            { text: "Ignorar, pois a decisão de comprar é dos adolescentes.", icon: "😒", analysis: [{metric: 'rights', impact: -15, text: "Sua omissão ignora o direito à saúde e à proteção desses adolescentes, que são legalmente protegidos contra isso."}, {metric: 'duties', impact: -15, text: "É dever de toda a sociedade proteger crianças de produtos perigosos."}, {metric: 'community', impact: -15, text: "Permitir essa prática cria um ponto de risco para a saúde de todos os jovens da comunidade escolar."} ]},
+            { text: "Tirar uma foto e postar nas redes sociais para expor o dono da loja.", icon: "📸", analysis: [{metric: 'rights', impact: 0, text: "Sua intenção é proteger, mas a exposição pública pode gerar consequências legais para você e não é o canal correto de denúncia."}, {metric: 'duties', impact: -5, text: "O justiçamento virtual não é o dever cívico correto; o certo é acionar as autoridades."}, {metric: 'community', impact: -10, text: "Pode gerar pânico e desinformação, além de não garantir uma solução efetiva para o problema."} ]},
+            { text: "Contar o fato aos seus pais ou a um responsável da escola.", icon: "👨‍👩‍👧‍👦", analysis: [{metric: 'rights', impact: 20, text: "Você buscou o caminho mais seguro e eficaz para proteger o direito à saúde dos adolescentes."}, {metric: 'duties', impact: 15, text: "Você cumpriu seu dever de comunicar uma ilegalidade grave a adultos que podem tomar as providências corretas (como acionar a polícia ou o Conselho Tutelar)."}, {metric: 'community', impact: 20, text: "Sua ação responsável ajuda a proteger toda a comunidade de jovens de um perigo real."} ]}
+        ]
+    },
+    {
+        caseId: 13,
+        title: "Caso #114: A Necessidade de Cuidado",
+        description: "Um colega seu vem para a escola com muita frequência doente ou com pequenos machucados. Ele parece triste e descuidado. Você suspeita que algo está errado em casa.",
+        image: "https://img.freepik.com/free-vector/stop-child-abuse-concept_23-2148689932.jpg",
+        eca: { title: "Art. 13: Notificação Compulsória", description: "Os casos de suspeita ou confirmação de castigo físico, de tratamento cruel ou degradante e de maus-tratos contra criança ou adolescente serão obrigatoriamente comunicados ao Conselho Tutelar." },
+        choices: [
+            { text: "Perguntar diretamente a ele na frente de todos o que está acontecendo.", icon: "🗣️", analysis: [{metric: 'rights', impact: -10, text: "Sua abordagem, embora talvez bem-intencionada, expõe seu colega a um enorme constrangimento, violando seu direito à dignidade."}, {metric: 'duties', impact: -5, text: "Seu dever é ajudar, mas de forma cuidadosa e respeitosa, não expondo a vítima."}, {metric: 'community', impact: -10, text: "A exposição pública pode fazer com que a vítima se feche ainda mais, dificultando o pedido de ajuda."} ]},
+            { text: "Não fazer nada, pois você não tem provas e pode ser só imaginação.", icon: "🤔", analysis: [{metric: 'rights', impact: -15, text: "A lei exige a comunicação da SUSPEITA. Esperar por provas pode custar a segurança e o bem-estar do seu colega."}, {metric: 'duties', impact: -15, text: "Você está se omitindo do dever obrigatório de comunicar uma suspeita de maus-tratos."}, {metric: 'community', impact: -15, text: "A comunidade falha em proteger um de seus membros mais vulneráveis."} ]},
+            { text: "Relatar sua preocupação de forma confidencial a um professor ou diretor.", icon: "🤫", analysis: [{metric: 'rights', impact: 20, text: "Você acionou o canal correto para que o direito à proteção e ao cuidado do seu colega seja garantido."}, {metric: 'duties', impact: 20, text: "Você cumpriu seu dever legal e moral de comunicar a suspeita, conforme exige o ECA, de forma segura e responsável."}, {metric: 'community', impact: 20, text: "Sua ação permite que a rede de proteção da comunidade funcione, garantindo a segurança da criança."} ]}
+        ]
+    },
+    {
+        caseId: 14,
+        title: "Caso #115: O Projeto Comunitário",
+        description: "A prefeitura abriu uma consulta pública para que os jovens decidam o que construir em um terreno baldio do bairro. Seus amigos querem uma pista de skate, mas um outro grupo quer uma horta comunitária.",
+        image: "https://img.freepik.com/free-vector/people-volunteering-doing-social-work_74855-6627.jpg",
+        eca: { title: "Art. 16, VI: Direito de Participar da Vida Comunitária", description: "O direito à liberdade abrange a participação na vida familiar e comunitária, sem discriminação." },
+        choices: [
+            { text: "Tentar convencer a todos que a sua ideia (pista de skate) é a única que importa.", icon: "🛹", analysis: [{metric: 'rights', impact: 5, text: "Você exerce seu direito de opinião, mas de forma impositiva, desrespeitando o direito dos outros."}, {metric: 'duties', impact: -10, text: "Você falha no seu dever de buscar o consenso e respeitar a opinião divergente."}, {metric: 'community', impact: -10, text: "Sua atitude gera divisão e conflito, enfraquecendo a capacidade da comunidade de tomar uma decisão conjunta."} ]},
+            { text: "Abrir mão da sua ideia e deixar o outro grupo vencer para não ter briga.", icon: "🏳️", analysis: [{metric: 'rights', impact: -10, text: "Você abre mão do seu direito de participação e de expressar sua vontade."}, {metric: 'duties', impact: -5, text: "Evitar o debate não é o mesmo que cumprir o dever de construir uma solução. É uma omissão."}, {metric: 'community', impact: -5, text: "A comunidade perde a chance de ter um projeto que poderia ser melhorado com o debate e a soma de ideias."} ]},
+            { text: "Propor uma reunião entre os grupos para buscar uma solução mista ou um acordo.", icon: "💡", analysis: [{metric: 'rights', impact: 15, text: "Você garante que o direito de participação de todos seja exercido de forma plena e democrática."}, {metric: 'duties', impact: 15, text: "Você cumpre seu dever cívico de mediar conflitos e buscar o bem comum."}, {metric: 'community', impact: 20, text: "Sua liderança promove o diálogo e fortalece a comunidade, possibilitando um projeto que beneficie o maior número de pessoas."} ]}
+        ]
     }
 ];
+
+// O restante do código JavaScript permanece idêntico.
 
 const startScreen = document.getElementById('start-screen');
 const gameContainer = document.getElementById('game-container');
@@ -314,18 +471,16 @@ function startGame() {
 }
 
 function initializeGame() {
-    // Esconde a tela de início
     startScreen.style.opacity = '0';
     startScreen.style.visibility = 'hidden';
-    startScreen.style.display = 'none'; // Garante que saia do fluxo do documento
+    startScreen.style.display = 'none';
     
-    // Mostra o container do jogo
     gameContainer.style.display = 'flex';
     setTimeout(() => {
         gameContainer.style.opacity = '1';
         gameContainer.style.transform = 'scale(1)';
         startGame();
-    }, 100); // Reduzi o tempo para uma transição mais rápida
+    }, 500);
 }
 </script>
 
