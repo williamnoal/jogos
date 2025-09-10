@@ -55,11 +55,11 @@
         }
 
         h1 {
-            font-size: 2.5em; /* Título levemente reduzido */
+            font-size: 2.2em; /* Título reduzido */
             font-weight: 800;
             color: var(--cor-primaria);
             margin-top: 0;
-            margin-bottom: 30px; /* Espaçamento reduzido */
+            margin-bottom: 20px; /* Espaçamento reduzido */
             text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
         }
 
@@ -67,16 +67,16 @@
             display: flex;
             flex-wrap: wrap;
             justify-content: center;
-            gap: 20px; /* Espaçamento entre cards reduzido */
-            max-width: 1400px; /* Largura máxima aumentada para caber mais cards */
+            gap: 15px; /* Espaçamento entre cards reduzido */
+            max-width: 1400px;
             margin: 0 auto;
         }
 
         .game-card {
             background-color: var(--cor-branco);
             border-radius: 20px;
-            width: 230px; /* Largura do card reduzida */
-            padding: 20px; /* Padding interno reduzido */
+            width: 220px; /* Largura do card reduzida */
+            padding: 15px; /* Padding interno reduzido */
             box-shadow: var(--sombra);
             text-align: center;
             text-decoration: none;
@@ -93,12 +93,13 @@
         }
 
         .game-card .icon {
-            font-size: 3em; /* Ícone reduzido */
-            margin-bottom: 15px; /* Espaçamento reduzido */
+            font-size: 2.8em; /* Ícone reduzido */
+            margin-bottom: 10px; /* Espaçamento reduzido */
         }
 
         .game-card h2 {
-            font-size: 1.3em; /* Título do card reduzido */
+            font-size: 1.2em; /* Título do card reduzido */
+            margin-top: 0;
             margin-bottom: 10px;
             color: var(--cor-primaria);
         }
@@ -106,16 +107,17 @@
         .game-card p {
             font-size: 0.8em; /* Descrição reduzida */
             line-height: 1.5;
-            margin-bottom: 20px; /* Espaçamento reduzido */
+            margin-bottom: 15px; /* Espaçamento reduzido */
             flex-grow: 1;
         }
 
         .play-button {
             background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria));
             color: var(--cor-branco);
-            padding: 10px 18px; /* Botão reduzido */
+            padding: 8px 16px; /* Botão reduzido */
             border-radius: 50px;
             font-weight: 600;
+            font-size: 0.9em; /* Fonte do botão reduzida */
             transition: transform 0.2s, box-shadow 0.2s;
         }
 
@@ -130,6 +132,13 @@
     <div class="container">
         <h1>Jogos Educacionais</h1>
         <div class="game-grid">
+            <a href="analise_gramatical.html" class="game-card">
+                <div class="icon">📝</div>
+                <h2>Análise Gramatical</h2>
+                <p>Identifique verbos, substantivos e adjetivos em manchetes de notícias e veja seu relatório.</p>
+                <div class="play-button">Analisar Agora</div>
+            </a>
+
             <a href="https://desafio-eca.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
                 <div class="icon">🛡️</div>
                 <h2>Desafio ECA</h2>
@@ -137,7 +146,7 @@
                 <div class="play-button">Jogar Agora</div>
             </a>
             
-            <a href="civitas.html" target="_blank" rel="noopener noreferrer" class="game-card">
+            <a href="civitas.html" class="game-card">
                 <div class="icon">⚖️</div>
                 <h2>Projeto Civitas</h2>
                 <p>Analise casos complexos baseados no ECA e tome decisões que impactam a sociedade.</p>
