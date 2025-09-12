@@ -49,6 +49,21 @@
             align-items: center;
             padding: 20px;
         }
+        
+          .back-button {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 1.5em;
+            color: var(--cor-primaria);
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s ease;
+        }
+
+          .back-button:hover {
+            transform: scale(1.1);
+        }
 
         .container {
             background-color: var(--cor-texto-claro);
@@ -514,7 +529,7 @@
     </style>
 </head>
 <body>
-
+    <a href="desafio-eca.html" class="back-button" title="Voltar ao Portal">‹ Voltar</a>
     <div class="container">
         <div id="tela-inicial">
             <header>
@@ -862,3 +877,4 @@
     </script>
 </body>
 </html>
+
