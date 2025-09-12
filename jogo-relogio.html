@@ -20,8 +20,8 @@
             overflow: hidden;
             position: relative;
         }
-
-        /* INÍCIO DO CÓDIGO ADICIONADO */
+        
+        /* INÍCIO DO CÓDIGO ADICIONADO ESTRITAMENTE PARA A SETA */
         .back-button {
             position: absolute;
             top: 20px;
@@ -196,40 +196,47 @@
         const nextButtonEl = document.getElementById('next-button');
 
         let correctHour;
+        let correctMinutes;
 
         function getRandomHour() {
             return Math.floor(Math.random() * 12) + 1;
         }
 
-        function createClock(hour) {
+        function createClock(hour, minutes) {
             const clock = document.createElement('div');
             clock.classList.add('clock');
 
+            const minuteHand = document.createElement('div');
+            minuteHand.classList.add('hand', 'minute-hand');
+            const minuteAngle = (minutes / 60) * 360 + 90; // +90 para ajustar a posição inicial
+            minuteHand.style.transform = `rotate(${minuteAngle}deg)`;
+
             const hourHand = document.createElement('div');
             hourHand.classList.add('hand', 'hour-hand');
-            const hourAngle = (hour % 12) * 30 + 90; // +90 para ajustar a posição inicial
+            const hourAngle = ((hour % 12) + minutes / 60) * 30 + 90; // +90 e ajuste para minutos
             hourHand.style.transform = `rotate(${hourAngle}deg)`;
             
+            clock.appendChild(minuteHand);
             clock.appendChild(hourHand);
             
-            clock.addEventListener('click', () => checkAnswer(hour));
+            clock.addEventListener('click', () => checkAnswer(hour, minutes));
             return clock;
         }
 
         function newRound() {
             feedbackEl.textContent = '';
-            feedbackEl.style.color = '';
             clocksContainerEl.innerHTML = '';
             nextButtonEl.style.display = 'none';
 
             correctHour = getRandomHour();
-            
-            let options = [correctHour];
-            // Agora gera 5 opções no total
-            while (options.length < 5) {
-                let randomOption = getRandomHour();
-                if (!options.includes(randomOption)) {
-                    options.push(randomOption);
+            correctMinutes = 0; // Sempre na hora certa
+
+            let options = [{ hour: correctHour, minutes: correctMinutes }];
+            while (options.length < 3) {
+                let randomHour = getRandomHour();
+                let randomMinutes = Math.floor(Math.random() * 12) * 5;
+                if (!options.find(opt => opt.hour === randomHour && opt.minutes === randomMinutes)) {
+                    options.push({ hour: randomHour, minutes: randomMinutes });
                 }
             }
 
@@ -237,16 +244,16 @@
 
             instructionEl.textContent = `Encontre o relógio que marca ${correctHour}:00`;
 
-            options.forEach(hour => {
-                const clock = createClock(hour);
+            options.forEach(time => {
+                const clock = createClock(time.hour, time.minutes);
                 clocksContainerEl.appendChild(clock);
             });
         }
 
-        function checkAnswer(selectedHour) {
+        function checkAnswer(selectedHour, selectedMinutes) {
             if (feedbackEl.textContent !== '') return; 
 
-            if (selectedHour === correctHour) {
+            if (selectedHour === correctHour && selectedMinutes === correctMinutes) {
                 feedbackEl.textContent = 'Mecanismo Perfeito! Acertou! 🎉';
                 feedbackEl.style.color = '#76ff03';
                 nextButtonEl.style.display = 'block';
