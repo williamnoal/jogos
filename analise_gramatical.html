@@ -6,16 +6,16 @@
     <title>Jornal do Aluno: Análise de Manchetes</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Merriweather:wght@400;700&family=Playfair+Display:wght@700&display=swap');
-        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap'); /* Para botões */
+        @import url('https://fonts.googleapis.com/css2?family=Roboto+Mono:wght@400&display=swap');
 
         :root {
-            --verbo-cor: #007bff;     /* Azul de jornal */
-            --substantivo-cor: #28a745; /* Verde para destaque */
-            --adjetivo-cor: #ffc107;  /* Amarelo para destaque */
-            --texto-manchete-cor: #343a40; /* Cor escura para o texto principal */
-            --papel-claro: #fcf8e3;   /* Cor de papel antigo */
-            --papel-escuro: #e0d8c3;  /* Sombra do papel */
-            --borda-jornal: #6c757d;  /* Cinza para bordas de seções */
+            --verbo-cor: #007bff;
+            --substantivo-cor: #28a745;
+            --adjetivo-cor: #ffc107;
+            --texto-manchete-cor: #343a40;
+            --papel-claro: #fcf8e3;
+            --papel-escuro: #e0d8c3;
+            --borda-jornal: #6c757d;
         }
 
         *, *::before, *::after { box-sizing: border-box; }
@@ -25,7 +25,7 @@
             height: 100%; width: 100%;
             overflow: hidden;
             font-family: 'Merriweather', serif;
-            background-color: #f8f9fa; /* Fundo mais neutro */
+            background-color: #f8f9fa;
             color: var(--texto-manchete-cor);
         }
 
@@ -38,14 +38,13 @@
             background-color: var(--papel-claro);
             border: 2px solid var(--borda-jornal);
             border-radius: 5px;
-            box-shadow: 10px 10px 0px var(--papel-escuro), 0 0 15px rgba(0,0,0,0.1); /* Efeito de sombra de papel */
+            box-shadow: 10px 10px 0px var(--papel-escuro), 0 0 15px rgba(0,0,0,0.1);
             width: 100%; max-width: 950px; height: 95vh;
             display: flex; flex-direction: column;
             overflow: hidden; padding: 30px 50px;
             position: relative;
         }
-        
-        /* Adiciona textura de papel */
+
         .game-card::before, .report-screen::before {
             content: '';
             position: absolute;
@@ -80,17 +79,14 @@
         
         .word { 
             padding: 2px 8px; border-radius: 3px; cursor: pointer; transition: all 0.3s ease; 
-            border-bottom: 2px dotted var(--borda-jornal); /* Linha tracejada de jornal */
-            background-color: transparent; /* Inicia transparente */
-            color: inherit; /* Mantém a cor do texto padrão */
+            border-bottom: 2px dotted var(--borda-jornal);
         }
         .word.selected { background-color: rgba(0,0,0,0.1); }
         .word.classified { cursor: default; border-bottom: none; color: white; text-shadow: 1px 1px 2px rgba(0,0,0,0.3); }
-        
-        /* Cores das classificações (visíveis após a seleção, mesmo se errada) */
-        .word.classified[data-selected-type="verbo"] { background-color: var(--verbo-cor); }
-        .word.classified[data-selected-type="substantivo"] { background-color: var(--substantivo-cor); }
-        .word.classified[data-selected-type="adjetivo"] { background-color: var(--adjetivo-cor); color: var(--texto-manchete-cor); }
+
+        .word.classified.verbo { background-color: var(--verbo-cor); }
+        .word.classified.substantivo { background-color: var(--substantivo-cor); }
+        .word.classified.adjetivo { background-color: var(--adjetivo-cor); color: var(--texto-manchete-cor); }
 
         #classification-box {
             position: absolute; display: none; gap: 10px; padding: 8px;
@@ -120,31 +116,27 @@
         .btn-avancar:disabled { background-color: var(--borda-jornal); cursor: not-allowed; opacity: 0.7; }
         .btn-avancar:not(:disabled):hover { transform: scale(1.03); box-shadow: 0 5px 15px rgba(0,0,0,0.2); }
         
-        /* ESTILOS DO RELATÓRIO */
-        .report-screen { display: none; overflow-y: auto; }
-        .report-content { flex-grow: 1; padding-right: 15px; } /* Ajusta padding para barra de rolagem */
+        .report-screen { display: none; }
+        .report-content { overflow-y: auto; flex-grow: 1; padding-right: 15px; }
         .report-content h2 { 
             text-align: center; font-family: 'Playfair Display', serif; font-size: 1.8em; 
             border-bottom: 1px solid var(--borda-jornal); padding-bottom: 10px; margin-bottom: 20px; 
-            color: var(--texto-manchete-cor);
         }
         
         #results-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 1em; }
         #results-table th, #results-table td { padding: 10px; text-align: center; border: 1px solid var(--borda-jornal); }
-        #results-table th { background-color: var(--papel-escuro); color: var(--texto-manchete-cor); }
-        .acertos { color: var(--substantivo-cor); font-weight: bold; }
-        .erros { color: #dc3545; font-weight: bold; } /* Erros no relatório em vermelho clássico */
+        #results-table th { background-color: var(--papel-escuro); }
+        .acertos { color: #28a745; font-weight: bold; }
+        .erros { color: #dc3545; font-weight: bold; }
 
         .review-item { margin-bottom: 25px; background-color: rgba(0,0,0,0.05); padding: 15px; border-radius: 3px; border: 1px solid var(--papel-escuro); }
         .review-item .sentence { font-size: 1.8em; margin-bottom: 10px; font-family: 'Playfair Display', serif; }
         .review-item .explanation { font-size: 0.9em; color: var(--borda-jornal); text-align: left; margin-top: 10px; border-top: 1px dashed var(--papel-escuro); padding-top: 10px; }
-        .review-item .explanation strong { color: var(--texto-manchete-cor); font-weight: bold; }
+        .review-item .explanation strong { color: var(--texto-manchete-cor); }
 
-        /* Scrollbar styles for the report section */
         .report-content::-webkit-scrollbar { width: 8px; }
-        .report-content::-webkit-scrollbar-track { background: var(--papel-escuro); border-radius: 4px; }
-        .report-content::-webkit-scrollbar-thumb { background: var(--borda-jornal); border-radius: 4px; }
-        .report-content::-webkit-scrollbar-thumb:hover { background: var(--texto-manchete-cor); }
+        .report-content::-webkit-scrollbar-track { background: var(--papel-escuro); }
+        .report-content::-webkit-scrollbar-thumb { background: var(--borda-jornal); }
     </style>
 </head>
 <body>
@@ -156,14 +148,11 @@
                 <p id="ficha-counter"></p>
                 <div class="progress-bar-container"><div id="progress-bar"></div></div>
             </header>
-
             <main id="fichas-container"></main>
-            
             <footer>
                 <button id="btn-avancar" class="btn-avancar" disabled>PRÓXIMA MANCHETE</button>
             </footer>
         </div>
-
         <div class="report-screen" id="report-container">
             <header><h1>Relatório da Redação</h1></header>
             <div class="report-content">
@@ -172,7 +161,6 @@
                     <thead><tr><th>Classe Gramatical</th><th>Acertos</th><th>Erros</th></tr></thead>
                     <tbody></tbody>
                 </table>
-                
                 <h2>Gabarito Comentado</h2>
                 <div id="review-list"></div>
             </div>
@@ -180,18 +168,9 @@
     </div>
     
     <div id="classification-box">
-        <button class="class-btn btn-verbo" data-type="verbo">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
-            Verbo
-        </button>
-        <button class="class-btn btn-substantivo" data-type="substantivo">
-            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
-            Substantivo
-        </button>
-        <button class="class-btn btn-adjetivo" data-type="adjetivo">
-             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z"></path></svg>
-            Adjetivo
-        </button>
+        <button class="class-btn btn-verbo" data-type="verbo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg> Verbo</button>
+        <button class="class-btn btn-substantivo" data-type="substantivo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg> Substantivo</button>
+        <button class="class-btn btn-adjetivo" data-type="adjetivo"><svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z"></path></svg> Adjetivo</button>
     </div>
 
     <script>
@@ -273,13 +252,11 @@
             ficha.sentence.split(' ').forEach(wordText => {
                 const cleanWord = wordText.replace(/[.,]/g, '');
                 const span = document.createElement('span');
-                
-                // Adiciona um espaço fixo para evitar que as palavras se juntem
-                span.textContent = wordText + (wordText.endsWith('.') || wordText.endsWith(',') ? '' : ' '); 
+                span.textContent = wordText + ' ';
                 
                 if (ficha.words[cleanWord]) {
                     span.classList.add('word');
-                    span.dataset.correctType = ficha.words[cleanWord]; // Guarda o tipo correto
+                    span.dataset.correctType = ficha.words[cleanWord];
                     span.addEventListener('click', handleWordClick);
                 }
                 sentenceEl.appendChild(span);
@@ -300,8 +277,7 @@
 
         function handleWordClick(event) {
             const target = event.target;
-            if (target.classList.contains('classified')) return; // Não clica em palavra já classificada
-
+            if (target.classList.contains('classified')) return;
             if(selectedWordEl) selectedWordEl.classList.remove('selected');
             
             selectedWordEl = target;
@@ -322,10 +298,9 @@
         function handleClassification(selectedType) {
             if (!selectedWordEl) return;
             
-            const correctType = selectedWordEl.dataset.correctType; // Pega o tipo correto
+            const correctType = selectedWordEl.dataset.correctType;
             const wordText = selectedWordEl.textContent.trim().replace(/[.,]/g, '');
 
-            // 1. Registrar o dado para o relatório
             reportData.push({
                 word: wordText,
                 correctClass: correctType,
@@ -333,18 +308,14 @@
                 isCorrect: selectedType === correctType
             });
 
-            // 2. Aplicar feedback visual (apenas a cor selecionada, sem erro visual)
             selectedWordEl.classList.remove('selected');
-            selectedWordEl.classList.add('classified');
-            selectedWordEl.dataset.selectedType = selectedType; // Guarda a seleção do aluno
+            selectedWordEl.classList.add('classified', selectedType); // Adiciona a classe da cor selecionada
             
-            // 3. Checar avanço
             attemptedWordsCount++;
             if (attemptedWordsCount === totalWordsToClassify) {
                 btnAvancar.disabled = false;
             }
 
-            // Esconde a caixa de classificação
             selectedWordEl = null;
             classificationBox.style.display = 'none';
         }
@@ -382,8 +353,7 @@
                     const cleanWord = wordText.replace(/[.,]/g, '');
                     if (ficha.words[cleanWord]) {
                         const type = ficha.words[cleanWord];
-                        const textColor = type === 'adjetivo' ? var(--texto-manchete-cor) : 'white'; /* Adjetivo com texto escuro */
-                        return `<span class="word classified correct-${type}" style="background-color: var(--${type}-cor); color: ${textColor};">${wordText}</span>`;
+                        return `<span class="word classified ${type}">${wordText}</span>`;
                     }
                     return `<span> ${wordText} </span>`;
                 }).join('');
