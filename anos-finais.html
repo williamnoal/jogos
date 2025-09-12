@@ -58,7 +58,6 @@
         
         .portal-header {
             text-align: center;
-            /* AJUSTE: Margem ainda menor */
             margin-bottom: 25px; 
             animation: fadeInDown 1s ease-out;
         }
@@ -84,9 +83,7 @@
         
         .games-grid {
             display: grid;
-            /* AJUSTE: Largura mínima dos cards reduzida */
             grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-            /* AJUSTE: Espaçamento entre cards reduzido */
             gap: 15px;
             width: 100%;
             padding: 10px;
@@ -101,7 +98,6 @@
 
         .game-card {
             background-color: var(--cor-branco);
-            /* AJUSTE: Borda e padding ainda menores */
             border-radius: 12px;
             padding: 15px;
             text-align: center;
@@ -119,7 +115,6 @@
             box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
         }
 
-        /* AJUSTES FINAIS DE TAMANHO NOS ELEMENTOS INTERNOS */
         .game-card .icon { font-size: 2.5em; line-height: 1; margin-bottom: 8px; }
         .game-card h2 { font-size: 1.15em; margin: 0 0 8px; color: var(--cor-primaria); }
         .game-card p { font-size: 0.8em; line-height: 1.4; color: #666; margin-bottom: 15px; flex-grow: 1; }
@@ -128,7 +123,6 @@
             display: inline-block; 
             background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria)); 
             color: var(--cor-branco); 
-            /* AJUSTE: Padding e fonte do botão reduzidos */
             padding: 8px 20px; 
             font-size: 0.9em;
             border-radius: 50px; 
@@ -149,7 +143,7 @@
     </style>
 </head>
 <body>
-    <a href="../jogos/index.html" class="back-button" title="Voltar ao Portal Principal">‹ Voltar</a>
+    <a href="index.html" class="back-button" title="Voltar ao Portal Principal">‹ Voltar</a>
     <div class="portal-container">
         <header class="portal-header">
             <h1>Jogos Educacionais</h1>
