@@ -1,0 +1,386 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redação Digital: Edição Avaliativa</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lexend:wght@400;600;700&display=swap');
+
+        :root {
+            --verbo-glow: #00a8ff;
+            --substantivo-glow: #4cd137;
+            --adjetivo-glow: #fbc531;
+            --erro-glow: #e84393;
+            
+            --bg-start: #191970;
+            --bg-end: #000033;
+
+            --card-bg: rgba(30, 30, 80, 0.4);
+            --card-border: rgba(255, 255, 255, 0.2);
+            --text-color: #f5f6fa;
+            --text-muted: #aaa6c3;
+        }
+
+        *, *::before, *::after { box-sizing: border-box; }
+
+        html, body {
+            margin: 0; padding: 0;
+            height: 100%; width: 100%;
+            overflow: hidden;
+            font-family: 'Lexend', sans-serif;
+            background: linear-gradient(135deg, var(--bg-start), var(--bg-end));
+            color: var(--text-color);
+        }
+
+        .container {
+            display: flex; justify-content: center; align-items: center;
+            height: 100vh; padding: 20px;
+        }
+
+        .game-card, .report-screen {
+            background: var(--card-bg);
+            border: 1px solid var(--card-border);
+            border-radius: 24px;
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.3);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
+            width: 100%; max-width: 900px; height: 95vh;
+            display: flex; flex-direction: column;
+            overflow: hidden; padding: 20px 40px;
+        }
+
+        header { text-align: center; padding-bottom: 20px; }
+        h1 { margin: 0; font-size: 1.8em; font-weight: 700; }
+        #ficha-counter { font-size: 1em; color: var(--text-muted); font-weight: 400; }
+
+        .progress-bar-container { width: 100%; height: 8px; background-color: rgba(0,0,0,0.3); border-radius: 4px; margin-top: 15px; overflow: hidden; }
+        #progress-bar { width: 0%; height: 100%; background: linear-gradient(90deg, var(--verbo-glow), var(--substantivo-glow), var(--adjetivo-glow)); border-radius: 4px; transition: width 0.5s cubic-bezier(0.25, 1, 0.5, 1); }
+
+        main { flex-grow: 1; display: flex; flex-direction: column; justify-content: center; align-items: center; }
+        .ficha { display: none; text-align: center; width: 100%; }
+        .ficha.active { display: block; animation: fadeIn 0.6s cubic-bezier(0.25, 1, 0.5, 1); }
+        @keyframes fadeIn { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+
+        .instruction { font-size: 1.2em; color: var(--text-muted); margin-bottom: 30px; }
+        .sentence { font-size: 2.2em; line-height: 1.5; font-weight: 600; }
+        
+        .word { padding: 2px 6px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; border-bottom: 3px dashed rgba(255, 255, 255, 0.3); }
+        .word.selected { background-color: rgba(255,255,255,0.2); border-bottom-style: solid; }
+        .word.classified { cursor: default; color: white; border-bottom: none; }
+        .word.correct-verbo { background-color: var(--verbo-glow); }
+        .word.correct-substantivo { background-color: var(--substantivo-glow); }
+        .word.correct-adjetivo { background-color: var(--adjetivo-glow); color: #111; }
+        .word.incorrect { background-color: var(--erro-glow); animation: shake 0.5s; }
+        @keyframes shake { 0%, 100% { transform: translateX(0); } 10%, 50%, 90% { transform: translateX(-6px); } 30%, 70% { transform: translateX(6px); } }
+
+        #classification-box {
+            position: absolute; display: none; gap: 15px; padding: 12px;
+            background: rgba(0, 0, 0, 0.5); border: 1px solid var(--card-border);
+            border-radius: 12px; transform: translate(-50%, 15px) scale(0.95);
+            backdrop-filter: blur(5px); transition: opacity 0.3s, transform 0.3s;
+        }
+        .class-btn {
+            border: none; border-radius: 8px; padding: 10px 20px; font-size: 1em;
+            font-weight: 600; cursor: pointer; color: #fff; display: flex;
+            align-items: center; gap: 8px; transition: transform 0.2s;
+        }
+        .class-btn:hover { transform: translateY(-3px); }
+        .btn-verbo { background-color: var(--verbo-glow); }
+        .btn-substantivo { background-color: var(--substantivo-glow); }
+        .btn-adjetivo { background-color: var(--adjetivo-glow); color: #111; }
+
+        footer { padding-top: 20px; text-align: center; }
+        .btn-avancar {
+            background: #fff; color: #111; padding: 15px 50px; border: none;
+            border-radius: 12px; font-size: 1.2em; font-weight: 700;
+            cursor: pointer; transition: all 0.3s ease;
+        }
+        .btn-avancar:disabled { background-color: #999; cursor: not-allowed; opacity: 0.3; }
+        .btn-avancar:not(:disabled):hover { transform: scale(1.05); box-shadow: 0 0 20px rgba(255,255,255,0.5); }
+        
+        /* ESTILOS DO RELATÓRIO */
+        .report-screen { display: none; }
+        .report-content { overflow-y: auto; flex-grow: 1; padding-right: 20px; }
+        .report-content h2 { text-align: center; font-size: 1.5em; border-bottom: 2px solid var(--verbo-glow); padding-bottom: 10px; margin-bottom: 20px; }
+        
+        #results-table { width: 100%; border-collapse: collapse; margin-bottom: 30px; font-size: 1.1em; }
+        #results-table th, #results-table td { padding: 12px; text-align: center; border: 1px solid var(--card-border); }
+        #results-table th { background-color: rgba(0,0,0,0.3); }
+        .acertos { color: var(--substantivo-glow); font-weight: bold; }
+        .erros { color: var(--erro-glow); font-weight: bold; }
+
+        .review-item { margin-bottom: 25px; background-color: rgba(0,0,0,0.2); padding: 15px; border-radius: 10px; }
+        .review-item .sentence { font-size: 1.5em; margin-bottom: 10px; }
+        .review-item .explanation { font-size: 1em; color: var(--text-muted); text-align: left; margin-top: 10px; border-top: 1px solid var(--card-border); paddingTop: 10px; }
+        .review-item .explanation strong { color: var(--text-color); font-weight: bold; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <div class="game-card" id="game-container">
+            <header>
+                <h1>Redação Digital</h1>
+                <p id="ficha-counter"></p>
+                <div class="progress-bar-container"><div id="progress-bar"></div></div>
+            </header>
+
+            <main id="fichas-container"></main>
+            
+            <footer>
+                <button id="btn-avancar" class="btn-avancar" disabled>Avançar</button>
+            </footer>
+        </div>
+
+        <div class="report-screen" id="report-container">
+            <header><h1>Relatório de Desempenho</h1></header>
+            <div class="report-content">
+                <h2>Painel de Resultados</h2>
+                <table id="results-table">
+                    <thead><tr><th>Classe Gramatical</th><th>Acertos</th><th>Erros</th></tr></thead>
+                    <tbody></tbody>
+                </table>
+                
+                <h2>Gabarito Comentado</h2>
+                <div id="review-list"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div id="classification-box">
+        <button class="class-btn btn-verbo" data-type="verbo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 3a2.828 2.828 0 1 1 4 4L7.5 20.5 2 22l1.5-5.5L17 3z"></path></svg>
+            Verbo
+        </button>
+        <button class="class-btn btn-substantivo" data-type="substantivo">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"></path><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"></path></svg>
+            Substantivo
+        </button>
+        <button class="class-btn btn-adjetivo" data-type="adjetivo">
+             <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2z"></path></svg>
+            Adjetivo
+        </button>
+    </div>
+
+    <script>
+        const fichasData = [
+            {
+                sentence: "Cientista brasileiro descobre incrível planeta novo.",
+                words: { "Cientista": "substantivo", "brasileiro": "adjetivo", "descobre": "verbo", "planeta": "substantivo", "incrível": "adjetivo", "novo": "adjetivo" },
+                explanation: "Nesta manchete: <strong>descobre</strong> é o verbo (a ação). <strong>Cientista</strong> e <strong>planeta</strong> são substantivos (dão nome a um ser e a uma coisa). <strong>Brasileiro, incrível</strong> e <strong>novo</strong> são adjetivos (dão características)."
+            },
+            {
+                sentence: "Tempestade forte atingiu a cidade grande.",
+                words: { "Tempestade": "substantivo", "forte": "adjetivo", "atingiu": "verbo", "cidade": "substantivo", "grande": "adjetivo" },
+                explanation: "Aqui: <strong>atingiu</strong> é o verbo. <strong>Tempestade</strong> e <strong>cidade</strong> são substantivos. <strong>Forte</strong> e <strong>grande</strong> são adjetivos que caracterizam os substantivos."
+            },
+            {
+                sentence: "Jovem artista pinta um mural colorido.",
+                words: { "artista": "substantivo", "Jovem": "adjetivo", "pinta": "verbo", "mural": "substantivo", "colorido": "adjetivo" },
+                explanation: "Observe: <strong>pinta</strong> é o verbo. <strong>Artista</strong> e <strong>mural</strong> são substantivos. <strong>Jovem</strong> e <strong>colorido</strong> são adjetivos."
+            },
+            {
+                sentence: "Robôs inteligentes ajudarão em tarefas difíceis.",
+                words: { "Robôs": "substantivo", "inteligentes": "adjetivo", "ajudarão": "verbo", "tarefas": "substantivo", "difíceis": "adjetivo"},
+                explanation: "Nesta frase: <strong>ajudarão</strong> é a ação (verbo). <strong>Robôs</strong> e <strong>tarefas</strong> dão nome às coisas (substantivos). <strong>Inteligentes</strong> e <strong>difíceis</strong> dão qualidades (adjetivos)."
+            },
+            {
+                sentence: "O rápido cometa cruzou o céu escuro.",
+                words: { "cometa": "substantivo", "rápido": "adjetivo", "cruzou": "verbo", "céu": "substantivo", "escuro": "adjetivo"},
+                explanation: "A ação é <strong>cruzou</strong> (verbo). <strong>Cometa</strong> e <strong>céu</strong> são os seres/lugares (substantivos). <strong>Rápido</strong> e <strong>escuro</strong> são as características (adjetivos)."
+            },
+            {
+                sentence: "Foguete veloz viajou para a Lua distante.",
+                words: { "Foguete": "substantivo", "veloz": "adjetivo", "viajou": "verbo", "Lua": "substantivo", "distante": "adjetivo" },
+                explanation: "Note: <strong>viajou</strong> é o verbo. <strong>Foguete</strong> e <strong>Lua</strong> são substantivos. <strong>Veloz</strong> e <strong>distante</strong> são adjetivos."
+            },
+            {
+                sentence: "Cachorro leal salvou o pequeno menino.",
+                words: { "Cachorro": "substantivo", "leal": "adjetivo", "salvou": "verbo", "menino": "substantivo", "pequeno": "adjetivo" },
+                explanation: "A ação é <strong>salvou</strong> (verbo). <strong>Cachorro</strong> e <strong>menino</strong> são substantivos. <strong>Leal</strong> e <strong>pequeno</strong> são as qualidades (adjetivos)."
+            },
+            {
+                sentence: "Água fresca brotou da rocha antiga.",
+                words: { "Água": "substantivo", "fresca": "adjetivo", "brotou": "verbo", "rocha": "substantivo", "antiga": "adjetivo" },
+                explanation: "Aqui: <strong>brotou</strong> é o verbo. <strong>Água</strong> e <strong>rocha</strong> são substantivos. <strong>Fresca</strong> e <strong>antiga</strong> são adjetivos."
+            },
+            {
+                sentence: "O time vitorioso celebrou a grande conquista.",
+                words: { "time": "substantivo", "vitorioso": "adjetivo", "celebrou": "verbo", "conquista": "substantivo", "grande": "adjetivo" },
+                explanation: "Nesta frase: <strong>celebrou</strong> é a ação (verbo). <strong>Time</strong> e <strong>conquista</strong> são substantivos. <strong>Vitorioso</strong> e <strong>grande</strong> são características (adjetivos)."
+            },
+            {
+                sentence: "Músicos talentosos tocaram uma bela canção.",
+                words: { "Músicos": "substantivo", "talentosos": "adjetivo", "tocaram": "verbo", "canção": "substantivo", "bela": "adjetivo" },
+                explanation: "A ação é <strong>tocaram</strong> (verbo). <strong>Músicos</strong> e <strong>canção</strong> dão nome (substantivos). <strong>Talentosos</strong> e <strong>bela</strong> dão qualidades (adjetivos)."
+            }
+        ];
+
+        let reportData = [];
+        let currentFichaIndex = 0;
+        let attemptedWordsCount = 0;
+        let totalWordsToClassify = 0;
+        let selectedWordEl = null;
+
+        const gameContainer = document.getElementById('game-container');
+        const fichasContainer = gameContainer.querySelector('#fichas-container');
+        const btnAvancar = gameContainer.querySelector('#btn-avancar');
+        const progressBar = gameContainer.querySelector('#progress-bar');
+        const fichaCounter = gameContainer.querySelector('#ficha-counter');
+        const classificationBox = document.getElementById('classification-box');
+
+        function renderFicha(index) {
+            const ficha = fichasData[index];
+            attemptedWordsCount = 0;
+            totalWordsToClassify = Object.keys(ficha.words).length;
+            btnAvancar.disabled = true;
+
+            const sentenceEl = document.createElement('p');
+            sentenceEl.classList.add('sentence');
+
+            ficha.sentence.split(' ').forEach(wordText => {
+                const cleanWord = wordText.replace(/[.,]/g, '');
+                const span = document.createElement('span');
+                
+                if (ficha.words[cleanWord]) {
+                    span.textContent = wordText + ' ';
+                    span.classList.add('word');
+                    span.dataset.type = ficha.words[cleanWord];
+                    span.addEventListener('click', handleWordClick);
+                } else {
+                    span.textContent = wordText + ' ';
+                }
+                sentenceEl.appendChild(span);
+            });
+
+            const fichaEl = document.createElement('div');
+            fichaEl.classList.add('ficha');
+            fichaEl.innerHTML = `<p class="instruction">Clique nas palavras abaixo e classifique-as.</p>`;
+            fichaEl.appendChild(sentenceEl);
+
+            fichasContainer.innerHTML = '';
+            fichasContainer.appendChild(fichaEl);
+            setTimeout(() => fichaEl.classList.add('active'), 10);
+            
+            progressBar.style.width = `${(index / fichasData.length) * 100}%`;
+            fichaCounter.textContent = `Manchete ${index + 1} de ${fichasData.length}`;
+        }
+
+        function handleWordClick(event) {
+            const target = event.target;
+            if (target.classList.contains('classified')) return;
+            if(selectedWordEl) selectedWordEl.classList.remove('selected');
+            
+            selectedWordEl = target;
+            selectedWordEl.classList.add('selected');
+
+            const wordRect = selectedWordEl.getBoundingClientRect();
+            classificationBox.style.display = 'flex';
+            classificationBox.style.opacity = '0';
+            classificationBox.style.transform = 'translate(-50%, 15px) scale(0.95)';
+            classificationBox.style.left = `${wordRect.left + wordRect.width / 2}px`;
+            classificationBox.style.top = `${wordRect.bottom}px`;
+            setTimeout(() => {
+                classificationBox.style.opacity = '1';
+                classificationBox.style.transform = 'translate(-50%, 15px) scale(1)';
+            }, 10);
+        }
+        
+        function handleClassification(selectedType) {
+            if (!selectedWordEl) return;
+            
+            const correctType = selectedWordEl.dataset.type;
+            const wordText = selectedWordEl.textContent.trim().replace(/[.,]/g, '');
+
+            reportData.push({
+                word: wordText,
+                correctClass: correctType,
+                chosenClass: selectedType,
+                isCorrect: selectedType === correctType
+            });
+
+            selectedWordEl.classList.remove('selected');
+            selectedWordEl.classList.add('classified');
+            if (selectedType === correctType) {
+                selectedWordEl.classList.add(`correct-${correctType}`);
+            } else {
+                selectedWordEl.classList.add('incorrect');
+            }
+            
+            attemptedWordsCount++;
+            if (attemptedWordsCount === totalWordsToClassify) {
+                btnAvancar.disabled = false;
+            }
+
+            selectedWordEl = null;
+            classificationBox.style.display = 'none';
+        }
+
+        function generateReport() {
+            const reportContainer = document.getElementById('report-container');
+            gameContainer.style.display = 'none';
+            reportContainer.style.display = 'flex';
+
+            let stats = {
+                verbo: { acertos: 0, erros: 0 },
+                substantivo: { acertos: 0, erros: 0 },
+                adjetivo: { acertos: 0, erros: 0 }
+            };
+
+            reportData.forEach(item => {
+                if (item.isCorrect) {
+                    stats[item.correctClass].acertos++;
+                } else {
+                    stats[item.correctClass].erros++;
+                }
+            });
+
+            const tableBody = reportContainer.querySelector("#results-table tbody");
+            tableBody.innerHTML = `
+                <tr><td>Verbos</td><td class="acertos">${stats.verbo.acertos}</td><td class="erros">${stats.verbo.erros}</td></tr>
+                <tr><td>Substantivos</td><td class="acertos">${stats.substantivo.acertos}</td><td class="erros">${stats.substantivo.erros}</td></tr>
+                <tr><td>Adjetivos</td><td class="acertos">${stats.adjetivo.acertos}</td><td class="erros">${stats.adjetivo.erros}</td></tr>
+            `;
+
+            const reviewList = reportContainer.querySelector('#review-list');
+            reviewList.innerHTML = '';
+            fichasData.forEach(ficha => {
+                let sentenceHTML = ficha.sentence.split(' ').map(wordText => {
+                    const cleanWord = wordText.replace(/[.,]/g, '');
+                    if (ficha.words[cleanWord]) {
+                        const type = ficha.words[cleanWord];
+                        const colorClass = type === 'adjetivo' ? '' : 'style="color: white;"';
+                        return `<span class="word classified correct-${type}" ${colorClass}>${wordText}</span>`;
+                    }
+                    return `<span> ${wordText} </span>`;
+                }).join('');
+                
+                reviewList.innerHTML += `
+                    <div class="review-item">
+                        <p class="sentence">${sentenceHTML}</p>
+                        <p class="explanation">${ficha.explanation}</p>
+                    </div>
+                `;
+            });
+        }
+
+        classificationBox.addEventListener('click', (event) => {
+            const button = event.target.closest('.class-btn');
+            if (button) {
+                handleClassification(button.dataset.type);
+            }
+        });
+
+        btnAvancar.addEventListener('click', () => {
+            currentFichaIndex++;
+            if (currentFichaIndex < fichasData.length) {
+                renderFicha(currentFichaIndex);
+            } else {
+                generateReport();
+            }
+        });
+        
+        renderFicha(currentFichaIndex);
+    </script>
+</body>
+</html>
