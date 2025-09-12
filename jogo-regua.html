@@ -18,6 +18,21 @@
             -ms-user-select: none;
             user-select: none;
         }
+        
+           .back-button {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 1.2em;
+            color: var(--cor-primaria);
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s;
+        }
+
+        .back-button:hover {
+            transform: scale(1.1);
+        }
 
         /* Container principal com design flat */
         .container {
@@ -207,7 +222,7 @@
     </style>
 </head>
 <body>
-
+<a href="anos-iniciais.html" class="back-button" title="Voltar ao Portal Principal">‹ Voltar</a>
 <div class="container">
     <div id="tela-introducao">
         <h1>Laboratório de Medidas</h1>
@@ -407,3 +422,4 @@
 </script>
 </body>
 </html>
+
