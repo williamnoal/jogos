@@ -19,8 +19,7 @@
         html, body {
             height: 100%;
             margin: 0;
-            /* Garante que não haja barra de rolagem */
-            overflow: hidden; 
+            overflow: hidden;
             font-family: 'Poppins', sans-serif;
         }
 
@@ -29,56 +28,84 @@
             align-items: center;
             justify-content: center;
             background-color: var(--cor-fundo);
-            padding: 20px; /* Padding ajustado para a tela inteira */
-            box-sizing: border-box;
         }
 
         .back-button {
             position: absolute;
-            top: 20px;
-            left: 20px;
-            font-size: 2em;
-            text-decoration: none;
+            top: 30px;
+            left: 30px;
+            font-size: 1.2em;
             color: var(--cor-primaria);
-            transition: transform 0.2s;
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s;
             z-index: 10;
         }
-
+        
         .back-button:hover {
             transform: scale(1.1);
         }
 
-        .container {
+        .portal-container {
+            width: 90%;
+            max-width: 1400px;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .portal-header {
             text-align: center;
-            padding: 20px;
-            width: 100%;
+            /* AJUSTE: Margem ainda menor */
+            margin-bottom: 25px; 
+            animation: fadeInDown 1s ease-out;
         }
 
-        h1 {
-            font-size: 2.2em; /* Título reduzido */
+        @keyframes fadeInDown {
+            from { opacity: 0; transform: translateY(-30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .portal-header h1 {
+            font-size: 3.5em;
             font-weight: 800;
             color: var(--cor-primaria);
-            margin-top: 0;
-            margin-bottom: 20px; /* Espaçamento reduzido */
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.1);
+            margin: 0;
         }
 
-        .game-grid {
-            display: flex;
-            flex-wrap: wrap;
-            justify-content: center;
-            gap: 15px; /* Espaçamento entre cards reduzido */
-            max-width: 1400px;
-            margin: 0 auto;
+        .portal-header p {
+            font-size: 1.2em;
+            color: var(--cor-texto);
+            opacity: 0.8;
+            margin: 5px 0 0;
+        }
+        
+        .games-grid {
+            display: grid;
+            /* AJUSTE: Largura mínima dos cards reduzida */
+            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            /* AJUSTE: Espaçamento entre cards reduzido */
+            gap: 15px;
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            animation: fadeInUp 1s ease-out;
+        }
+
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
         }
 
         .game-card {
             background-color: var(--cor-branco);
-            border-radius: 20px;
-            width: 220px; /* Largura do card reduzida */
-            padding: 15px; /* Padding interno reduzido */
-            box-shadow: var(--sombra);
+            /* AJUSTE: Borda e padding ainda menores */
+            border-radius: 12px;
+            padding: 15px;
             text-align: center;
+            box-shadow: var(--sombra);
             text-decoration: none;
             color: var(--cor-texto);
             display: flex;
@@ -86,73 +113,67 @@
             justify-content: space-between;
             transition: transform 0.3s, box-shadow 0.3s;
         }
-
+        
         .game-card:hover {
-            transform: translateY(-10px);
-            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.15);
+            transform: translateY(-8px);
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
         }
 
-        .game-card .icon {
-            font-size: 2.8em; /* Ícone reduzido */
-            margin-bottom: 10px; /* Espaçamento reduzido */
-        }
-
-        .game-card h2 {
-            font-size: 1.2em; /* Título do card reduzido */
-            margin-top: 0;
-            margin-bottom: 10px;
-            color: var(--cor-primaria);
-        }
-
-        .game-card p {
-            font-size: 0.8em; /* Descrição reduzida */
-            line-height: 1.5;
-            margin-bottom: 15px; /* Espaçamento reduzido */
-            flex-grow: 1;
-        }
-
-        .play-button {
-            background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria));
-            color: var(--cor-branco);
-            padding: 8px 16px; /* Botão reduzido */
-            border-radius: 50px;
+        /* AJUSTES FINAIS DE TAMANHO NOS ELEMENTOS INTERNOS */
+        .game-card .icon { font-size: 2.5em; line-height: 1; margin-bottom: 8px; }
+        .game-card h2 { font-size: 1.15em; margin: 0 0 8px; color: var(--cor-primaria); }
+        .game-card p { font-size: 0.8em; line-height: 1.4; color: #666; margin-bottom: 15px; flex-grow: 1; }
+        
+        .play-button { 
+            display: inline-block; 
+            background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria)); 
+            color: var(--cor-branco); 
+            /* AJUSTE: Padding e fonte do botão reduzidos */
+            padding: 8px 20px; 
+            font-size: 0.9em;
+            border-radius: 50px; 
             font-weight: 600;
-            font-size: 0.9em; /* Fonte do botão reduzida */
             transition: transform 0.2s, box-shadow 0.2s;
         }
-
+        
         .game-card:hover .play-button {
             transform: scale(1.05);
             box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
         }
+
+        @media (max-width: 768px) { 
+            body { overflow-y: auto; } 
+            .portal-header h1 { font-size: 2.5em; } 
+            .portal-header p { font-size: 1em; } 
+        }
     </style>
 </head>
 <body>
-    <a href="../index.html" class="back-button">←</a>
-    <div class="container">
-        <h1>Jogos Educacionais</h1>
-        <div class="game-grid">
+    <a href="../index.html" class="back-button" title="Voltar ao Portal Principal">‹ Voltar</a>
+    <div class="portal-container">
+        <header class="portal-header">
+            <h1>Jogos Educacionais</h1>
+            <p>Atividades de leitura, escrita e análise para o Ensino Fundamental.</p>
+        </header>
+        <div class="games-grid">
             <a href="analise_gramatical.html" class="game-card">
                 <div class="icon">📝</div>
                 <h2>Análise Gramatical</h2>
                 <p>Identifique verbos, substantivos e adjetivos em manchetes de notícias e veja seu relatório.</p>
                 <div class="play-button">Analisar Agora</div>
             </a>
-
             <a href="https://desafio-eca.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
                 <div class="icon">🛡️</div>
                 <h2>Desafio ECA</h2>
                 <p>Teste os seus conhecimentos sobre os direitos e deveres das crianças e adolescentes.</p>
                 <div class="play-button">Jogar Agora</div>
             </a>
-            
             <a href="civitas.html" class="game-card">
                 <div class="icon">⚖️</div>
                 <h2>Projeto Civitas</h2>
                 <p>Analise casos complexos baseados no ECA e tome decisões que impactam a sociedade.</p>
                 <div class="play-button">Iniciar Projeto</div>
             </a>
-            
             <a href="https://oficina-de-rimas-emefrincao.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
                 <div class="icon">✒️</div>
                 <h2>Oficina de Poemas</h2>
