@@ -35,6 +35,21 @@
             place-items: center;
         }
         
+        .back-button {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 1.5em;
+            color: var(--cor-primaria);
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s ease;
+        }
+
+          .back-button:hover {
+            transform: scale(1.1);
+        }
+        
         #start-screen, #game-container {
             grid-area: 1 / 1;
         }
@@ -200,7 +215,7 @@
     </style>
 </head>
 <body>
-
+<a href="anos-finais.html" class="back-button" title="Voltar ao Portal">‹ Voltar</a>
 <div id="start-screen">
     <h1>Projeto Civitas</h1>
     <p>Sua missão é analisar casos complexos e tomar decisões que irão moldar o futuro. Decifre os direitos, equilibre os deveres e entenda seu impacto na comunidade.</p>
@@ -627,3 +642,4 @@ function initializeGame() {
 
 </body>
 </html>
+
