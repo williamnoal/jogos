@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mediador de Debates (Versão Final)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+        :root {
+            --azul-civitas: #1A3E6F;
+            --cinza-texto: #363736;
+            --amarelo-destaque: #f9a825;
+            --verde-correto: #2e7d32;
+            --vermelho-incorreto: #c62828;
+            --fundo-claro: #f0f4f8;
+            --branco: #ffffff;
+            --cinza-claro: #e0e0e0;
+        }
+        body, html {
+            height: 100%; margin: 0; font-family: 'Lato', sans-serif;
+            background-color: var(--fundo-claro); display: flex;
+            justify-content: center; align-items: center; overflow: hidden;
+            padding: 20px; box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* --- Botão Voltar --- */
+        .btn-voltar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: var(--azul-civitas);
+            color: var(--branco);
+            padding: 10px 20px;
+            border-radius: 8px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: all 0.3s ease;
+            z-index: 100;
+        }
+        .btn-voltar:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+        }
+        /* --- Telas de Início e Fim --- */
+        .tela-overlay {
+            background-color: var(--branco); padding: 40px; border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: center;
+            width: 90%; max-width: 700px;
+            border-top: 5px solid var(--azul-civitas);
+        }
+        .tela-overlay h1 { color: var(--azul-civitas); font-size: 2em; margin-bottom: 15px; }
+        .tela-overlay p { color: var(--cinza-texto); font-size: 1.2em; line-height: 1.6; margin-bottom: 30px; }
+        .btn-principal {
+            background-color: var(--amarelo-destaque); color: var(--cinza-texto);
+            border: none; padding: 15px 40px; border-radius: 8px; cursor: pointer;
+            font-size: 1.2em; font-weight: bold; transition: all 0.3s;
+        }
+        .btn-principal:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+        
+        /* --- Estrutura Principal da Atividade --- */
+        .container-principal { display: flex; align-items: stretch; gap: 20px; width: 100%; max-width: 1200px; height: 95vh; max-height: 750px; }
+        .legenda-sidebar { background-color: var(--branco); padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-top: 5px solid var(--amarelo-destaque); width: 300px; flex-shrink: 0; }
+        .legenda-sidebar h2 { margin: 0 0 20px 0; color: var(--azul-civitas); font-size: 1.4em; text-align: center; }
+        .legenda-item { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; }
+        .legenda-sinal { font-size: 2.5em; font-weight: bold; color: var(--cinza-texto); width: 40px; text-align: center; }
+        .legenda-texto p { margin: 0; font-size: 1em; line-height: 1.4; }
+        .legenda-texto strong { color: var(--azul-civitas); }
+        .legenda-emoji { font-size: 2em; }
+        main.card { background-color: var(--branco); padding: 20px 30px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-top: 5px solid var(--azul-civitas); flex-grow: 1; display: flex; flex-direction: column; }
+        
+        .arena-debate { text-align: center; padding-bottom: 10px; }
+        .arena-debate p.contexto { font-size: 1em; line-height: 1.5; margin-bottom: 10px; }
+        .teses-container { display: flex; justify-content: space-around; align-items: center; }
+        .debatedor { text-align: center; width: 45%; }
+        .debatedor h3 { margin: 0 0 5px 0; color: var(--azul-civitas); font-size: 1.1em; }
+        .debatedor p.tese { font-size: 0.95em; margin: 0; font-style: italic; }
+        .tese strong { background-color: #fff9e6; padding: 2px 5px; border-radius: 4px; }
+        .vs { font-size: 1.5em; font-weight: bold; color: var(--amarelo-destaque); }
+        
+        .paleta { text-align: center; padding: 10px 0; border-top: 2px solid #eee; border-bottom: 2px solid #eee; margin: 10px 0; }
+        .paleta button { font-family: 'Lato', sans-serif; background-color: #e9ecef; color: var(--cinza-texto); border: 2px solid #ced4da; width: 45px; height: 45px; margin: 0 5px; border-radius: 10px; cursor: pointer; font-size: 1.5em; font-weight: bold; transition: all 0.2s; }
+        .paleta button.selecionado { background-color: var(--amarelo-destaque); border-color: var(--azul-civitas); color: var(--azul-civitas); transform: scale(1.1); }
+        
+        .dialogo { margin: 10px 0; font-size: 1.15em; line-height: 2; color: var(--cinza-texto); flex-grow: 1; overflow-y: auto; padding-right: 10px; }
+        .espaco {
+            display: inline-flex; align-items: center; justify-content: center;
+            width: 30px; height: 30px; border: 2px dashed #ccc; border-radius: 8px;
+            vertical-align: middle; cursor: pointer; background-color: #fafafa;
+            font-weight: bold; color: var(--azul-civitas); transition: border-color 0.3s;
+        }
+        .espaco:hover { border-color: var(--amarelo-destaque); }
+        
+        footer { margin-top: auto; }
+        .acoes { display: flex; justify-content: center; align-items: center; gap: 15px; height: 50px; }
+        #feedback { padding: 10px; border-radius: 8px; text-align: center; display: none; flex-grow: 1; }
+        #feedback.correto { background-color: #e8f5e9; }
+        #feedback.incorreto { background-color: #ffebee; }
+        #feedback p { margin: 0; font-weight: bold; }
+        #feedback.correto p { color: var(--verde-correto); }
+        #feedback.incorreto p { color: var(--vermelho-incorreto); }
+        .btn-acao { background-color: var(--azul-civitas); color: var(--branco); border: none; padding: 12px 30px; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: bold; transition: transform 0.2s; }
+        #btn-avancar { display: none; }
+    </style>
+</head>
+<body>
+    <a href="anos-finais.html" class="btn-voltar">❮ Voltar</a>
+
+    <div id="tela-inicial" class="tela-overlay">
+        <h1>Bem-vindo ao Mediador de Debates!</h1>
+        <p>Sua missão é usar a pontuação correta para organizar as falas em pequenos debates. Leia o contexto, escolha um sinal na paleta e clique nos espaços para completar o diálogo. Boa sorte!</p>
+        <button id="btn-comecar" class="btn-principal">Começar!</button>
+    </div>
+
+    <div id="tela-final" class="tela-overlay" style="display: none;">
+        <h1>Parabéns, Mediador! 🏆</h1>
+        <p>Você completou todos os debates com sucesso! Agora você sabe como usar a pontuação para dar voz, ordem e emoção às falas dos personagens. Continue praticando!</p>
+        <button id="btn-reiniciar" class="btn-principal">Jogar Novamente</button>
+    </div>
+
+    <div class="container-principal" style="display: none;">
+        <aside class="legenda-sidebar">
+            <h2>Legenda de Diálogo</h2>
+            <div class="legenda-item"> <div class="legenda-sinal">:</div> <div class="legenda-texto"><p><strong>Dois-pontos</strong><br>Anuncia que alguém vai falar.</p></div> <div class="legenda-emoji">🗣️</div> </div>
+            <div class="legenda-item"> <div class="legenda-sinal">—</div> <div class="legenda-texto"><p><strong>Travessão</strong><br>Marca o início da fala do personagem.</p></div> <div class="legenda-emoji">💬</div> </div>
+            <div class="legenda-item"> <div class="legenda-sinal">" "</div> <div class="legenda-texto"><p><strong>Aspas</strong><br>Também podem ser usadas para mostrar uma fala ou citação.</p></div> <div class="legenda-emoji">✍️</div> </div>
+            <div class="legenda-item"> <div class="legenda-sinal">? . !</div> <div class="legenda-texto"><p><strong>Finais</strong><br>Terminam a frase dentro da fala, com a intenção correta.</p></div> <div class="legenda-emoji">🏁</div> </div>
+        </aside>
+
+        <main class="card">
+            <p id="contador" style="text-align: right; margin: 0;"></p>
+            <header id="arena-debate" class="arena-debate"></header>
+            <div id="paleta" class="paleta"></div>
+            <section id="dialogo" class="dialogo"></section>
+            <footer>
+                <div class="acoes">
+                    <button id="btn-verificar" class="btn-acao">Verificar</button>
+                    <div id="feedback"><p id="feedback-texto"></p></div>
+                    <button id="btn-avancar" class="btn-acao">Avançar</button>
+                </div>
+            </footer>
+        </main>
+    </div>
+
+    <script>
+        const debates = [
+             {
+                contexto: "Na aula de artes, a professora propôs uma discussão sobre o que é mais valioso: a imaginação para criar algo novo ou a técnica para executar com perfeição?",
+                debatedores: [ { nome: "LIA", tese: "A <strong>imaginação</strong> é mais importante que a técnica." }, { nome: "LEO", tese: "A <strong>técnica</strong> perfeita é mais importante que a imaginação." } ],
+                dialogo: [ "Leo começou defendendo a precisão<ESP1>", "<ESP2> Sem técnica, a melhor ideia do mundo fica presa na cabeça e nunca se torna real<ESP3>", "Lia discordou, valorizando a criatividade<ESP4>", "<ESP5> E de que adianta uma cópia perfeita sem alma ou uma ideia original<ESP6>" ],
+                solucao: [":", "—", ".", ":", "—", "?"],
+                paleta: [".", "?", ":", "—"],
+                comentarioAcerto: "Excelente! Você deu o tom certo à defesa da técnica e à pergunta provocadora.",
+                comentarioErro: "Revise com atenção. Leo faz uma afirmação, mas a fala de Lia é uma pergunta que desafia a ideia dele."
+            },
+            {
+                contexto: "Durante o planejamento das férias da turma, surgiu um impasse sobre o destino ideal.",
+                debatedores: [ { nome: "ANA", tese: "As férias na <strong>praia</strong> são mais divertidas e sociais." }, { nome: "BETO", tese: "As férias no <strong>campo</strong> são melhores para relaxar e se reconectar." } ],
+                dialogo: [ "Beto defendeu a tranquilidade<ESP1>", "<ESP2> O silêncio do campo recarrega as energias<ESP3> Não há nada igual<ESP4>", "Ana contrapôs com entusiasmo<ESP5>", "<ESP6> Mas e a alegria contagiante do mar, da areia e dos amigos reunidos<ESP7>" ],
+                solucao: [":", "—", ".", "!", ":", "—", "?"],
+                paleta: [":", "—", ".", "!", "?"],
+                comentarioAcerto: "Perfeito! Você usou os sinais para mostrar tanto a calma de Beto quanto a empolgação de Ana.",
+                comentarioErro: "Quase lá! Lembre-se que o ponto de exclamação pode mostrar entusiasmo, e a fala de Ana é uma pergunta animada."
+            },
+            {
+                contexto: "Um grupo de amigos debatia sobre a melhor forma de se preparar para uma prova importante.",
+                debatedores: [ { nome: "CARLA", tese: "Estudar <strong>em grupo</strong> ajuda a aprender mais, trocando ideias." }, { nome: "DAVI", tese: "Estudar <strong>sozinho</strong> gera mais foco e concentração." } ],
+                dialogo: [ "Davi argumentou a favor do silêncio<ESP1>", "<ESP2> Sozinho, eu consigo me concentrar totalmente no conteúdo, sem interrupções<ESP3>", "Carla então questionou a estratégia dele<ESP4>", "<ESP5> Mas você não perde a chance de aprender com as dúvidas dos colegas e ensinar o que sabe<ESP6>" ],
+                solucao: [":", "—", ".", ":", "—", "?"],
+                paleta: [":", "—", ".", "?"],
+                comentarioAcerto: "Isso mesmo! A pontuação está correta para organizar este debate sobre métodos de estudo.",
+                comentarioErro: "Cheque novamente. A fala de Carla é claramente uma pergunta, precisa do sinal correto no final."
+            },
+            {
+                contexto: "Em uma conversa sobre sucesso, Rita e Guto apresentaram visões opostas sobre o que leva alguém ao topo.",
+                debatedores: [ { nome: "RITA", tese: "O <strong>esforço e a dedicação</strong> superam o talento natural." }, { nome: "GUTO", tese: "O <strong>talento natural</strong> é o fator mais importante para o sucesso." } ],
+                dialogo: [ "Guto afirmou com certeza<ESP1>", "<ESP2> Algumas pessoas simplesmente nascem com um dom, é algo que não se aprende<ESP3>", "Rita rebateu com uma pergunta provocadora<ESP4>", "<ESP5> E de que adianta o dom sem a disciplina e a dedicação para aprimorá-lo todos os dias<ESP6>" ],
+                solucao: [":", "—", ".", ":", "—", "?"],
+                paleta: [".", "?", ":", "—"],
+                comentarioAcerto: "Ótima organização! Você usou a pontuação para dar o tom certo a cada fala.",
+                comentarioErro: "Faltou pouco! A fala de Rita é uma provocação em forma de pergunta. Qual sinal se encaixa no final dela?"
+            },
+            {
+                contexto: "Pedro e Mari, donos de pets, iniciaram uma clássica discussão sobre qual animal de estimação é o melhor companheiro.",
+                debatedores: [ { nome: "PEDRO", tese: "Os <strong>cães</strong> são os melhores e mais leais amigos do homem." }, { nome: "MARI", tese: "Os <strong>gatos</strong> são mais independentes, práticos e carinhosos à sua maneira." } ],
+                dialogo: [ "Mari defendeu a praticidade dos felinos<ESP1>", "<ESP2> Gatos são muito mais práticos, limpos e não exigem tanta atenção constante<ESP3>", "Pedro exclamou, indignado<ESP4>", "<ESP5> Como assim<ESP6> A alegria contagiante de um cão ao nos ver chegar não tem preço<ESP7>" ],
+                solucao: [":", "—", ".", ":", "—", "?", "!"],
+                paleta: [".", "!", "?", ":", "—"],
+                comentarioAcerto: "Trabalho excelente! Você capturou a emoção da fala do Pedro com a pontuação correta.",
+                comentarioErro: "Revise a fala de Pedro. Ele faz uma pergunta surpreso e termina com uma afirmação emocionada."
+            },
+            {
+                contexto: "A turma discutia o impacto dos jogos eletrônicos na vida dos estudantes.",
+                debatedores: [ { nome: "JULIA", tese: "Os <strong>videogames</strong> podem ser muito educativos." }, { nome: "MARCOS", tese: "Os <strong>videogames</strong> são apenas uma perda de tempo." } ],
+                dialogo: [ "Marcos foi direto ao ponto<ESP1>", "<ESP2> Eles apenas nos distraem dos estudos e das tarefas<ESP3>", "Julia contrapôs com um argumento<ESP4>", "<ESP5> Muitos jogos ensinam história, estratégia e até outros idiomas<ESP6> Você não sabia<ESP7>" ],
+                solucao: [":", "—", ".", ":", "—", ".", "?"],
+                paleta: [".", "?", ":", "—"],
+                comentarioAcerto: "Exato! A pontuação está perfeita para mostrar a pergunta surpresa de Julia.",
+                comentarioErro: "Observe a última fala de Julia. Ela faz uma afirmação e depois uma pergunta."
+            },
+            {
+                contexto: "No corredor, um debate rápido surgiu sobre a melhor forma de se comunicar à distância.",
+                debatedores: [ { nome: "LUCAS", tese: "As <strong>mensagens de texto</strong> são mais rápidas e eficientes." }, { nome: "SOFIA", tese: "As <strong>ligações de voz</strong> conectam mais as pessoas." } ],
+                dialogo: [ "Sofia defendeu o calor da voz humana<ESP1>", "<ESP2> Ouvir a entonação e a emoção de alguém é muito mais pessoal<ESP3>", "Lucas respondeu com um questionamento prático<ESP4>", "<ESP5> Mas e a praticidade de resolver tudo com uma mensagem rápida, sem atrapalhar o outro<ESP6>" ],
+                solucao: [":", "—", ".", ":", "—", "?"],
+                paleta: [".", "?", ":", "—"],
+                comentarioAcerto: "Correto! Você pontuou a afirmação de Sofia e a pergunta de Lucas perfeitamente.",
+                comentarioErro: "Verifique a fala de Lucas. Ele está fazendo uma pergunta, não uma afirmação."
+            },
+            {
+                contexto: "Na hora do lanche, a conversa girou em torno das escolhas alimentares e o estilo de vida moderno.",
+                debatedores: [ { nome: "PAULA", tese: "A <strong>comida caseira</strong> é mais saudável e saborosa." }, { nome: "TIAGO", tese: "O <strong>fast-food</strong> é mais prático e combina com a correria." } ],
+                dialogo: [ "Tiago elogiou a conveniência<ESP1>", "<ESP2> Nada supera a rapidez do fast-food num dia agitado<ESP3>", "Paula fez um alerta em forma de pergunta<ESP4>", "<ESP5> E o custo disso para a nossa saúde no longo prazo<ESP6>" ],
+                solucao: [":", "—", "!", ":", "—", "?"],
+                paleta: ["!", "?", ":", "—"],
+                comentarioAcerto: "Ótimo! Você usou a exclamação para dar ênfase e a interrogação para a pergunta retórica.",
+                comentarioErro: "A fala de Tiago é entusiasmada. A de Paula é uma pergunta de alerta. Use os sinais corretos."
+            },
+            {
+                contexto: "O conselho estudantil debatia a proposta de implementar ou não uniformes obrigatórios na escola.",
+                debatedores: [ { nome: "HELENA", tese: "Os <strong>uniformes</strong> promovem a igualdade e reduzem o consumismo." }, { nome: "BRUNO", tese: "Os <strong>uniformes</strong> tiram a individualidade e a liberdade de expressão." } ],
+                dialogo: [ "Helena explicou seu ponto de vista<ESP1>", "<ESP2> Com uniforme, a preocupação com marcas e aparências diminui<ESP3>", "Bruno protestou com veemência<ESP4>", "<ESP5> Que absurdo<ESP6> Quer dizer que devemos todos ser iguais para evitar problemas<ESP7>" ],
+                solucao: [":", "—", ".", ":", "—", "!", "?"],
+                paleta: [".", "!", "?", ":", "—"],
+                comentarioAcerto: "Excelente! A pontuação da fala de Bruno mostra perfeitamente a indignação dele.",
+                comentarioErro: "Veja a fala de Bruno. Ele começa com uma exclamação de protesto e termina com uma pergunta irônica."
+            },
+            {
+                contexto: "Dois alunos com opiniões diferentes conversavam sobre as tarefas escolares para casa.",
+                debatedores: [ { nome: "RAFA", tese: "O <strong>dever de casa</strong> é essencial para fixar o conteúdo." }, { nome: "BIA", tese: "O <strong>dever de casa</strong> é um estresse desnecessário após a aula." } ],
+                dialogo: [ "Bia desabafou sobre o cansaço<ESP1>", "<ESP2> Nós já passamos o dia todo na escola, precisamos de um tempo para descansar a mente<ESP3>", "Rafa argumentou com foco no aprendizado<ESP4>", "<ESP5> Mas a prática constante e individual é o que realmente leva à perfeição e ao domínio da matéria<ESP6>" ],
+                solucao: [":", "—", ".", ":", "—", "."],
+                paleta: [".", ":", "—"],
+                comentarioAcerto: "Isso mesmo! Um diálogo simples com afirmações diretas e bem pontuadas.",
+                comentarioErro: "Revise com atenção. As duas falas são afirmações, sem grande emoção ou dúvida, defendendo um ponto de vista."
+            },
+            {
+                contexto: "Numa roda de amigos, a discussão era sobre qual superpoder seria o mais incrível de se ter.",
+                debatedores: [ { nome: "VITOR", tese: "O superpoder de <strong>voar</strong> é o melhor, representa a liberdade." }, { nome: "SARA", tese: "O superpoder de <strong>ficar invisível</strong> é muito mais útil e estratégico." } ],
+                dialogo: [ "Vitor sonhou alto<ESP1>", "<ESP2> Imagine poder viajar para qualquer lugar do mundo de graça, sentindo o vento no rosto<ESP3>", "Sara foi mais prática e misteriosa<ESP4>", "<ESP5> E a utilidade de descobrir segredos e estar em lugares sem ser notada<ESP6>" ],
+                solucao: [":", "—", "!", ":", "—", "?"],
+                paleta: ["!", "?", ":", "—"],
+                comentarioAcerto: "Perfeito! O entusiasmo de Vitor e a pergunta estratégica de Sara foram bem pontuados.",
+                comentarioErro: "A fala de Vitor é um sonho, cheia de entusiasmo. A de Sara é uma pergunta para reflexão."
+            },
+            {
+                contexto: "Nina e Diogo não chegavam a um acordo sobre qual era a melhor estação do ano para aproveitar a vida.",
+                debatedores: [ { nome: "NINA", tese: "O <strong>verão</strong>, com seu calor e dias longos, é a melhor estação." }, { nome: "DIOGO", tese: "O <strong>inverno</strong>, com seu frio, é muito mais charmoso e aconchegante." } ],
+                dialogo: [ "Diogo elogiou o frio<ESP1>", "<ESP2> Não há nada como um chocolate quente, um bom livro e o barulho da chuva lá fora<ESP3>", "Nina retrucou com energia<ESP4>", "<ESP5> Você está se esquecendo da alegria contagiante do sol, de um mergulho no mar e de tomar sorvete na praça<ESP6>" ],
+                solucao: [":", "—", ".", ":", "—", "?"],
+                paleta: [".", "?", ":", "—"],
+                comentarioAcerto: "Ótima pontuação! Você diferenciou bem a afirmação calma de Diogo da pergunta animada de Nina.",
+                comentarioErro: "A fala de Nina, apesar de listar coisas, tem o tom de uma pergunta, como se dissesse 'e o que me diz disso?'."
+            },
+            {
+                contexto: "A chegada dos leitores digitais iniciou um debate sobre o futuro dos livros.",
+                debatedores: [ { nome: "MATEUS", tese: "Os <strong>livros físicos</strong>, de papel, são insubstituíveis." }, { nome: "LAURA", tese: "Os <strong>livros digitais (e-books)</strong> são o futuro da leitura." } ],
+                dialogo: [ "Mateus falou com nostalgia<ESP1>", "<ESP2> O cheiro de um livro novo e o toque das páginas são parte da magia<ESP3>", "Laura questionou com um argumento prático<ESP4>", "<ESP5> Mas e a vantagem incrível de poder carregar mil livros em um único aparelho para onde você for<ESP6>" ],
+                solucao: [":", "—", ".", ":", "—", "?"],
+                paleta: [".", "?", ":", "—"],
+                comentarioAcerto: "Exato! A afirmação nostálgica e a pergunta prática foram pontuadas corretamente.",
+                comentarioErro: "A fala de Laura é uma pergunta clara que busca comparar vantagens. Use o sinal correto."
+            },
+            {
+                contexto: "Dois primos conversavam sobre onde gostariam de morar no futuro, na cidade grande ou no interior.",
+                debatedores: [ { nome: "JOÃO", tese: "Morar na <strong>cidade grande</strong> oferece mais oportunidades." }, { nome: "TEREZA", tese: "A vida no <strong>interior</strong> é mais tranquila e segura." } ],
+                dialogo: [ "João exaltou o ritmo da metrópole<ESP1>", "<ESP2> As melhores escolas, trabalhos e eventos culturais estão todos aqui<ESP3>", "Tereza suspirou e fez uma reflexão<ESP4>", "<ESP5> Mas que adianta ter tudo isso se não temos tempo nem paz para aproveitar de verdade<ESP6>" ],
+                solucao: [":", "—", "!", ":", "—", "?"],
+                paleta: ["!", "?", ":", "—"],
+                comentarioAcerto: "Perfeito! Você capturou a empolgação de João e o questionamento profundo de Tereza.",
+                comentarioErro: "A fala de João é uma exclamação, mostrando empolgação. A de Tereza é uma pergunta filosófica."
+            },
+            {
+                contexto: "O filme da noite anterior levantou uma questão moral complexa entre dois amigos.",
+                debatedores: [ { nome: "FELIPE", tese: "É sempre melhor saber a <strong>verdade</strong>, mesmo que ela machuque." }, { nome: "VANESSA", tese: "Às vezes, uma <strong>mentira pequena</strong> pode proteger quem amamos." } ],
+                dialogo: [ "Vanessa defendeu seu ponto de vista<ESP1>", "<ESP2> Uma mentira pequena pode evitar uma tristeza desnecessária e que não muda nada<ESP3>", "Felipe foi incisivo e direto<ESP4>", "<ESP5> Então você prefere o conforto de viver na ilusão em vez de encarar a realidade<ESP6>" ],
+                solucao: [":", "—", ".", ":", "—", "?"],
+                paleta: [".", "?", ":", "—"],
+                comentarioAcerto: "Correto! A pontuação está perfeita para este debate intenso e filosófico.",
+                comentarioErro: "A fala de Felipe é uma pergunta direta e cortante, que coloca Vanessa contra a parede. Qual sinal deve ser usado?",
+            }
+        ];
+        
+        let debateAtual = 0;
+        let pincelAtual = null;
+        let respostasUsuario = [];
+
+        const telaInicialEl = document.getElementById('tela-inicial');
+        const telaFinalEl = document.getElementById('tela-final');
+        const containerPrincipalEl = document.querySelector('.container-principal');
+        const arenaEl = document.getElementById('arena-debate');
+        const dialogoEl = document.getElementById('dialogo');
+        const paletaEl = document.getElementById('paleta');
+        const btnVerificarEl = document.getElementById('btn-verificar');
+        const btnAvancarEl = document.getElementById('btn-avancar');
+        const feedbackEl = document.getElementById('feedback');
+        const feedbackTextoEl = document.getElementById('feedback-texto');
+        const contadorEl = document.getElementById('contador');
+        const btnComecarEl = document.getElementById('btn-comecar');
+        const btnReiniciarEl = document.getElementById('btn-reiniciar');
+
+        function iniciarAtividade() {
+            telaInicialEl.style.display = 'none';
+            containerPrincipalEl.style.display = 'flex';
+            carregarDebate();
+        }
+
+        function finalizarAtividade() {
+            containerPrincipalEl.style.display = 'none';
+            telaFinalEl.style.display = 'block';
+        }
+
+        function reiniciarAtividade() {
+            window.location.reload();
+        }
+
+        function carregarDebate() {
+            if (debateAtual >= debates.length) {
+                finalizarAtividade();
+                return;
+            }
+
+            const debate = debates[debateAtual];
+            respostasUsuario = new Array(debate.solucao.length).fill('');
+            
+            contadorEl.textContent = `Atividade ${debateAtual + 1} de ${debates.length}`;
+            arenaEl.innerHTML = `
+                <p class="contexto">${debate.contexto}</p>
+                <div class="teses-container">
+                    <div class="debatedor"><h3>${debate.debatedores[0].nome}</h3><p class="tese">${debate.debatedores[0].tese}</p></div>
+                    <div class="vs">VS</div>
+                    <div class="debatedor"><h3>${debate.debatedores[1].nome}</h3><p class="tese">${debate.debatedores[1].tese}</p></div>
+                </div>`;
+
+            paletaEl.innerHTML = '';
+            debate.paleta.forEach(sinal => {
+                const btn = document.createElement('button');
+                btn.textContent = sinal;
+                btn.addEventListener('click', () => selecionarPincel(btn, sinal));
+                paletaEl.appendChild(btn);
+            });
+            
+            dialogoEl.innerHTML = '';
+            let espacoIndex = 0;
+            debate.dialogo.forEach(linha => {
+                const p = document.createElement('p');
+                p.innerHTML = linha.replace(/<ESP\d+>/g, () => `<span class="espaco" data-index="${espacoIndex++}"></span>`);
+                dialogoEl.appendChild(p);
+            });
+            
+            adicionarListenersAosEspacos();
+            resetarEstado();
+        }
+
+        function selecionarPincel(btn, sinal) {
+            const botoes = paletaEl.querySelectorAll('button');
+            botoes.forEach(b => b.classList.remove('selecionado'));
+            btn.classList.add('selecionado');
+            pincelAtual = sinal;
+        }
+
+        function adicionarListenersAosEspacos() {
+            const espacos = dialogoEl.querySelectorAll('.espaco');
+            espacos.forEach(espaco => {
+                espaco.addEventListener('click', () => {
+                    if (pincelAtual) {
+                        espaco.textContent = pincelAtual;
+                        const index = parseInt(espaco.dataset.index);
+                        respostasUsuario[index] = pincelAtual;
+                    }
+                });
+            });
+        }
+
+        function resetarEstado() {
+            pincelAtual = null;
+            btnVerificarEl.style.display = 'inline-block';
+            btnAvancarEl.style.display = 'none';
+            feedbackEl.style.display = 'none';
+        }
+
+        btnVerificarEl.addEventListener('click', () => {
+            const debate = debates[debateAtual];
+            let acertos = 0;
+            const espacos = dialogoEl.querySelectorAll('.espaco');
+
+            respostasUsuario.forEach((resposta, index) => {
+                const espacoEl = espacos[index];
+                if (resposta === debate.solucao[index]) {
+                    espacoEl.style.borderColor = 'var(--verde-correto)';
+                    acertos++;
+                } else {
+                    espacoEl.style.borderColor = 'var(--vermelho-incorreto)';
+                }
+            });
+            
+            feedbackEl.style.display = 'block';
+            if (acertos === debate.solucao.length) {
+                feedbackEl.className = 'correto';
+                feedbackTextoEl.textContent = debate.comentarioAcerto;
+                btnVerificarEl.style.display = 'none';
+                btnAvancarEl.style.display = 'inline-block';
+            } else {
+                feedbackEl.className = 'incorreto';
+                feedbackTextoEl.textContent = debate.comentarioErro;
+            }
+        });
+
+        btnAvancarEl.addEventListener('click', () => {
+            debateAtual++;
+            carregarDebate();
+        });
+
+        btnComecarEl.addEventListener('click', iniciarAtividade);
+        btnReiniciarEl.addEventListener('click', reiniciarAtividade);
+
+    </script>
+</body>
+</html>

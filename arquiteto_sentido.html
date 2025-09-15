@@ -1,0 +1,476 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Arquiteto de Sentido (Versão Definitiva)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+        :root {
+            --azul-civitas: #1A3E6F;
+            --cinza-texto: #363736;
+            --amarelo-destaque: #f9a825;
+            --verde-correto: #2e7d32;
+            --vermelho-incorreto: #c62828;
+            --fundo-claro: #f0f4f8;
+            --branco: #ffffff;
+            --cinza-claro: #e0e0e0;
+        }
+        body, html {
+            height: 100%; margin: 0; font-family: 'Lato', sans-serif;
+            background-color: var(--fundo-claro); display: flex;
+            justify-content: center; align-items: center; overflow: hidden;
+            padding: 20px; box-sizing: border-box;
+            -webkit-font-smoothing: antialiased;
+        }
+        /* --- Botão Voltar --- */
+        .btn-voltar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            z-index: 1000;
+            background-color: var(--azul-civitas);
+            color: var(--branco);
+            padding: 10px 20px;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: bold;
+            font-size: 1em;
+            transition: all 0.3s;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+        }
+        .btn-voltar:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 15px rgba(0,0,0,0.2);
+        }
+        /* --- Telas de Início e Fim --- */
+        .tela-overlay {
+            background-color: var(--branco); padding: 40px; border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: center;
+            width: 90%; max-width: 700px;
+            border-top: 5px solid var(--azul-civitas);
+        }
+        .tela-overlay h1 { color: var(--azul-civitas); font-size: 2em; margin-bottom: 15px; }
+        .tela-overlay p { color: var(--cinza-texto); font-size: 1.2em; line-height: 1.6; margin-bottom: 30px; }
+        .resumo-erros { text-align: left; background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+        .resumo-erros h3 { margin-top: 0; color: var(--azul-civitas); }
+        .resumo-erros ul { padding-left: 20px; margin: 0; }
+        .resumo-erros li { margin-bottom: 10px; }
+        .btn-principal {
+            background-color: var(--amarelo-destaque); color: var(--cinza-texto);
+            border: none; padding: 15px 40px; border-radius: 8px; cursor: pointer;
+            font-size: 1.2em; font-weight: bold; transition: all 0.3s;
+        }
+        .btn-principal:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+
+        /* --- Estrutura Principal da Atividade --- */
+        .container-principal { display: flex; align-items: stretch; gap: 20px; width: 100%; max-width: 1100px; height: 95vh; max-height: 700px; }
+        .legenda-sidebar { background-color: var(--branco); padding: 25px; border-radius: 12px; box-shadow: 0 10px 25px rgba(0,0,0,0.08); border-top: 5px solid var(--amarelo-destaque); width: 280px; flex-shrink: 0; }
+        .legenda-sidebar h2 { margin: 0 0 20px 0; color: var(--azul-civitas); font-size: 1.4em; text-align: center; }
+        .legenda-item { display: flex; align-items: center; gap: 15px; margin-bottom: 25px; }
+        .legenda-sinal { font-size: 3em; font-weight: bold; color: var(--cinza-texto); width: 50px; text-align: center; }
+        .legenda-texto p { margin: 0; font-size: 1em; line-height: 1.4; }
+        .legenda-texto strong { color: var(--azul-civitas); }
+        .legenda-emoji { font-size: 2em; }
+        main.card {
+            background-color: var(--branco); padding: 25px 35px; border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: center;
+            border-top: 5px solid var(--azul-civitas);
+            flex-grow: 1; display: flex; flex-direction: column; justify-content: space-around;
+        }
+        h1#titulo-pergunta { color: var(--azul-civitas); margin: 0; font-size: 1.6em; }
+        p#contador { font-size: 0.9em; color: #777; font-weight: bold; margin-bottom: 5px; }
+        .argumento { border-left: 4px solid var(--cinza-claro); padding: 5px 15px; margin: 10px 0; text-align: left; }
+        p.frase { font-size: 1.25em; color: var(--cinza-texto); line-height: 1.5; }
+        #glossario-container { background-color: #f9f9f9; border-top: 2px solid #eee; margin: 10px 0; padding: 10px 15px; text-align: left; }
+        #glossario-container h3 { margin: 0 0 8px 0; color: var(--azul-civitas); font-size: 1.05em; }
+        .termo-glossario { margin-bottom: 5px; font-size: 0.95em; }
+        .termo-glossario strong { font-weight: 700; color: var(--cinza-texto); }
+        .opcoes { display: flex; justify-content: center; gap: 20px; margin-top: 15px; }
+        .opcoes > div { flex: 1; max-width: 100px; }
+        .opcoes label { background-color: var(--branco); border: 2px solid var(--cinza-claro); color: var(--azul-civitas); padding: 15px 10px; border-radius: 10px; cursor: pointer; transition: all 0.3s; display: block; -webkit-tap-highlight-color: transparent; }
+        .opcoes span.sinal { font-size: 2.5em; font-weight: bold; display: block; line-height: 1; }
+        .opcoes input[type="radio"] { display: none; }
+        .opcoes input[type="radio"]:checked + label { border-color: var(--amarelo-destaque); background-color: #fffaf0; transform: scale(1.05); }
+        .opcoes label.disabled { cursor: not-allowed; opacity: 0.7; }
+        #feedback { margin-top: 10px; padding: 12px; border-radius: 8px; text-align: left; display: none; }
+        #feedback.correto { background-color: #e8f5e9; border-left: 5px solid var(--verde-correto); }
+        #feedback.incorreto { background-color: #ffebee; border-left: 5px solid var(--vermelho-incorreto); }
+        #feedback h3 { margin: 0 0 5px 0; font-size: 1.1em; }
+        #feedback p { margin: 0; font-size: 1em; }
+        #btn-avancar { background-color: var(--azul-civitas); color: var(--branco); border: none; padding: 12px 35px; margin-top: 10px; border-radius: 8px; cursor: pointer; font-size: 1em; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s; display: none; }
+        #btn-avancar:hover { transform: translateY(-2px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+    </style>
+</head>
+<body>
+    <a href="anos-finais.html" class="btn-voltar">&#x2190; Voltar</a>
+
+    <div id="tela-inicial" class="tela-overlay">
+        <h1>Arquiteto de Sentido</h1>
+        <p>Sua missão é escolher o sinal de pontuação final que dá a intenção correta para cada frase. Um mesmo argumento pode virar uma certeza, uma dúvida ou uma emoção, dependendo da sua escolha. Vamos lá?</p>
+        <button id="btn-comecar" class="btn-principal">Começar!</button>
+    </div>
+
+    <div id="tela-final" class="tela-overlay" style="display: none;">
+        <h1>Parabéns! 🏆</h1>
+        <p>Você concluiu todas as atividades! Veja abaixo algumas dicas baseadas nas suas respostas para praticar ainda mais.</p>
+        <div id="resumo-erros-container" class="resumo-erros" style="display: none;">
+            <h3>Dicas para você:</h3>
+            <ul id="lista-erros"></ul>
+        </div>
+        <button id="btn-reiniciar" class="btn-principal">Jogar Novamente</button>
+    </div>
+    
+    <div class="container-principal" style="display: none;">
+        <aside class="legenda-sidebar">
+            <h2>Legenda Rápida</h2>
+            <div class="legenda-item"> <div class="legenda-sinal">.</div> <div class="legenda-texto"> <p><strong>Ponto Final</strong></p> <p>Termina uma frase com certeza e sem emoção.</p> </div> <div class="legenda-emoji">✅</div> </div>
+            <div class="legenda-item"> <div class="legenda-sinal">?</div> <div class="legenda-texto"> <p><strong>Interrogação</strong></p> <p>Faz uma pergunta ou mostra uma dúvida.</p> </div> <div class="legenda-emoji">🤔</div> </div>
+            <div class="legenda-item"> <div class="legenda-sinal">!</div> <div class="legenda-texto"> <p><strong>Exclamação</strong></p> <p>Mostra uma emoção forte: surpresa, alegria, raiva.</p> </div> <div class="legenda-emoji">😮</div> </div>
+        </aside>
+
+        <main class="card">
+            <p id="contador"></p>
+            <h1 id="titulo-pergunta"></h1>
+            <div class="argumento"> <p id="frase" class="frase"></p> </div>
+            <div id="glossario-container"> <h3>Palavras e Conectores</h3> <div id="glossario-lista"></div> </div>
+            <div id="opcoes" class="opcoes"></div>
+            <div id="feedback"> <h3 id="feedback-titulo"></h3> <p id="feedback-texto"></p> </div>
+            <button id="btn-avancar">Avançar</button>
+        </main>
+    </div>
+
+    <script>
+        const atividades = [
+            // Os 20 exercícios com glossário e tipo de erro
+            {
+                pergunta: "Para transformar a frase em uma AFIRMAÇÃO definitiva, qual sinal você usa?",
+                frase: "Considerando os argumentos, podemos concluir que a leitura expande o vocabulário",
+                opcoes: [".", "?", "!"], correta: 0,
+                comentarioAcerto: "Exato! O ponto final encerra a ideia com certeza.",
+                comentarioErro: "Não exatamente. Para fazer uma afirmação, usamos o sinal que encerra a frase de forma neutra.",
+                glossario: [ { termo: "Argumentos", definicao: "Razões que usamos para defender uma ideia." }, { termo: "Expandir", definicao: "Aumentar, tornar maior." } ],
+                tipoErro: "Afirmação vs. Dúvida/Emoção"
+            },
+            {
+                pergunta: "Para mostrar INCERTEZA ou provocar uma reflexão, qual sinal é o ideal?",
+                frase: "A tecnologia, que deveria nos aproximar, está na verdade criando barreiras",
+                opcoes: ["!", ".", "?"], correta: 2,
+                comentarioAcerto: "Perfeito! O ponto de interrogação transforma a certeza em uma dúvida.",
+                comentarioErro: "Pense bem: o objetivo é criar uma dúvida. Qual sinal usamos para fazer perguntas?",
+                glossario: [ { termo: "Barreiras", definicao: "Obstáculos, coisas que atrapalham ou separam." } ],
+                tipoErro: "Dúvida vs. Afirmação/Emoção"
+            },
+            {
+                pergunta: "Para expressar SURPRESA ou INDIGNAÇÃO, qual sinal usar?",
+                frase: "É inaceitável que ainda existam pessoas sem acesso à água potável",
+                opcoes: ["?", "!", "."], correta: 1,
+                comentarioAcerto: "Isso mesmo! O ponto de exclamação é o sinal das emoções fortes.",
+                comentarioErro: "Opa! Para mostrar um sentimento forte, precisamos de um sinal que demonstre emoção.",
+                glossario: [ { termo: "Inaceitável", definicao: "Algo que não pode ser aceito ou permitido." } ],
+                tipoErro: "Emoção vs. Dúvida/Afirmação"
+            },
+             {
+                pergunta: "Para fazer uma PERGUNTA RETÓRICA (que faz pensar), qual sinal é o melhor?",
+                frase: "Até quando vamos ignorar as consequências do consumo excessivo",
+                opcoes: [".", "!", "?"], correta: 2,
+                comentarioAcerto: "Excelente! A interrogação aqui não espera uma resposta, mas sim provoca uma reflexão.",
+                comentarioErro: "Atenção: o objetivo é fazer o leitor pensar. Qual sinal usamos para fazer perguntas?",
+                glossario: [ { termo: "Ignorar", definicao: "Não dar atenção, fingir que não vê." }, { termo: "Consequências", definicao: "Resultados de uma ação." } ],
+                tipoErro: "Dúvida vs. Afirmação/Emoção"
+            },
+            {
+                pergunta: "Para transformar a frase em um forte APELO, qual sinal você usa?",
+                frase: "É preciso que todos se conscientizem sobre a importância de preservar o meio ambiente",
+                opcoes: ["?", ".", "!"], correta: 2,
+                comentarioAcerto: "Exato! O ponto de exclamação dá um tom de urgência e apelo à frase.",
+                comentarioErro: "Não exatamente. Para fazer um apelo forte, precisamos de um sinal que demonstre emoção.",
+                glossario: [ { termo: "Conscientizar-se", definicao: "Perceber, entender a importância de algo." } ],
+                tipoErro: "Emoção vs. Dúvida/Afirmação"
+            },
+            {
+                pergunta: "Para fazer uma CONSTATAÇÃO simples e direta, qual sinal é o correto?",
+                frase: "Muitos jovens preferem jogos online a atividades ao ar livre",
+                opcoes: ["!", ".", "?"], correta: 1,
+                comentarioAcerto: "Perfeito! O ponto final é usado para declarar um fato de forma neutra.",
+                comentarioErro: "Cuidado, a ideia é apenas constatar um fato, sem emoção ou dúvida.",
+                glossario: [ { termo: "Constatação", definicao: "Observar e afirmar um fato como ele é." } ],
+                tipoErro: "Afirmação vs. Dúvida/Emoção"
+            },
+            {
+                pergunta: "Para mostrar INCREDULIDADE, qual sinal usar?",
+                frase: "Então essa é a solução proposta para um problema tão complexo",
+                opcoes: [".", "?", "!"], correta: 1,
+                comentarioAcerto: "Isso mesmo! A interrogação aqui expressa dúvida e ironia.",
+                comentarioErro: "Para mostrar que você não acredita em algo, sua frase soaria como uma pergunta.",
+                glossario: [ { termo: "Incredulidade", definicao: "Sentimento de não acreditar em algo." }, { termo: "Complexo", definicao: "Complicado." } ],
+                tipoErro: "Dúvida vs. Afirmação/Emoção"
+            },
+            {
+                pergunta: "Para fazer um ALERTA com urgência, qual pontuação é mais eficaz?",
+                frase: "Cuidado com as notícias falsas que circulam nas redes sociais",
+                opcoes: ["?", "!", "."], correta: 1,
+                comentarioAcerto: "Correto! A exclamação dá à frase a força de um alerta.",
+                comentarioErro: "Um alerta precisa de impacto! Qual sinal transmite mais força e emoção?",
+                glossario: [ { termo: "Circular", definicao: "Espalhar-se, passar de pessoa para pessoa." } ],
+                tipoErro: "Emoção vs. Dúvida/Afirmação"
+            },
+            {
+                pergunta: "Para expressar uma DESCOBERTA com entusiasmo, qual sinal usar?",
+                frase: "Então era isso que o autor queria dizer com aquela metáfora",
+                opcoes: [".", "?", "!"], correta: 2,
+                comentarioAcerto: "Exato! O ponto de exclamação mostra o entusiasmo da descoberta.",
+                comentarioErro: "Uma descoberta é um momento emocionante! Qual sinal expressa emoções?",
+                glossario: [ { termo: "Metáfora", definicao: "Uma comparação criativa." } ],
+                tipoErro: "Emoção vs. Dúvida/Afirmação"
+            },
+            {
+                pergunta: "Para uma DÚVIDA genuína, qual sinal é necessário?",
+                frase: "Será que a inteligência artificial um dia substituirá os professores",
+                opcoes: ["!", ".", "?"], correta: 2,
+                comentarioAcerto: "Perfeito! 'Será que' e a interrogação confirmam a pergunta.",
+                comentarioErro: "Observe como a frase começa. 'Será que' já indica uma dúvida.",
+                glossario: [ { termo: "Inteligência artificial", definicao: "Tecnologia que faz máquinas 'pensarem'." } ],
+                tipoErro: "Dúvida vs. Afirmação/Emoção"
+            },
+            {
+                pergunta: "Para expressar FRUSTRAÇÃO, qual sinal demonstra melhor esse sentimento?",
+                frase: "Eu estudei tanto e mesmo assim não consegui a nota que eu queria",
+                opcoes: ["?", ".", "!"], correta: 2,
+                comentarioAcerto: "Isso! O ponto de exclamação transmite o sentimento de frustração.",
+                comentarioErro: "Frustração é um sentimento forte. Qual sinal expressa emoções intensas?",
+                glossario: [ { termo: "Frustração", definicao: "Sentimento de tristeza por não conseguir algo." } ],
+                tipoErro: "Emoção vs. Dúvida/Afirmação"
+            },
+            {
+                pergunta: "Para uma AFIRMAÇÃO com total convicção, qual pontuação usar?",
+                frase: "Não há dúvidas de que a prática de esportes melhora a saúde",
+                opcoes: [".", "?", "!"], correta: 0,
+                comentarioAcerto: "Correto! O ponto final transmite a segurança e a convicção da frase.",
+                comentarioErro: "A frase já diz 'Não há dúvidas'. O objetivo é afirmar com certeza.",
+                glossario: [ { termo: "Convicção", definicao: "Certeza absoluta sobre algo." } ],
+                tipoErro: "Afirmação vs. Dúvida/Emoção"
+            },
+            {
+                pergunta: "Para fazer um DESAFIO ou uma provocação, qual sinal se encaixa?",
+                frase: "Você realmente acredita que essa atitude vai resolver o problema",
+                opcoes: ["!", ".", "?"], correta: 2,
+                comentarioAcerto: "Exato! A interrogação, nesse contexto, tem um tom de desafio.",
+                comentarioErro: "Um desafio é uma forma de questionar a outra pessoa.",
+                glossario: [ { termo: "Atitude", definicao: "Modo de se comportar, agir." } ],
+                tipoErro: "Dúvida vs. Afirmação/Emoção"
+            },
+            {
+                pergunta: "Para expressar um lamento, uma TRISTEZA, qual sinal demonstra isso?",
+                frase: "Infelizmente, nem todos valorizam a amizade verdadeira",
+                opcoes: ["?", "!", "."], correta: 1,
+                comentarioAcerto: "Perfeito. A exclamação, junto com 'infelizmente', reforça o tom de lamento.",
+                comentarioErro: "A palavra 'infelizmente' já indica um sentimento. Qual sinal pode reforçar essa emoção?",
+                glossario: [ { termo: "Infelizmente", definicao: "Conector que indica algo triste." }, { termo: "Valorizar", definicao: "Dar importância." } ],
+                tipoErro: "Emoção vs. Dúvida/Afirmação"
+            },
+            {
+                pergunta: "Para uma pergunta que expressa SURPRESA, qual sinal é o melhor?",
+                frase: "Você não sabia que o prazo final para o trabalho era hoje",
+                opcoes: [".", "?", "!"], correta: 1,
+                comentarioAcerto: "Isso mesmo! A interrogação mostra que é uma pergunta, mas com um sentimento de surpresa.",
+                comentarioErro: "Mesmo com surpresa, a frase ainda é uma pergunta.",
+                glossario: [ { termo: "Prazo final", definicao: "A data e hora limite para entregar algo." } ],
+                tipoErro: "Dúvida vs. Afirmação/Emoção"
+            },
+            {
+                pergunta: "Para uma DECLARAÇÃO FORMAL, como em um jornal, qual sinal usar?",
+                frase: "As novas medidas econômicas foram anunciadas pelo governo ontem",
+                opcoes: [".", "?", "!"], correta: 0,
+                comentarioAcerto: "Correto. O ponto final é o padrão para textos informativos e formais.",
+                comentarioErro: "Notícias e declarações formais evitam emoção ou dúvida. Qual é o sinal mais neutro?",
+                glossario: [ { termo: "Medidas econômicas", definicao: "Ações do governo sobre dinheiro." } ],
+                tipoErro: "Afirmação vs. Dúvida/Emoção"
+            },
+            {
+                pergunta: "Para expressar um DESEJO forte, qual sinal demonstra essa vontade?",
+                frase: "Ah, quem dera se as férias pudessem durar para sempre",
+                opcoes: ["?", ".", "!"], correta: 2,
+                comentarioAcerto: "Perfeito! A exclamação captura perfeitamente o tom de desejo.",
+                comentarioErro: "'Quem dera' já indica um forte desejo. Qual sinal representa esse sentimento?",
+                glossario: [ { termo: "Quem dera", definicao: "Expressão usada para indicar um grande desejo." } ],
+                tipoErro: "Emoção vs. Dúvida/Afirmação"
+            },
+            {
+                pergunta: "Para uma pergunta com resposta óbvia, qual sinal usar?",
+                frase: "Depois de tudo isso, quem ainda duvidaria da sua capacidade",
+                opcoes: ["!", "?", "."], correta: 1,
+                comentarioAcerto: "Isso! A pergunta não espera uma resposta real, ela serve para afirmar algo.",
+                comentarioErro: "Mesmo que a resposta seja óbvia, a frase tem a estrutura de uma pergunta.",
+                glossario: [ { termo: "Capacidade", definicao: "Habilidade de fazer algo bem." } ],
+                tipoErro: "Dúvida vs. Afirmação/Emoção"
+            },
+            {
+                pergunta: "Para expressar admiração, um ELOGIO, qual sinal se encaixa melhor?",
+                frase: "Que apresentação incrível você fez para a turma",
+                opcoes: [".", "?", "!"], correta: 2,
+                comentarioAcerto: "Correto! A exclamação é ideal para elogios, pois transmite emoção positiva.",
+                comentarioErro: "Um elogio é uma demonstração de emoção positiva. Qual sinal é o 'campeão' das emoções?",
+                glossario: [ { termo: "Incrível", definicao: "Algo muito bom, extraordinário." } ],
+                tipoErro: "Emoção vs. Dúvida/Afirmação"
+            },
+            {
+                pergunta: "Para uma certeza absoluta, qual é o sinal?",
+                frase: "O sol é a estrela central do nosso sistema solar",
+                opcoes: ["?", "!", "."], correta: 2,
+                comentarioAcerto: "Exato! É um fato científico. O ponto final é a única opção correta.",
+                comentarioErro: "A frase apresenta um fato, uma verdade. Não há dúvida nem emoção.",
+                glossario: [ { termo: "Sistema solar", definicao: "O conjunto de planetas que giram ao redor do Sol." } ],
+                tipoErro: "Afirmação vs. Dúvida/Emoção"
+            }
+        ];
+
+        let atividadeAtual = 0;
+        let erros = [];
+        
+        const telaInicialEl = document.getElementById('tela-inicial');
+        const telaFinalEl = document.getElementById('tela-final');
+        const containerPrincipalEl = document.querySelector('.container-principal');
+        const perguntaEl = document.getElementById('titulo-pergunta');
+        const fraseEl = document.getElementById('frase');
+        const opcoesEl = document.getElementById('opcoes');
+        const feedbackEl = document.getElementById('feedback');
+        const feedbackTituloEl = document.getElementById('feedback-titulo');
+        const feedbackTextoEl = document.getElementById('feedback-texto');
+        const btnAvancarEl = document.getElementById('btn-avancar');
+        const contadorEl = document.getElementById('contador');
+        const glossarioContainerEl = document.getElementById('glossario-container');
+        const glossarioListaEl = document.getElementById('glossario-lista');
+        const btnComecarEl = document.getElementById('btn-comecar');
+        const btnReiniciarEl = document.getElementById('btn-reiniciar');
+        const resumoContainerEl = document.getElementById('resumo-erros-container');
+        const listaErrosEl = document.getElementById('lista-erros');
+
+        function iniciarAtividade() {
+            telaInicialEl.style.display = 'none';
+            containerPrincipalEl.style.display = 'flex';
+            carregarAtividade();
+        }
+
+        function finalizarAtividade() {
+            containerPrincipalEl.style.display = 'none';
+            telaFinalEl.style.display = 'block';
+            gerarResumoDeErros();
+        }
+
+        function reiniciarAtividade() {
+            window.location.reload();
+        }
+
+        function gerarResumoDeErros() {
+            if (erros.length === 0) {
+                resumoContainerEl.style.display = 'none';
+                return;
+            }
+
+            const contagemErros = erros.reduce((acc, erro) => {
+                acc[erro] = (acc[erro] || 0) + 1;
+                return acc;
+            }, {});
+
+            const errosMaisComuns = Object.keys(contagemErros).sort((a, b) => contagemErros[b] - contagemErros[a]);
+            
+            listaErrosEl.innerHTML = '';
+            resumoContainerEl.style.display = 'block';
+
+            errosMaisComuns.slice(0, 2).forEach(tipoErro => {
+                const li = document.createElement('li');
+                if (tipoErro === "Afirmação vs. Dúvida/Emoção") {
+                    li.innerHTML = "Você confundiu algumas vezes quando <strong>afirmar</strong> algo com um ponto final (.). Lembre-se: se não há dúvida ou emoção forte, o ponto final é a escolha segura.";
+                } else if (tipoErro === "Dúvida vs. Afirmação/Emoção") {
+                    li.innerHTML = "Parece que você tem dúvidas sobre quando usar o ponto de interrogação (?). Use-o sempre que a frase tiver um tom de <strong>pergunta, dúvida ou incerteza</strong>.";
+                } else if (tipoErro === "Emoção vs. Dúvida/Afirmação") {
+                    li.innerHTML = "Notamos que você hesitou ao usar o ponto de exclamação (!). Use-o para mostrar <strong>emoções fortes</strong> como surpresa, alegria, raiva ou para fazer um alerta.";
+                }
+                listaErrosEl.appendChild(li);
+            });
+        }
+
+        function carregarAtividade() {
+            if (atividadeAtual >= atividades.length) {
+                finalizarAtividade();
+                return;
+            }
+
+            const atv = atividades[atividadeAtual];
+            contadorEl.textContent = `Atividade ${atividadeAtual + 1} de ${atividades.length}`;
+            perguntaEl.textContent = atv.pergunta;
+            fraseEl.textContent = atv.frase;
+            opcoesEl.innerHTML = '';
+            glossarioListaEl.innerHTML = '';
+            
+            atv.glossario.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'termo-glossario';
+                div.innerHTML = `<strong>${item.termo}:</strong> ${item.definicao}`;
+                glossarioListaEl.appendChild(div);
+            });
+            
+            atv.opcoes.forEach((opcao, index) => {
+                const inputId = `opcao-${index}`;
+                const div = document.createElement('div');
+                div.innerHTML = `
+                    <input type="radio" id="${inputId}" name="pista">
+                    <label for="${inputId}">
+                        <span class="sinal">${opcao}</span>
+                    </label>
+                `;
+                div.querySelector('input').addEventListener('click', () => selecionarOpcao(index));
+                opcoesEl.appendChild(div);
+            });
+
+            feedbackEl.style.display = 'none';
+            btnAvancarEl.style.display = 'none';
+        }
+
+        function selecionarOpcao(selectedIndex) {
+            const atv = atividades[atividadeAtual];
+            const labels = opcoesEl.querySelectorAll('label');
+            labels.forEach(label => {
+                label.classList.add('disabled');
+                label.previousElementSibling.disabled = true;
+            });
+            
+            const labelSelecionada = document.querySelector(`label[for="opcao-${selectedIndex}"]`);
+
+            if (selectedIndex === atv.correta) {
+                feedbackEl.className = 'correto';
+                feedbackTituloEl.innerText = 'Correto!';
+                feedbackTextoEl.innerText = atv.comentarioAcerto;
+                labelSelecionada.style.borderColor = 'var(--verde-correto)';
+                labelSelecionada.style.backgroundColor = '#e8f5e9';
+            } else {
+                feedbackEl.className = 'incorreto';
+                feedbackTituloEl.innerText = 'Incorreto.';
+                feedbackTextoEl.innerText = atv.comentarioErro;
+                labelSelecionada.style.borderColor = 'var(--vermelho-incorreto)';
+                labelSelecionada.style.backgroundColor = '#ffebee';
+                
+                const labelCorreta = document.querySelector(`label[for="opcao-${atv.correta}"]`);
+                if (labelCorreta) {
+                    labelCorreta.style.borderColor = 'var(--verde-correto)';
+                    labelCorreta.style.backgroundColor = '#e8f5e9';
+                }
+                erros.push(atv.tipoErro);
+            }
+            
+            fraseEl.textContent += atv.opcoes[selectedIndex];
+            feedbackEl.style.display = 'block';
+            btnAvancarEl.style.display = 'inline-block';
+        }
+
+        btnAvancarEl.addEventListener('click', () => {
+            atividadeAtual++;
+            carregarAtividade();
+        });
+
+        btnComecarEl.addEventListener('click', iniciarAtividade);
+        btnReiniciarEl.addEventListener('click', reiniciarAtividade);
+    </script>
+</body>
+</html>

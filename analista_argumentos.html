@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analista de Argumentos (Versão Revisada)</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
+        :root {
+            --azul-civitas: #1A3E6F;
+            --cinza-texto: #363736;
+            --amarelo-destaque: #f9a825;
+            --verde-correto: #2e7d32;
+            --vermelho-incorreto: #c62828;
+            --fundo-claro: #f0f4f8;
+            --branco: #ffffff;
+        }
+        body, html {
+            height: 100%; margin: 0; font-family: 'Lato', sans-serif;
+            background-color: var(--fundo-claro); display: flex;
+            justify-content: center; align-items: center; overflow: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
+        
+        /* --- Botão Voltar Global --- */
+        #btn-voltar-global {
+            position: fixed;
+            top: 20px;
+            left: 20px;
+            background-color: var(--branco);
+            color: var(--azul-civitas);
+            padding: 10px 20px;
+            border-radius: 20px;
+            text-decoration: none;
+            font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 1000;
+            transition: transform 0.2s;
+        }
+        #btn-voltar-global:hover {
+            transform: scale(1.05);
+        }
+
+        /* --- Telas de Início e Fim --- */
+        .tela-overlay {
+            background-color: var(--branco); padding: 40px; border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08); text-align: center;
+            width: 90%; max-width: 700px;
+            border-top: 5px solid var(--azul-civitas);
+        }
+        .tela-overlay h1 { color: var(--azul-civitas); font-size: 2em; margin-bottom: 15px; }
+        .tela-overlay p { color: var(--cinza-texto); font-size: 1.2em; line-height: 1.6; margin-bottom: 30px; }
+        .resumo-erros { text-align: left; background-color: #f9f9f9; padding: 20px; border-radius: 8px; margin-bottom: 30px; }
+        .resumo-erros h3 { margin-top: 0; color: var(--azul-civitas); }
+        .resumo-erros ul { padding-left: 20px; margin: 0; }
+        .resumo-erros li { margin-bottom: 10px; }
+        .btn-principal {
+            background-color: var(--amarelo-destaque); color: var(--cinza-texto);
+            border: none; padding: 15px 40px; border-radius: 8px; cursor: pointer;
+            font-size: 1.2em; font-weight: bold; transition: all 0.3s;
+        }
+        .btn-principal:hover { transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.15); }
+
+        /* --- Estrutura Principal da Atividade --- */
+        main.card {
+            background-color: var(--branco); padding: 30px 40px; border-radius: 12px;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+            width: 90%; max-width: 750px; border-top: 5px solid var(--azul-civitas);
+            transition: transform 0.3s ease; text-align: center;
+        }
+        p#contador { text-align: right; font-size: 1em; color: #777; font-weight: bold; margin: 0; margin-bottom: 10px; }
+        h1#titulo-pergunta { color: var(--azul-civitas); margin-top: 0; font-size: 1.8em; }
+        p.texto-argumentativo { font-size: 1.3em; color: var(--cinza-texto); line-height: 1.6; margin: 25px 0; text-align: left; }
+        .destaque { background-color: var(--amarelo-destaque); color: var(--cinza-texto); padding: 2px 6px; border-radius: 4px; font-weight: bold; }
+        #glossario-container { background-color: #f9f9f9; border-top: 2px solid #eee; margin: 20px 0; padding: 15px; text-align: left; }
+        #glossario-container h3 { margin: 0 0 10px 0; color: var(--azul-civitas); font-size: 1.1em; }
+        .termo-glossario { margin-bottom: 8px; font-size: 1em; }
+        .termo-glossario strong { font-weight: 700; color: var(--cinza-texto); }
+        .opcoes button { display: block; width: 100%; text-align: left; background-color: #fdfdfd; color: var(--cinza-texto); border: 2px solid #ddd; padding: 15px 20px; margin: 10px 0; border-radius: 8px; cursor: pointer; font-size: 1.05em; transition: all 0.2s ease; }
+        .opcoes button:not(:disabled):hover { border-color: var(--amarelo-destaque); background-color: #fffaf0; }
+        .opcoes button:disabled { cursor: not-allowed; opacity: 0.8; }
+        #feedback { margin-top: 20px; padding: 15px; border-radius: 8px; text-align: left; display: none; }
+        #feedback.correto { background-color: #e8f5e9; border-left: 5px solid var(--verde-correto); }
+        #feedback.incorreto { background-color: #ffebee; border-left: 5px solid var(--vermelho-incorreto); }
+        #feedback h3 { margin: 0 0 5px 0; }
+        #feedback.correto h3 { color: var(--verde-correto); }
+        #feedback.incorreto h3 { color: var(--vermelho-incorreto); }
+        #feedback p { margin: 0; }
+        #btn-avancar { background-color: var(--azul-civitas); color: var(--branco); border: none; padding: 15px 40px; margin-top: 20px; border-radius: 8px; cursor: pointer; font-size: 1.1em; font-weight: bold; transition: transform 0.2s, box-shadow 0.2s; display: none; }
+        #btn-avancar:hover { transform: translateY(-3px); box-shadow: 0 4px 10px rgba(0,0,0,0.15); }
+    </style>
+</head>
+<body>
+    <a href="anos-finais.html" id="btn-voltar-global">‹ Voltar</a>
+
+    <div id="tela-inicial" class="tela-overlay">
+        <h1>Analista de Argumentos</h1>
+        <p>Sua missão é ler atentamente cada frase e identificar a função correta do sinal de pontuação destacado. Use o glossário para ajudar a entender as palavras. Vamos começar?</p>
+        <button id="btn-comecar" class="btn-principal">Começar!</button>
+    </div>
+
+    <div id="tela-final" class="tela-overlay" style="display: none;">
+        <h1>Parabéns! 🏆</h1>
+        <p>Você concluiu a análise de todos os argumentos! Veja abaixo algumas dicas personalizadas para reforçar seu aprendizado.</p>
+        <div id="resumo-erros-container" class="resumo-erros" style="display: none;">
+            <h3>Dicas para você:</h3>
+            <ul id="lista-erros"></ul>
+        </div>
+        <button id="btn-reiniciar" class="btn-principal">Jogar Novamente</button>
+    </div>
+
+    <main class="card" style="display: none;">
+        <p id="contador"></p>
+        <h1 id="titulo-pergunta">Qual a função da pontuação destacada?</h1>
+        <p id="frase" class="texto-argumentativo"></p>
+        <div id="glossario-container">
+            <h3>Palavras e Conectores</h3>
+            <div id="glossario-lista"></div>
+        </div>
+        <div id="opcoes" class="opcoes"></div>
+        <div id="feedback">
+            <h3 id="feedback-titulo"></h3>
+            <p id="feedback-texto"></p>
+        </div>
+        <button id="btn-avancar">Avançar</button>
+    </main>
+
+    <script>
+        const questoes = [
+            { frase: "A tecnologia<destaque>,</destaque> sem dúvida<destaque>,</destaque> transformou a comunicação moderna.", opcoes: ["Separar quem faz a ação do resto da frase.", "Pausar a frase para encaixar um comentário.", "Indicar que alguém vai começar a falar."], correta: 1, comentario: "As vírgulas isolam a expressão 'sem dúvida', que funciona como um comentário.", glossario: [{termo:"Moderna", definicao:"Relativo ao tempo presente."},{termo:"Sem dúvida", definicao:"Conector que serve para dar certeza."}], tipoErro: "Vírgula em Termos Intercalados" },
+            { frase: "Para que uma sociedade avance<destaque>,</destaque> o investimento em educação é essencial.", opcoes: ["Mostrar que a condição veio antes da ação.", "Indicar uma pausa para respirar.", "Separar os itens de uma lista."], correta: 0, comentario: "A vírgula separa a primeira parte da frase (a condição) da segunda parte (a consequência).", glossario: [{termo:"Essencial", definicao:"Algo muito importante."},{termo:"Para que", definicao:"Conector que indica um objetivo."}], tipoErro: "Vírgula em Orações Deslocadas" },
+            { frase: "O desmatamento na Amazônia<destaque>—</destaque> um problema de escala global<destaque>—</destaque> afeta o clima mundial.", opcoes: ["Indicar que o pensamento foi cortado.", "Separar a fala de um personagem.", "Dar destaque e força para uma explicação."], correta: 2, comentario: "Os travessões dão um destaque maior para a explicação, sendo mais fortes que as vírgulas.", glossario: [{termo:"Escala global", definicao:"Algo que atinge o mundo inteiro."}], tipoErro: "Uso do Travessão" },
+            { frase: "A conclusão é clara<destaque>:</destaque> precisamos agir agora para frear o aquecimento global.", opcoes: ["Mostrar que alguém vai falar.", "Anunciar uma explicação ou conclusão.", "Mostrar a cópia de um texto longo."], correta: 1, comentario: "Os dois-pontos introduzem a conclusão que foi anunciada na primeira parte da frase.", glossario: [{termo:"Frear", definicao:"Diminuir a velocidade, parar algo."}], tipoErro: "Uso dos Dois-Pontos" },
+            { frase: "Políticos<destaque>,</destaque> empresários e cidadãos<destaque>:</destaque> todos têm responsabilidade.", opcoes: ["Separar um chamado ou vocativo.", "Indicar que a lista está incompleta.", "Introduzir uma palavra que resume a lista."], correta: 2, comentario: "Os dois-pontos aqui introduzem a palavra 'todos', que resume a lista anterior.", glossario: [{termo:"Responsabilidade", definicao:"O dever de responder por seus atos."}], tipoErro: "Uso dos Dois-Pontos" },
+            { frase: "As redes sociais<destaque>,</destaque> que prometiam conectar o mundo<destaque>,</destaque> estão na verdade nos isolando?", opcoes: ["Separar um comentário qualquer.", "Separar uma explicação sobre 'as redes sociais'.", "Mostrar que uma palavra de ação está faltando."], correta: 1, comentario: "A parte entre vírgulas ('que prometiam conectar o mundo') é uma explicação sobre 'redes sociais'.", glossario: [{termo:"Isolando", definicao:"Deixando as pessoas sozinhas."}], tipoErro: "Vírgula em Termos Intercalados" },
+            { frase: "A reciclagem é fundamental<destaque>;</destaque> contudo, sua prática ainda é insuficiente.", opcoes: ["Ligar duas ideias relacionadas com uma pausa forte.", "Indicar uma pausa para criar suspense.", "Separar itens de uma lista muito longa."], correta: 0, comentario: "O ponto e vírgula conecta duas ideias completas que se relacionam, sendo uma pausa mais forte que a vírgula.", glossario: [{termo:"Insuficiente", definicao:"Que não é o bastante."},{termo:"Contudo", definicao:"Conector que indica oposição (mas, porém)."}], tipoErro: "Uso do Ponto e Vírgula" },
+            { frase: "A leitura desenvolve o senso crítico<destaque>;</destaque> os filmes<destaque>,</destaque> a percepção visual.", opcoes: ["Separar itens de uma lista que já usam vírgula.", "Indicar uma lista de ações diferentes.", "Mostrar que as ideias não têm relação."], correta: 0, comentario: "O ponto e vírgula organiza uma lista quando os itens já possuem suas próprias vírgulas.", glossario: [{termo:"Senso crítico", definicao:"A capacidade de analisar as coisas."}], tipoErro: "Uso do Ponto e Vírgula" },
+            { frase: "A arte<destaque>,</destaque> na minha opinião<destaque>,</destaque> é a mais alta forma de esperança.", opcoes: ["Separar uma explicação técnica.", "Isolar uma opinião pessoal no meio da frase.", "Separar o local da data em um cabeçalho."], correta: 1, comentario: "Expressões como 'na minha opinião' são comentários e devem ser isoladas por vírgulas.", glossario: [], tipoErro: "Vírgula em Termos Intercalados" },
+            { frase: "O relatório aponta duas causas<destaque>:</destaque> o consumo excessivo e o descarte inadequado.", opcoes: ["Mostrar a cópia de um texto.", "Anunciar uma lista de coisas.", "Separar duas ideias completas."], correta: 1, comentario: "Os dois-pontos são usados para anunciar a lista de 'duas causas' que foi mencionada antes.", glossario: [{termo:"Descarte inadequado", definicao:"Jogar o lixo no lugar errado."}], tipoErro: "Uso dos Dois-Pontos" },
+            { frase: "Os alunos<destaque> (</destaque>pelo menos a maioria<destaque>)</destaque> entenderam o projeto.", opcoes: ["Colocar uma explicação muito importante.", "Marcar a fala de um personagem.", "Encaixar um comentário extra, não obrigatório."], correta: 2, comentario: "Os parênteses servem para inserir uma informação que não é essencial para o sentido principal da frase.", glossario: [], tipoErro: "Uso dos Parênteses" },
+            { frase: "A tese do autor<destaque>,</destaque> de que a história é cíclica<destaque>,</destaque> encontra muitos adeptos.", opcoes: ["Explicar o que é a 'tese do autor'.", "Chamar a atenção do autor.", "Mostrar as palavras exatas que alguém disse."], correta: 0, comentario: "A parte entre vírgulas explica exatamente qual é a 'tese do autor'.", glossario: [{termo:"Cíclica", definicao:"Algo que se repete em ciclos."},{termo:"Adeptos", definicao:"Seguidores de uma ideia."}], tipoErro: "Vírgula em Termos Intercalados" },
+            { frase: "Investir em saneamento não é gasto<destaque>,</destaque> é investimento em saúde.", opcoes: ["Separar duas ideias curtas e opostas.", "Esconder a falta de uma palavra.", "Separar uma qualidade da coisa."], correta: 0, comentario: "A vírgula conecta duas ideias curtas e opostas ('não é X, é Y') para criar um efeito forte.", glossario: [{termo:"Saneamento", definicao:"Serviços de tratamento de água e esgoto."}], tipoErro: "Vírgula em Orações Deslocadas" },
+            { frase: "Ele comprou tudo o que precisava<destaque>:</destaque> pão, leite e ovos.", opcoes: ["Anunciar a fala de alguém.", "Apresentar uma lista de itens.", "Criar um momento de suspense."], correta: 1, comentario: "Correto! Os dois-pontos aqui servem para iniciar a lista de itens que ele comprou.", glossario: [], tipoErro: "Uso dos Dois-Pontos" },
+            { frase: "O time jogou muito bem<destaque>;</destaque> no entanto, não conseguiu a vitória.", opcoes: ["Ligar duas ideias relacionadas com uma pausa forte.", "Separar os ingredientes de uma receita.", "Iniciar uma explicação longa."], correta: 0, comentario: "O ponto e vírgula conecta as duas frases, mostrando que elas têm relação, e a segunda ideia contrasta com a primeira.", glossario: [{termo:"No entanto", definicao:"Conector que indica oposição (mas, porém)."}], tipoErro: "Uso do Ponto e Vírgula" }
+        ];
+
+        let questaoAtual = 0;
+        let erros = [];
+        
+        // Elementos da tela
+        const telaInicialEl = document.getElementById('tela-inicial');
+        const telaFinalEl = document.getElementById('tela-final');
+        const mainCardEl = document.querySelector('main.card');
+        
+        // Elementos da atividade
+        const fraseEl = document.getElementById('frase');
+        const opcoesEl = document.getElementById('opcoes');
+        const feedbackEl = document.getElementById('feedback');
+        const feedbackTituloEl = document.getElementById('feedback-titulo');
+        const feedbackTextoEl = document.getElementById('feedback-texto');
+        const btnAvancarEl = document.getElementById('btn-avancar');
+        const contadorEl = document.getElementById('contador');
+        const glossarioContainerEl = document.getElementById('glossario-container');
+        const glossarioListaEl = document.getElementById('glossario-lista');
+        const btnComecarEl = document.getElementById('btn-comecar');
+        const btnReiniciarEl = document.getElementById('btn-reiniciar');
+        const resumoContainerEl = document.getElementById('resumo-erros-container');
+        const listaErrosEl = document.getElementById('lista-erros');
+
+        function iniciarAtividade() {
+            telaInicialEl.style.display = 'none';
+            mainCardEl.style.display = 'block';
+            carregarQuestao();
+        }
+
+        function finalizarAtividade() {
+            mainCardEl.style.display = 'none';
+            telaFinalEl.style.display = 'block';
+            gerarResumoDeErros();
+        }
+
+        function reiniciarAtividade() {
+            window.location.reload();
+        }
+
+        function gerarResumoDeErros() {
+            if (erros.length === 0) {
+                resumoContainerEl.style.display = 'none';
+                return;
+            }
+
+            const contagemErros = erros.reduce((acc, erro) => {
+                acc[erro] = (acc[erro] || 0) + 1;
+                return acc;
+            }, {});
+
+            const errosMaisComuns = Object.keys(contagemErros).sort((a, b) => contagemErros[b] - contagemErros[a]);
+            
+            listaErrosEl.innerHTML = '';
+            resumoContainerEl.style.display = 'block';
+
+            errosMaisComuns.slice(0, 2).forEach(tipoErro => {
+                const li = document.createElement('li');
+                if (tipoErro === "Vírgula em Termos Intercalados") {
+                    li.innerHTML = "Você teve alguns desafios com <strong>vírgulas que separam comentários</strong>. Lembre-se: expressões como 'sem dúvida' ou que dão uma explicação extra no meio da frase devem ficar entre vírgulas.";
+                } else if (tipoErro === "Uso dos Dois-Pontos") {
+                    li.innerHTML = "Parece que o uso dos <strong>dois-pontos (:)</strong> foi um desafio. Use-os sempre que for anunciar uma lista, uma explicação ou um resumo de algo que acabou de ser dito.";
+                } else if (tipoErro === "Uso do Ponto e Vírgula") {
+                    li.innerHTML = "Notamos que o <strong>ponto e vírgula (;)</strong> gerou dúvidas. Ele serve para criar uma pausa maior que a vírgula, geralmente para separar grandes ideias ou itens de uma lista que já usam vírgulas.";
+                } else if (tipoErro === "Vírgula em Orações Deslocadas") {
+                    li.innerHTML = "Você confundiu o uso da <strong>vírgula para separar ideias</strong>. Quando uma parte da frase que indica condição ou tempo ('Para que avance...', 'Quando chegar...') vem no início, ela deve ser separada por vírgula.";
+                } else {
+                     li.innerHTML = `Você teve alguns desafios com <strong>${tipoErro}</strong>. Continue praticando para dominar essa regra!`;
+                }
+                listaErrosEl.appendChild(li);
+            });
+        }
+
+        function carregarQuestao() {
+            if (questaoAtual >= questoes.length) {
+                finalizarAtividade();
+                return;
+            }
+
+            const q = questoes[questaoAtual];
+            contadorEl.textContent = `Questão ${questaoAtual + 1} de ${questoes.length}`;
+            fraseEl.innerHTML = q.frase.replace(/<destaque>/g, '<span class="destaque">').replace(/<\/destaque>/g, '</span>');
+            opcoesEl.innerHTML = '';
+            glossarioListaEl.innerHTML = '';
+
+            if (q.glossario.length > 0) {
+                glossarioContainerEl.style.display = 'block';
+                q.glossario.forEach(item => {
+                    const div = document.createElement('div');
+                    div.className = 'termo-glossario';
+                    div.innerHTML = `<strong>${item.termo}:</strong> ${item.definicao}`;
+                    glossarioListaEl.appendChild(div);
+                });
+            } else {
+                glossarioContainerEl.style.display = 'none';
+            }
+            
+            q.opcoes.forEach((opcao, index) => {
+                const button = document.createElement('button');
+                button.innerText = opcao;
+                button.addEventListener('click', () => selecionarOpcao(index));
+                opcoesEl.appendChild(button);
+            });
+
+            feedbackEl.style.display = 'none';
+            btnAvancarEl.style.display = 'none';
+        }
+
+        function selecionarOpcao(index) {
+            const q = questoes[questaoAtual];
+            const botoes = opcoesEl.querySelectorAll('button');
+            botoes.forEach(btn => btn.disabled = true);
+
+            if (index === q.correta) {
+                feedbackEl.className = 'correto';
+                feedbackTituloEl.innerText = 'Correto!';
+                feedbackTextoEl.innerText = q.comentario;
+                botoes[index].style.borderColor = 'var(--verde-correto)';
+                botoes[index].style.backgroundColor = '#e8f5e9';
+            } else {
+                feedbackEl.className = 'incorreto';
+                feedbackTituloEl.innerText = 'Incorreto.';
+                feedbackTextoEl.innerText = q.comentario;
+                botoes[index].style.borderColor = 'var(--vermelho-incorreto)';
+                botoes[index].style.backgroundColor = '#ffebee';
+                
+                const botaoCorreto = botoes[q.correta];
+                botaoCorreto.style.borderColor = 'var(--verde-correto)';
+                botaoCorreto.style.backgroundColor = '#e8f5e9';
+                
+                erros.push(q.tipoErro);
+            }
+
+            feedbackEl.style.display = 'block';
+            btnAvancarEl.style.display = 'inline-block';
+        }
+
+        btnAvancarEl.addEventListener('click', () => {
+            questaoAtual++;
+            carregarQuestao();
+        });
+
+        btnComecarEl.addEventListener('click', iniciarAtividade);
+        btnReiniciarEl.addEventListener('click', reiniciarAtividade);
+
+    </script>
+</body>
+</html>
