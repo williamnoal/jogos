@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Analista de Argumentos (Versão Revisada)</title>
+    <title>Analista de Argumentos (Versão 2.1)</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Lato:wght@400;700&display=swap');
         :root {
@@ -91,7 +91,7 @@
     </style>
 </head>
 <body>
-    <a href="anos-finais.html" id="btn-voltar-global">‹ Voltar</a>
+    <a href="index.html" id="btn-voltar-global">‹ Voltar</a>
 
     <div id="tela-inicial" class="tela-overlay">
         <h1>Analista de Argumentos</h1>
@@ -127,32 +127,25 @@
 
     <script>
         const questoes = [
-            { frase: "A tecnologia<destaque>,</destaque> sem dúvida<destaque>,</destaque> transformou a comunicação moderna.", opcoes: ["Separar quem faz a ação do resto da frase.", "Pausar a frase para encaixar um comentário.", "Indicar que alguém vai começar a falar."], correta: 1, comentario: "As vírgulas isolam a expressão 'sem dúvida', que funciona como um comentário.", glossario: [{termo:"Moderna", definicao:"Relativo ao tempo presente."},{termo:"Sem dúvida", definicao:"Conector que serve para dar certeza."}], tipoErro: "Vírgula em Termos Intercalados" },
-            { frase: "Para que uma sociedade avance<destaque>,</destaque> o investimento em educação é essencial.", opcoes: ["Mostrar que a condição veio antes da ação.", "Indicar uma pausa para respirar.", "Separar os itens de uma lista."], correta: 0, comentario: "A vírgula separa a primeira parte da frase (a condição) da segunda parte (a consequência).", glossario: [{termo:"Essencial", definicao:"Algo muito importante."},{termo:"Para que", definicao:"Conector que indica um objetivo."}], tipoErro: "Vírgula em Orações Deslocadas" },
-            { frase: "O desmatamento na Amazônia<destaque>—</destaque> um problema de escala global<destaque>—</destaque> afeta o clima mundial.", opcoes: ["Indicar que o pensamento foi cortado.", "Separar a fala de um personagem.", "Dar destaque e força para uma explicação."], correta: 2, comentario: "Os travessões dão um destaque maior para a explicação, sendo mais fortes que as vírgulas.", glossario: [{termo:"Escala global", definicao:"Algo que atinge o mundo inteiro."}], tipoErro: "Uso do Travessão" },
-            { frase: "A conclusão é clara<destaque>:</destaque> precisamos agir agora para frear o aquecimento global.", opcoes: ["Mostrar que alguém vai falar.", "Anunciar uma explicação ou conclusão.", "Mostrar a cópia de um texto longo."], correta: 1, comentario: "Os dois-pontos introduzem a conclusão que foi anunciada na primeira parte da frase.", glossario: [{termo:"Frear", definicao:"Diminuir a velocidade, parar algo."}], tipoErro: "Uso dos Dois-Pontos" },
-            { frase: "Políticos<destaque>,</destaque> empresários e cidadãos<destaque>:</destaque> todos têm responsabilidade.", opcoes: ["Separar um chamado ou vocativo.", "Indicar que a lista está incompleta.", "Introduzir uma palavra que resume a lista."], correta: 2, comentario: "Os dois-pontos aqui introduzem a palavra 'todos', que resume a lista anterior.", glossario: [{termo:"Responsabilidade", definicao:"O dever de responder por seus atos."}], tipoErro: "Uso dos Dois-Pontos" },
-            { frase: "As redes sociais<destaque>,</destaque> que prometiam conectar o mundo<destaque>,</destaque> estão na verdade nos isolando?", opcoes: ["Separar um comentário qualquer.", "Separar uma explicação sobre 'as redes sociais'.", "Mostrar que uma palavra de ação está faltando."], correta: 1, comentario: "A parte entre vírgulas ('que prometiam conectar o mundo') é uma explicação sobre 'redes sociais'.", glossario: [{termo:"Isolando", definicao:"Deixando as pessoas sozinhas."}], tipoErro: "Vírgula em Termos Intercalados" },
-            { frase: "A reciclagem é fundamental<destaque>;</destaque> contudo, sua prática ainda é insuficiente.", opcoes: ["Ligar duas ideias relacionadas com uma pausa forte.", "Indicar uma pausa para criar suspense.", "Separar itens de uma lista muito longa."], correta: 0, comentario: "O ponto e vírgula conecta duas ideias completas que se relacionam, sendo uma pausa mais forte que a vírgula.", glossario: [{termo:"Insuficiente", definicao:"Que não é o bastante."},{termo:"Contudo", definicao:"Conector que indica oposição (mas, porém)."}], tipoErro: "Uso do Ponto e Vírgula" },
-            { frase: "A leitura desenvolve o senso crítico<destaque>;</destaque> os filmes<destaque>,</destaque> a percepção visual.", opcoes: ["Separar itens de uma lista que já usam vírgula.", "Indicar uma lista de ações diferentes.", "Mostrar que as ideias não têm relação."], correta: 0, comentario: "O ponto e vírgula organiza uma lista quando os itens já possuem suas próprias vírgulas.", glossario: [{termo:"Senso crítico", definicao:"A capacidade de analisar as coisas."}], tipoErro: "Uso do Ponto e Vírgula" },
-            { frase: "A arte<destaque>,</destaque> na minha opinião<destaque>,</destaque> é a mais alta forma de esperança.", opcoes: ["Separar uma explicação técnica.", "Isolar uma opinião pessoal no meio da frase.", "Separar o local da data em um cabeçalho."], correta: 1, comentario: "Expressões como 'na minha opinião' são comentários e devem ser isoladas por vírgulas.", glossario: [], tipoErro: "Vírgula em Termos Intercalados" },
-            { frase: "O relatório aponta duas causas<destaque>:</destaque> o consumo excessivo e o descarte inadequado.", opcoes: ["Mostrar a cópia de um texto.", "Anunciar uma lista de coisas.", "Separar duas ideias completas."], correta: 1, comentario: "Os dois-pontos são usados para anunciar a lista de 'duas causas' que foi mencionada antes.", glossario: [{termo:"Descarte inadequado", definicao:"Jogar o lixo no lugar errado."}], tipoErro: "Uso dos Dois-Pontos" },
-            { frase: "Os alunos<destaque> (</destaque>pelo menos a maioria<destaque>)</destaque> entenderam o projeto.", opcoes: ["Colocar uma explicação muito importante.", "Marcar a fala de um personagem.", "Encaixar um comentário extra, não obrigatório."], correta: 2, comentario: "Os parênteses servem para inserir uma informação que não é essencial para o sentido principal da frase.", glossario: [], tipoErro: "Uso dos Parênteses" },
-            { frase: "A tese do autor<destaque>,</destaque> de que a história é cíclica<destaque>,</destaque> encontra muitos adeptos.", opcoes: ["Explicar o que é a 'tese do autor'.", "Chamar a atenção do autor.", "Mostrar as palavras exatas que alguém disse."], correta: 0, comentario: "A parte entre vírgulas explica exatamente qual é a 'tese do autor'.", glossario: [{termo:"Cíclica", definicao:"Algo que se repete em ciclos."},{termo:"Adeptos", definicao:"Seguidores de uma ideia."}], tipoErro: "Vírgula em Termos Intercalados" },
-            { frase: "Investir em saneamento não é gasto<destaque>,</destaque> é investimento em saúde.", opcoes: ["Separar duas ideias curtas e opostas.", "Esconder a falta de uma palavra.", "Separar uma qualidade da coisa."], correta: 0, comentario: "A vírgula conecta duas ideias curtas e opostas ('não é X, é Y') para criar um efeito forte.", glossario: [{termo:"Saneamento", definicao:"Serviços de tratamento de água e esgoto."}], tipoErro: "Vírgula em Orações Deslocadas" },
-            { frase: "Ele comprou tudo o que precisava<destaque>:</destaque> pão, leite e ovos.", opcoes: ["Anunciar a fala de alguém.", "Apresentar uma lista de itens.", "Criar um momento de suspense."], correta: 1, comentario: "Correto! Os dois-pontos aqui servem para iniciar a lista de itens que ele comprou.", glossario: [], tipoErro: "Uso dos Dois-Pontos" },
-            { frase: "O time jogou muito bem<destaque>;</destaque> no entanto, não conseguiu a vitória.", opcoes: ["Ligar duas ideias relacionadas com uma pausa forte.", "Separar os ingredientes de uma receita.", "Iniciar uma explicação longa."], correta: 0, comentario: "O ponto e vírgula conecta as duas frases, mostrando que elas têm relação, e a segunda ideia contrasta com a primeira.", glossario: [{termo:"No entanto", definicao:"Conector que indica oposição (mas, porém)."}], tipoErro: "Uso do Ponto e Vírgula" }
+            { frase: "A tecnologia<destaque>,</destaque> sem dúvida<destaque>,</destaque> transformou o mundo.", opcoes: ["Para encaixar um comentário extra na frase.", "Para separar os itens de uma lista.", "Para indicar a fala de um personagem."], correta: 0, feedbackAcerto: "Isso mesmo! As vírgulas servem para 'abraçar' um comentário ou uma explicação que está no meio da frase, como 'sem dúvida'.", feedbackErro: "Quase lá! A regra aqui é que as vírgulas separam um comentário extra no meio da frase. A expressão 'sem dúvida' é um exemplo disso.", glossario: [{termo:"Transformou", definicao:"Mudou completamente."},{termo:"Sem dúvida", definicao:"Conector que serve para dar certeza."}], tipoErro: "Vírgula para Intercalar" },
+            { frase: "Para que uma sociedade avance<destaque>,</destaque> o investimento em educação é essencial.", opcoes: ["Para separar a 'condição' do 'resultado' na frase.", "Para indicar uma pausa longa para respirar.", "Para separar o nome de quem se chama."], correta: 0, feedbackAcerto: "Exato! A vírgula separa a parte da frase que mostra uma condição ('Para que avance...') do seu resultado ('é essencial').", feedbackErro: "Atenção! Neste caso, usamos a vírgula porque a parte que indica uma condição ('Para que avance...') veio no início da frase, antes da ideia principal.", glossario: [{termo:"Essencial", definicao:"Algo muito importante."},{termo:"Para que", definicao:"Conector que indica um objetivo."}], tipoErro: "Vírgula para Deslocar" },
+            { frase: "O desmatamento na Amazônia<destaque>—</destaque>um problema de escala global<destaque>—</destaque>afeta o clima mundial.", opcoes: ["Para indicar que o pensamento foi cortado de repente.", "Para separar a fala de um personagem.", "Para dar um super destaque a uma explicação."], correta: 2, feedbackAcerto: "Perfeito! Os travessões são como 'super vírgulas' e servem para dar mais destaque e força a uma explicação importante.", feedbackErro: "Faltou pouco! Lembre-se que os travessões são usados para dar um destaque especial a uma explicação no meio da frase, com mais ênfase que as vírgulas.", glossario: [{termo:"Escala global", definicao:"Algo que atinge o mundo inteiro."}], tipoErro: "Uso do Travessão" },
+            { frase: "A conclusão é clara<destaque>:</destaque> precisamos agir agora para frear o aquecimento global.", opcoes: ["Para mostrar que alguém vai começar a falar.", "Para anunciar uma explicação que virá em seguida.", "Para mostrar a cópia de um texto longo."], correta: 1, feedbackAcerto: "Correto! Os dois-pontos funcionam como uma seta, avisando que uma explicação ou conclusão está chegando.", feedbackErro: "Neste caso, os dois-pontos servem para anunciar a explicação que vem logo depois. Pense neles como um sinal de 'preste atenção no que vem a seguir'.", glossario: [{termo:"Frear", definicao:"Diminuir a velocidade, parar algo."}], tipoErro: "Uso dos Dois-Pontos" },
+            { frase: "As redes sociais<destaque>,</destaque> que prometiam conectar o mundo<destaque>,</destaque> às vezes nos isolam.", opcoes: ["Para separar uma opinião pessoal.", "Para dar uma explicação extra sobre a palavra anterior.", "Para mostrar que uma palavra foi omitida."], correta: 1, feedbackAcerto: "Ótimo! A parte entre vírgulas ('que prometiam conectar o mundo') é uma explicação extra sobre o que são as 'redes sociais'.", feedbackErro: "Observe bem. A parte entre vírgulas está dando uma informação a mais sobre as 'redes sociais'. É para isso que servem as vírgulas aqui.", glossario: [{termo:"Isolam", definicao:"Deixando as pessoas sozinhas."}], tipoErro: "Vírgula para Intercalar" },
+            { frase: "A reciclagem é fundamental<destaque>;</destaque> contudo, sua prática ainda é pequena.", opcoes: ["Para ligar duas ideias completas que conversam entre si.", "Para indicar uma pausa para criar suspense.", "Para separar os itens de uma lista simples (pão, leite...)."], correta: 0, feedbackAcerto: "Excelente! O ponto e vírgula é uma pausa mais forte que a vírgula. Ele conecta duas ideias que poderiam ser frases separadas, mas que têm uma forte relação.", feedbackErro: "O ponto e vírgula é usado para ligar duas ideias completas que se relacionam. É como uma pausa mais forte que a vírgula, mas que não encerra o assunto como o ponto final.", glossario: [{termo:"Fundamental", definicao:"Algo muito importante."},{termo:"Contudo", definicao:"Conector que indica oposição (mas, porém)."}], tipoErro: "Uso do Ponto e Vírgula" },
+            { frase: "Ele comprou tudo o que precisava<destaque>:</destaque> pão, leite e ovos.", opcoes: ["Para indicar que a frase terminou.", "Para apresentar uma lista de itens.", "Para criar um momento de suspense na história."], correta: 1, feedbackAcerto: "Isso aí! Os dois-pontos são perfeitos para anunciar uma lista, como a lista de compras que veio depois.", feedbackErro: "Lembre-se: uma das principais funções dos dois-pontos é anunciar uma lista de itens. Foi exatamente o que aconteceu aqui.", glossario: [], tipoErro: "Uso dos Dois-Pontos" },
+            { frase: "Os alunos<destaque> (</destaque>pelo menos a maioria<destaque>)</destaque> entenderam o projeto.", opcoes: ["Para colocar uma informação super importante.", "Para marcar a fala de um personagem no texto.", "Para encaixar um comentário de lado, que não é essencial."], correta: 2, feedbackAcerto: "Mandou bem! Os parênteses servem para inserir uma informação extra, um comentário que poderia ser retirado sem estragar o sentido principal da frase.", feedbackErro: "Quase! Os parênteses são usados para encaixar um comentário 'de lado', uma informação que não é a mais importante da frase.", glossario: [], tipoErro: "Uso dos Parênteses" },
+            { frase: "Investir em saneamento não é gasto<destaque>,</destaque> é investimento em saúde.", opcoes: ["Para separar duas ideias curtas e com sentidos opostos.", "Para indicar a falta de um verbo na frase.", "Para separar o lugar da data em um cabeçalho."], correta: 0, feedbackAcerto: "Perfeito! A vírgula é usada para separar ideias opostas e curtas, como 'não é X, é Y', para dar mais força à mensagem.", feedbackErro: "A dica aqui é notar a oposição de ideias: 'não é gasto' versus 'é investimento'. A vírgula serve para marcar essa separação.", glossario: [{termo:"Saneamento", definicao:"Serviços de tratamento de água e esgoto."}], tipoErro: "Vírgula para Oposição" },
+            { frase: "O time jogou muito bem<destaque>;</destaque> no entanto, não conseguiu a vitória.", opcoes: ["Para ligar duas ideias completas, sendo uma oposição à outra.", "Para separar os ingredientes de uma receita.", "Para iniciar uma explicação muito longa e detalhada."], correta: 0, feedbackAcerto: "Exato! O ponto e vírgula conecta as duas frases, mostrando que a segunda ideia ('não conseguiu a vitória') é uma oposição à primeira ('jogou muito bem').", feedbackErro: "Aqui temos duas frases completas ligadas por um conector de oposição ('no entanto'). O ponto e vírgula é ideal para fazer essa conexão.", glossario: [{termo:"No entanto", definicao:"Conector que indica oposição (mas, porém)."}], tipoErro: "Uso do Ponto e Vírgula" }
         ];
 
         let questaoAtual = 0;
         let erros = [];
         
-        // Elementos da tela
         const telaInicialEl = document.getElementById('tela-inicial');
         const telaFinalEl = document.getElementById('tela-final');
         const mainCardEl = document.querySelector('main.card');
         
-        // Elementos da atividade
         const fraseEl = document.getElementById('frase');
         const opcoesEl = document.getElementById('opcoes');
         const feedbackEl = document.getElementById('feedback');
@@ -201,14 +194,14 @@
 
             errosMaisComuns.slice(0, 2).forEach(tipoErro => {
                 const li = document.createElement('li');
-                if (tipoErro === "Vírgula em Termos Intercalados") {
+                if (tipoErro === "Vírgula para Intercalar") {
                     li.innerHTML = "Você teve alguns desafios com <strong>vírgulas que separam comentários</strong>. Lembre-se: expressões como 'sem dúvida' ou que dão uma explicação extra no meio da frase devem ficar entre vírgulas.";
                 } else if (tipoErro === "Uso dos Dois-Pontos") {
-                    li.innerHTML = "Parece que o uso dos <strong>dois-pontos (:)</strong> foi um desafio. Use-os sempre que for anunciar uma lista, uma explicação ou um resumo de algo que acabou de ser dito.";
+                    li.innerHTML = "Parece que o uso dos <strong>dois-pontos (:)</strong> foi um desafio. Use-os sempre que for anunciar uma lista ou uma explicação de algo que acabou de ser dito.";
                 } else if (tipoErro === "Uso do Ponto e Vírgula") {
-                    li.innerHTML = "Notamos que o <strong>ponto e vírgula (;)</strong> gerou dúvidas. Ele serve para criar uma pausa maior que a vírgula, geralmente para separar grandes ideias ou itens de uma lista que já usam vírgulas.";
-                } else if (tipoErro === "Vírgula em Orações Deslocadas") {
-                    li.innerHTML = "Você confundiu o uso da <strong>vírgula para separar ideias</strong>. Quando uma parte da frase que indica condição ou tempo ('Para que avance...', 'Quando chegar...') vem no início, ela deve ser separada por vírgula.";
+                    li.innerHTML = "Notamos que o <strong>ponto e vírgula (;)</strong> gerou dúvidas. Ele serve para criar uma pausa maior que a vírgula, ligando duas ideias completas que se relacionam.";
+                } else if (tipoErro === "Vírgula para Deslocar") {
+                     li.innerHTML = "Atenção com a <strong>vírgula no início das frases</strong>. Quando uma ideia de tempo ou condição ('Quando chove...', 'Para que funcione...') vem no começo, ela deve ser separada por vírgula.";
                 } else {
                      li.innerHTML = `Você teve alguns desafios com <strong>${tipoErro}</strong>. Continue praticando para dominar essa regra!`;
                 }
@@ -217,6 +210,14 @@
         }
 
         function carregarQuestao() {
+            // Embaralha as questões uma vez no início
+            if (questaoAtual === 0 && questoes.length > 1) {
+                for (let i = questoes.length - 1; i > 0; i--) {
+                    const j = Math.floor(Math.random() * (i + 1));
+                    [questoes[i], questoes[j]] = [questoes[j], questoes[i]];
+                }
+            }
+        
             if (questaoAtual >= questoes.length) {
                 finalizarAtividade();
                 return;
@@ -228,7 +229,7 @@
             opcoesEl.innerHTML = '';
             glossarioListaEl.innerHTML = '';
 
-            if (q.glossario.length > 0) {
+            if (q.glossario && q.glossario.length > 0) {
                 glossarioContainerEl.style.display = 'block';
                 q.glossario.forEach(item => {
                     const div = document.createElement('div');
@@ -259,13 +260,13 @@
             if (index === q.correta) {
                 feedbackEl.className = 'correto';
                 feedbackTituloEl.innerText = 'Correto!';
-                feedbackTextoEl.innerText = q.comentario;
+                feedbackTextoEl.innerText = q.feedbackAcerto; // << MUDANÇA AQUI
                 botoes[index].style.borderColor = 'var(--verde-correto)';
                 botoes[index].style.backgroundColor = '#e8f5e9';
             } else {
                 feedbackEl.className = 'incorreto';
                 feedbackTituloEl.innerText = 'Incorreto.';
-                feedbackTextoEl.innerText = q.comentario;
+                feedbackTextoEl.innerText = q.feedbackErro; // << MUDANÇA AQUI
                 botoes[index].style.borderColor = 'var(--vermelho-incorreto)';
                 botoes[index].style.backgroundColor = '#ffebee';
                 
