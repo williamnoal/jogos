@@ -228,43 +228,60 @@
         const resultadoTexto = document.getElementById('resultado-texto');
         const barraProgresso = document.getElementById('barra-progresso');
 
-        // ===== CORREÇÃO APLICADA AQUI =====
-        const perguntas = [
-            { frase: 'O jogo Minecraft foi lançado oficialmente em 2011.', tipo: 'fato', justificativa: 'Esta data pode ser verificada em fontes oficiais, como o site da Mojang, desenvolvedora do jogo.' },
-            { frase: 'Jogar videogame é a melhor forma de passar o tempo.', tipo: 'opinião', justificativa: 'A expressão "a melhor forma" revela uma preferência pessoal. Outra pessoa pode achar que ler um livro é melhor.' },
-            { frase: 'O Brasil possui 26 estados e um Distrito Federal.', tipo: 'fato', justificativa: 'Essa é uma informação oficial da organização geopolítica do país, disponível em fontes como o IBGE.' },
-            { frase: 'Aulas de matemática são muito difíceis.', tipo: 'opinião', justificativa: 'A palavra "difíceis" é um julgamento subjetivo. A dificuldade de uma matéria varia muito de aluno para aluno.' },
-            { frase: 'A reciclagem de lixo reduz a poluição do planeta.', tipo: 'fato', justificativa: 'Estudos científicos e relatórios de órgãos ambientais, como o Greenpeace, comprovam que a reciclagem diminui a extração de recursos e a poluição.' },
-            { frase: 'Filmes de super-heróis são mais legais que filmes de comédia.', tipo: 'opinião', justificativa: 'O termo "mais legais" expressa um gosto pessoal. Não existe uma medida oficial para o que é "legal".' },
-            { frase: 'A Terra completa uma volta em torno do Sol em aproximadamente 365 dias.', tipo: 'fato', justificativa: 'É um fato astronômico comprovado por observações e cálculos da ciência, confirmados por agências como a NASA.' },
-            { frase: 'Usar a rede social TikTok é muito divertido.', tipo: 'opinião', justificativa: 'A palavra "divertido" descreve um sentimento. O que é divertido para uma pessoa pode ser chato para outra.' },
-            { frase: 'A molécula da água é formada por dois átomos de hidrogênio e um de oxigênio.', tipo: 'fato', justificativa: 'A fórmula química H₂O é um conhecimento científico fundamental, verificável em qualquer livro de química.' },
-            { frase: 'Pizza de abacaxi é uma combinação horrível.', tipo: 'opinião', justificativa: 'A palavra "horrível" é um julgamento de valor baseado no paladar de cada um. Muitas pessoas adoram!' },
-            { frase: 'O desmatamento na Floresta Amazônica é um problema ambiental real.', tipo: 'fato', justificativa: 'Dados de satélite do INPE (Instituto Nacional de Pesquisas Espaciais) monitoram e comprovam as áreas desmatadas.' },
-            { frase: 'É importante dormir 8 horas por noite para ser saudável.', tipo: 'opinião', justificativa: 'Embora seja uma recomendação comum, é uma opinião baseada em médias. A necessidade de sono pode variar, e a frase usa um tom de conselho, não de fato absoluto.' },
-            { frase: 'A série "Stranger Things" é uma produção original da Netflix.', tipo: 'fato', justificativa: 'Esta informação pode ser verificada diretamente na plataforma da Netflix e em fontes de notícias sobre entretenimento.' },
-            { frase: 'Andar de bicicleta é mais relaxante do que caminhar.', tipo: 'opinião', justificativa: 'O que é "mais relaxante" é uma sensação puramente pessoal e subjetiva.' },
-            { frase: 'O Oceano Pacífico é o maior e mais profundo oceano da Terra.', tipo: 'fato', justificativa: 'Medições geográficas e oceanográficas confirmam esta informação, presente em mapas e enciclopédias.' },
-            { frase: 'A cor verde transmite uma sensação de tranquilidade.', tipo: 'opinião', justificativa: 'A associação de cores com sensações é cultural e psicológica, não um fato universal. Outra pessoa pode não sentir tranquilidade com o verde.' },
-            { frase: 'O celular é um aparelho que pode fazer chamadas telefônicas.', tipo: 'fato', justificativa: 'Esta é a função básica e definidora de um celular, uma característica técnica que pode ser demonstrada.' },
-            { frase: 'É chato ter que acordar cedo para ir à escola.', tipo: 'opinião', justificativa: 'A palavra "chato" expressa um sentimento pessoal sobre uma rotina. Muitos alunos podem gostar de acordar cedo.' },
-            { frase: 'O Sol é classificado como uma estrela do tipo anã amarela.', tipo: 'fato', justificativa: 'Esta é uma classificação científica usada pela astronomia, baseada em seu tamanho, temperatura e espectro de luz.' },
-            { frase: 'Cachorros são mais leais que gatos.', tipo: 'opinião', justificativa: 'A "lealdade" é uma qualidade interpretada pelos humanos e não pode ser medida objetivamente. Além disso, a afirmação "mais que" cria uma comparação de valor.' }
+        let perguntas = [
+            { frase: 'A tecnologia 5G é a invenção mais importante desta década.', tipo: 'opinião', justificativa: 'O termo "mais importante" é um juízo de valor. Embora o 5G seja relevante, outras pessoas podem considerar invenções na área da medicina ou energia como mais importantes. É uma questão de perspectiva.' },
+            { frase: 'O Brasil é o quinto maior país do mundo em área territorial.', tipo: 'fato', justificativa: 'Esta é uma informação geográfica que pode ser verificada em fontes oficiais como o IBGE ou em relatórios de organizações internacionais como a ONU. A área exata é de mais de 8.5 milhões de km².' },
+            { frase: 'A fotossíntese converte luz solar, água e dióxido de carbono em glicose e oxigênio.', tipo: 'fato', justificativa: 'Este é um processo biológico fundamental, descrito e comprovado pela ciência. Sua fórmula química é um conhecimento estabelecido e pode ser encontrada em qualquer livro de biologia.' },
+            { frase: 'Aprender a programar é, sem dúvida, mais útil do que aprender a tocar um instrumento musical.', tipo: 'opinião', justificativa: 'A expressão "sem dúvida, mais útil" estabelece uma comparação de valor que é subjetiva. A utilidade de uma habilidade depende dos objetivos e interesses de cada pessoa.' },
+            { frase: 'A Declaração Universal dos Direitos Humanos foi adotada pela ONU em 1948.', tipo: 'fato', justificativa: 'Este é um evento histórico documentado. A data e o órgão responsável (Organização das Nações Unidas) são informações precisas e podem ser consultadas em arquivos históricos e documentos oficiais.' },
+            { frase: 'Filmes baseados em livros são sempre uma decepção comparados às obras originais.', tipo: 'opinião', justificativa: 'As palavras "sempre" e "decepção" generalizam uma experiência que é puramente pessoal. Muitas pessoas podem adorar adaptações cinematográficas, mostrando que isso é uma questão de gosto.' },
+            { frase: 'É evidente que os governos deveriam proibir completamente o uso de plásticos descartáveis.', tipo: 'opinião', justificativa: 'A expressão "é evidente" sugere que a conclusão é óbvia, mas esta é uma proposta complexa com argumentos a favor e contra. Trata-se de uma posição sobre uma política pública, não de um fato consumado.' },
+            { frase: 'A expectativa de vida média no mundo aumentou em mais de 20 anos desde 1960.', tipo: 'fato', justificativa: 'Este é um dado demográfico verificável. Organizações como a OMS (Organização Mundial da Saúde) e o Banco Mundial publicam relatórios periódicos com essas estatísticas, baseadas em censos e registros civis.' },
+            { frase: 'A exploração espacial representa um desperdício de dinheiro público.', tipo: 'opinião', justificativa: 'Classificar um investimento como "desperdício" é um julgamento de valor. Defensores da exploração espacial argumentam que ela gera avanços tecnológicos e conhecimento, o que mostra que há diferentes pontos de vista sobre o tema.' },
+            { frase: 'Existem atualmente mais de 7.000 idiomas sendo falados ao redor do mundo.', tipo: 'fato', justificativa: 'Esta é uma informação linguística catalogada por instituições como a Ethnologue e a UNESCO. Embora o número exato possa variar ligeiramente, a ordem de grandeza é um dado estabelecido.' },
+            { frase: 'A velocidade da luz no vácuo é de 299.792.458 metros por segundo.', tipo: 'fato', justificativa: 'Esta é uma constante fundamental da física, usada como base para diversas teorias científicas. É um valor medido, preciso e universalmente aceito pela comunidade científica.' },
+            { frase: 'A arte moderna é muito mais interessante que a arte clássica.', tipo: 'opinião', justificativa: 'O termo "mais interessante" é uma avaliação subjetiva. O interesse e o valor da arte são uma questão de gosto pessoal, interpretação e bagagem cultural de cada indivíduo.' },
+            { frase: 'É sempre melhor se informar por portais de notícias online do que por jornais impressos.', tipo: 'opinião', justificativa: 'A afirmação "é sempre melhor" expressa uma preferência. Ambos os meios têm vantagens e desvantagens, e a escolha ideal depende dos hábitos e prioridades do leitor.' },
+            { frase: 'O chocolate é feito a partir das sementes do cacaueiro, uma árvore nativa das Américas.', tipo: 'fato', justificativa: 'Esta é uma informação botânica e histórica. A origem do cacau e o processo básico de fabricação do chocolate são fatos documentados pela história e pela agronomia.' },
+            { frase: 'A Constituição Brasileira de 1988 define a educação como um direito de todos.', tipo: 'fato', justificativa: 'Isto é um fato legal. O Artigo 205 da Constituição Federal do Brasil afirma exatamente isso, e o documento pode ser consultado publicamente para verificação.' },
+            { frase: 'As redes sociais são, no geral, prejudiciais para a saúde mental dos jovens.', tipo: 'opinião', justificativa: 'Embora existam estudos que apontam riscos, a afirmação "são prejudiciais" é uma conclusão ampla e generalista. O impacto das redes sociais é complexo e pode ser positivo ou negativo, tornando a frase um ponto de vista sobre um debate em andamento.' },
+            { frase: 'A Grande Barreira de Corais, na Austrália, é a maior estrutura do mundo feita por organismos vivos.', tipo: 'fato', justificativa: 'Este é um fato geográfico e biológico. É tão grande que pode ser vista do espaço, e sua composição por colônias de corais é um dado científico amplamente documentado.' },
+            { frase: 'Não há nada mais relaxante do que ouvir o som da chuva.', tipo: 'opinião', justificativa: 'A frase "não há nada mais relaxante" eleva uma preferência pessoal a um nível absoluto. O que é relaxante varia enormemente de pessoa para pessoa.' },
+            { frase: 'Sob pressão atmosférica normal, a água pura congela a 0°C e ferve a 100°C.', tipo: 'fato', justificativa: 'Estes são os pontos de fusão e ebulição da água, propriedades físicas da matéria que são mensuráveis e replicáveis em experimentos científicos sob condições controladas.' },
+            { frase: 'A história é, de longe, a matéria escolar mais fascinante.', tipo: 'opinião', justificativa: 'Usar adjetivos como "fascinante" e uma expressão de intensidade como "de longe, a mais" indica uma preferência pessoal. Outro aluno poderia achar a matemática ou a biologia mais fascinantes.' }
         ];
 
+        let perguntasEmbaralhadas = [];
         let perguntaAtual = 0;
         let pontuacao = 0;
+        
+        function embaralhar(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
 
+        function iniciarAtividade() {
+            perguntasEmbaralhadas = [...perguntas];
+            embaralhar(perguntasEmbaralhadas);
+            perguntaAtual = 0;
+            pontuacao = 0;
+            carregarPergunta();
+            telaInicial.classList.add('hidden');
+            telaAtividade.classList.remove('hidden');
+        }
+        
         function carregarPergunta() {
             feedbackBox.classList.add('hidden');
             btnAvancar.classList.add('hidden');
             btnFato.disabled = false;
             btnOpiniao.disabled = false;
             
-            const p = perguntas[perguntaAtual];
+            const p = perguntasEmbaralhadas[perguntaAtual];
             fraseBox.textContent = p.frase;
             
-            const progresso = ((perguntaAtual) / perguntas.length) * 100;
+            const progresso = ((perguntaAtual) / perguntasEmbaralhadas.length) * 100;
             barraProgresso.style.width = progresso + '%';
         }
 
@@ -272,7 +289,7 @@
             btnFato.disabled = true;
             btnOpiniao.disabled = true;
 
-            const p = perguntas[perguntaAtual];
+            const p = perguntasEmbaralhadas[perguntaAtual];
             feedbackBox.classList.remove('hidden');
 
             if (escolha === p.tipo) {
@@ -289,7 +306,7 @@
 
         function proximaPergunta() {
             perguntaAtual++;
-            if (perguntaAtual < perguntas.length) {
+            if (perguntaAtual < perguntasEmbaralhadas.length) {
                 carregarPergunta();
             } else {
                 mostrarResultado();
@@ -299,22 +316,15 @@
         function mostrarResultado() {
             telaAtividade.classList.add('hidden');
             telaFinal.classList.remove('hidden');
-            resultadoTexto.textContent = `Você acertou ${pontuacao} de ${perguntas.length} frases!`;
+            resultadoTexto.textContent = `Você acertou ${pontuacao} de ${perguntasEmbaralhadas.length} frases!`;
         }
 
         function reiniciar() {
-            perguntaAtual = 0;
-            pontuacao = 0;
             telaFinal.classList.add('hidden');
             telaInicial.classList.remove('hidden');
         }
 
-        btnIniciar.addEventListener('click', () => {
-            telaInicial.classList.add('hidden');
-            telaAtividade.classList.remove('hidden');
-            carregarPergunta();
-        });
-
+        btnIniciar.addEventListener('click', iniciarAtividade);
         btnFato.addEventListener('click', () => verificarResposta('fato'));
         btnOpiniao.addEventListener('click', () => verificarResposta('opinião'));
         btnAvancar.addEventListener('click', proximaPergunta);
