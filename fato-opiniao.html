@@ -1,0 +1,325 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detector de Fato vs. Opinião</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --cor-fato: #007BFF;
+            --cor-opiniao: #FD7E14;
+            --cor-correto: #28a745;
+            --cor-incorreto: #dc3545;
+            --cor-fundo: #f0f2f5;
+            --cor-texto: #333;
+            --cor-branco: #ffffff;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: scale(0.95); }
+            to { opacity: 1; transform: scale(1); }
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: var(--cor-texto);
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .container {
+            background-color: var(--cor-branco);
+            padding: 50px; 
+            border-radius: 20px;
+            box-shadow: 0 15px 40px rgba(0, 0, 0, 0.15);
+            width: 90%;
+            max-width: 650px;
+            text-align: center;
+            position: relative;
+            animation: fadeIn 0.5s ease-out;
+        }
+
+        .btn-voltar {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            background-color: #e9ecef;
+            color: #495057;
+            border: none;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            font-size: 1.5em;
+            font-weight: bold;
+            cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            text-decoration: none;
+            transition: background-color 0.2s, transform 0.2s;
+        }
+
+        .btn-voltar:hover {
+            background-color: #ced4da;
+            transform: scale(1.1);
+        }
+
+        h1 {
+            margin-top: 20px;
+            font-size: 2.2em;
+            color: var(--cor-texto);
+        }
+
+        p {
+            font-size: 1.1em;
+            line-height: 1.6;
+        }
+        
+        .definicao {
+            text-align: left;
+            margin: 20px 0;
+            padding: 15px;
+            background-color: var(--cor-fundo);
+            border-radius: 10px;
+        }
+
+        .frase-box {
+            background-color: var(--cor-fundo);
+            border: 2px solid #e0e0e0;
+            padding: 30px;
+            border-radius: 15px;
+            margin-bottom: 30px;
+            font-size: 1.5em;
+            min-height: 120px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-weight: 600;
+        }
+
+        .botoes-escolha button {
+            margin: 0 15px;
+        }
+
+        .btn {
+            border: none;
+            padding: 18px 35px;
+            font-size: 1.2em;
+            font-weight: 600;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s, filter 0.2s;
+            color: var(--cor-branco);
+            min-width: 160px;
+        }
+
+        .btn:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.2);
+            filter: brightness(1.1);
+        }
+
+        .btn-iniciar, .btn-avancar, .btn-reiniciar {
+            background-color: #6f42c1;
+            margin-top: 20px;
+        }
+
+        .btn-fato { background-color: var(--cor-fato); }
+        .btn-opiniao { background-color: var(--cor-opiniao); }
+
+        #feedback-box {
+            margin-top: 25px;
+            padding: 15px;
+            border-radius: 10px;
+            font-weight: 600;
+            font-size: 1.1em;
+            text-align: left;
+        }
+        
+        .correto {
+            background-color: #d4edda;
+            color: #155724;
+            border-left: 5px solid var(--cor-correto);
+        }
+
+        .incorreto {
+            background-color: #f8d7da;
+            color: #721c24;
+            border-left: 5px solid var(--cor-incorreto);
+        }
+
+        #barra-progresso-container {
+            width: 100%;
+            background-color: #e9ecef;
+            border-radius: 10px;
+            margin-bottom: 25px;
+            height: 15px;
+        }
+        
+        #barra-progresso {
+            height: 100%;
+            width: 0%;
+            background: linear-gradient(90deg, var(--cor-fato), #83c5be);
+            border-radius: 10px;
+            transition: width 0.3s ease-in-out;
+        }
+
+    </style>
+</head>
+<body>
+
+    <a href="anos-finais.html" class="btn-voltar">&lt;</a>
+
+    <div id="tela-inicial" class="container">
+        <h1>Detector de Fato vs. Opinião</h1>
+        <p>Vamos aprender a diferenciar o que pode ser provado do que é apenas um sentimento ou um jeito de pensar.</p>
+        <div class="definicao">
+            <strong>FATO:</strong> É uma informação que pode ser verificada e provada como verdadeira. <br><em>Ex: A água ferve a 100 graus Celsius ao nível do mar.</em>
+        </div>
+        <div class="definicao">
+            <strong>OPINIÃO:</strong> É um julgamento, sentimento ou pensamento pessoal. Não pode ser provado. <br><em>Ex: A cor azul é a mais bonita de todas.</em>
+        </div>
+        <button id="btn-iniciar" class="btn btn-iniciar">Começar!</button>
+    </div>
+
+    <div id="tela-atividade" class="container hidden">
+        <div id="barra-progresso-container">
+            <div id="barra-progresso"></div>
+        </div>
+        <div id="frase-box">Carregando frase...</div>
+        <div class="botoes-escolha">
+            <button id="btn-fato" class="btn btn-fato">FATO</button>
+            <button id="btn-opiniao" class="btn btn-opiniao">OPINIÃO</button>
+        </div>
+        <div id="feedback-box" class="hidden"></div>
+        <button id="btn-avancar" class="btn btn-avancar hidden">Avançar &gt;</button>
+    </div>
+
+    <div id="tela-final" class="container hidden">
+        <h1>Parabéns!</h1>
+        <p id="resultado-texto">Você completou a atividade!</p>
+        <button id="btn-reiniciar" class="btn btn-reiniciar">Jogar Novamente</button>
+    </div>
+
+    <script>
+        const telaInicial = document.getElementById('tela-inicial');
+        const telaAtividade = document.getElementById('tela-atividade');
+        const telaFinal = document.getElementById('tela-final');
+
+        const btnIniciar = document.getElementById('btn-iniciar');
+        const btnFato = document.getElementById('btn-fato');
+        const btnOpiniao = document.getElementById('btn-opiniao');
+        const btnAvancar = document.getElementById('btn-avancar');
+        const btnReiniciar = document.getElementById('btn-reiniciar');
+        
+        const fraseBox = document.getElementById('frase-box');
+        const feedbackBox = document.getElementById('feedback-box');
+        const resultadoTexto = document.getElementById('resultado-texto');
+        const barraProgresso = document.getElementById('barra-progresso');
+
+        // ===== CORREÇÃO APLICADA AQUI =====
+        const perguntas = [
+            { frase: 'O jogo Minecraft foi lançado oficialmente em 2011.', tipo: 'fato', justificativa: 'Esta data pode ser verificada em fontes oficiais, como o site da Mojang, desenvolvedora do jogo.' },
+            { frase: 'Jogar videogame é a melhor forma de passar o tempo.', tipo: 'opinião', justificativa: 'A expressão "a melhor forma" revela uma preferência pessoal. Outra pessoa pode achar que ler um livro é melhor.' },
+            { frase: 'O Brasil possui 26 estados e um Distrito Federal.', tipo: 'fato', justificativa: 'Essa é uma informação oficial da organização geopolítica do país, disponível em fontes como o IBGE.' },
+            { frase: 'Aulas de matemática são muito difíceis.', tipo: 'opinião', justificativa: 'A palavra "difíceis" é um julgamento subjetivo. A dificuldade de uma matéria varia muito de aluno para aluno.' },
+            { frase: 'A reciclagem de lixo reduz a poluição do planeta.', tipo: 'fato', justificativa: 'Estudos científicos e relatórios de órgãos ambientais, como o Greenpeace, comprovam que a reciclagem diminui a extração de recursos e a poluição.' },
+            { frase: 'Filmes de super-heróis são mais legais que filmes de comédia.', tipo: 'opinião', justificativa: 'O termo "mais legais" expressa um gosto pessoal. Não existe uma medida oficial para o que é "legal".' },
+            { frase: 'A Terra completa uma volta em torno do Sol em aproximadamente 365 dias.', tipo: 'fato', justificativa: 'É um fato astronômico comprovado por observações e cálculos da ciência, confirmados por agências como a NASA.' },
+            { frase: 'Usar a rede social TikTok é muito divertido.', tipo: 'opinião', justificativa: 'A palavra "divertido" descreve um sentimento. O que é divertido para uma pessoa pode ser chato para outra.' },
+            { frase: 'A molécula da água é formada por dois átomos de hidrogênio e um de oxigênio.', tipo: 'fato', justificativa: 'A fórmula química H₂O é um conhecimento científico fundamental, verificável em qualquer livro de química.' },
+            { frase: 'Pizza de abacaxi é uma combinação horrível.', tipo: 'opinião', justificativa: 'A palavra "horrível" é um julgamento de valor baseado no paladar de cada um. Muitas pessoas adoram!' },
+            { frase: 'O desmatamento na Floresta Amazônica é um problema ambiental real.', tipo: 'fato', justificativa: 'Dados de satélite do INPE (Instituto Nacional de Pesquisas Espaciais) monitoram e comprovam as áreas desmatadas.' },
+            { frase: 'É importante dormir 8 horas por noite para ser saudável.', tipo: 'opinião', justificativa: 'Embora seja uma recomendação comum, é uma opinião baseada em médias. A necessidade de sono pode variar, e a frase usa um tom de conselho, não de fato absoluto.' },
+            { frase: 'A série "Stranger Things" é uma produção original da Netflix.', tipo: 'fato', justificativa: 'Esta informação pode ser verificada diretamente na plataforma da Netflix e em fontes de notícias sobre entretenimento.' },
+            { frase: 'Andar de bicicleta é mais relaxante do que caminhar.', tipo: 'opinião', justificativa: 'O que é "mais relaxante" é uma sensação puramente pessoal e subjetiva.' },
+            { frase: 'O Oceano Pacífico é o maior e mais profundo oceano da Terra.', tipo: 'fato', justificativa: 'Medições geográficas e oceanográficas confirmam esta informação, presente em mapas e enciclopédias.' },
+            { frase: 'A cor verde transmite uma sensação de tranquilidade.', tipo: 'opinião', justificativa: 'A associação de cores com sensações é cultural e psicológica, não um fato universal. Outra pessoa pode não sentir tranquilidade com o verde.' },
+            { frase: 'O celular é um aparelho que pode fazer chamadas telefônicas.', tipo: 'fato', justificativa: 'Esta é a função básica e definidora de um celular, uma característica técnica que pode ser demonstrada.' },
+            { frase: 'É chato ter que acordar cedo para ir à escola.', tipo: 'opinião', justificativa: 'A palavra "chato" expressa um sentimento pessoal sobre uma rotina. Muitos alunos podem gostar de acordar cedo.' },
+            { frase: 'O Sol é classificado como uma estrela do tipo anã amarela.', tipo: 'fato', justificativa: 'Esta é uma classificação científica usada pela astronomia, baseada em seu tamanho, temperatura e espectro de luz.' },
+            { frase: 'Cachorros são mais leais que gatos.', tipo: 'opinião', justificativa: 'A "lealdade" é uma qualidade interpretada pelos humanos e não pode ser medida objetivamente. Além disso, a afirmação "mais que" cria uma comparação de valor.' }
+        ];
+
+        let perguntaAtual = 0;
+        let pontuacao = 0;
+
+        function carregarPergunta() {
+            feedbackBox.classList.add('hidden');
+            btnAvancar.classList.add('hidden');
+            btnFato.disabled = false;
+            btnOpiniao.disabled = false;
+            
+            const p = perguntas[perguntaAtual];
+            fraseBox.textContent = p.frase;
+            
+            const progresso = ((perguntaAtual) / perguntas.length) * 100;
+            barraProgresso.style.width = progresso + '%';
+        }
+
+        function verificarResposta(escolha) {
+            btnFato.disabled = true;
+            btnOpiniao.disabled = true;
+
+            const p = perguntas[perguntaAtual];
+            feedbackBox.classList.remove('hidden');
+
+            if (escolha === p.tipo) {
+                pontuacao++;
+                feedbackBox.innerHTML = `<strong>✔ Certo!</strong> ${p.justificativa}`;
+                feedbackBox.className = 'correto';
+            } else {
+                feedbackBox.innerHTML = `<strong>✖ Errado.</strong> A resposta correta é <strong>${p.tipo.toUpperCase()}</strong>. ${p.justificativa}`;
+                feedbackBox.className = 'incorreto';
+            }
+            
+            btnAvancar.classList.remove('hidden');
+        }
+
+        function proximaPergunta() {
+            perguntaAtual++;
+            if (perguntaAtual < perguntas.length) {
+                carregarPergunta();
+            } else {
+                mostrarResultado();
+            }
+        }
+        
+        function mostrarResultado() {
+            telaAtividade.classList.add('hidden');
+            telaFinal.classList.remove('hidden');
+            resultadoTexto.textContent = `Você acertou ${pontuacao} de ${perguntas.length} frases!`;
+        }
+
+        function reiniciar() {
+            perguntaAtual = 0;
+            pontuacao = 0;
+            telaFinal.classList.add('hidden');
+            telaInicial.classList.remove('hidden');
+        }
+
+        btnIniciar.addEventListener('click', () => {
+            telaInicial.classList.add('hidden');
+            telaAtividade.classList.remove('hidden');
+            carregarPergunta();
+        });
+
+        btnFato.addEventListener('click', () => verificarResposta('fato'));
+        btnOpiniao.addEventListener('click', () => verificarResposta('opinião'));
+        btnAvancar.addEventListener('click', proximaPergunta);
+        btnReiniciar.addEventListener('click', reiniciar);
+    </script>
+
+</body>
+</html>

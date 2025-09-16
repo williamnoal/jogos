@@ -13,7 +13,7 @@
             --cor-fundo: #E8F0F7;
             --cor-texto: #333;
             --cor-branco: #FFFFFF;
-            --sombra: 0 10px 30px rgba(0, 0, 0, 0.1);
+            --sombra: 0 8px G25px rgba(0, 0, 0, 0.08);
         }
 
         html, body {
@@ -32,9 +32,9 @@
 
         .back-button {
             position: absolute;
-            top: 30px;
-            left: 30px;
-            font-size: 1.2em;
+            top: 20px;
+            left: 20px;
+            font-size: 1.1em;
             color: var(--cor-primaria);
             text-decoration: none;
             font-weight: 700;
@@ -47,7 +47,7 @@
         }
 
         .portal-container {
-            width: 90%;
+            width: 95%;
             max-width: 1400px;
             height: 100%;
             display: flex;
@@ -58,24 +58,27 @@
         
         .portal-header {
             text-align: center;
-            margin-bottom: 25px; 
+            /* ATUALIZAÇÃO: Margem inferior reduzida */
+            margin-bottom: 20px; 
             animation: fadeInDown 1s ease-out;
         }
 
         @keyframes fadeInDown {
-            from { opacity: 0; transform: translateY(-30px); }
+            from { opacity: 0; transform: translateY(-20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .portal-header h1 {
-            font-size: 3.5em;
+            /* ATUALIZAÇÃO: Tamanho da fonte reduzido */
+            font-size: 3em;
             font-weight: 800;
             color: var(--cor-primaria);
             margin: 0;
         }
 
         .portal-header p {
-            font-size: 1.2em;
+            /* ATUALIZAÇÃO: Tamanho da fonte reduzido */
+            font-size: 1.1em;
             color: var(--cor-texto);
             opacity: 0.8;
             margin: 5px 0 0;
@@ -83,23 +86,25 @@
         
         .games-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+            /* ATUALIZAÇÃO: Tamanho mínimo dos cartões e espaçamento reduzidos */
+            grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
             gap: 15px;
             width: 100%;
-            padding: 10px;
+            padding: 5px;
             box-sizing: border-box;
             animation: fadeInUp 1s ease-out;
         }
 
         @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(30px); }
+            from { opacity: 0; transform: translateY(20px); }
             to { opacity: 1; transform: translateY(0); }
         }
 
         .game-card {
             background-color: var(--cor-branco);
             border-radius: 12px;
-            padding: 15px;
+            /* ATUALIZAÇÃO: Padding reduzido */
+            padding: 12px;
             text-align: center;
             box-shadow: var(--sombra);
             text-decoration: none;
@@ -111,20 +116,22 @@
         }
         
         .game-card:hover {
-            transform: translateY(-8px);
-            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.12);
+            transform: translateY(-5px);
+            box-shadow: 0 12px 28px rgba(0, 0, 0, 0.1);
         }
 
-        .game-card .icon { font-size: 2.5em; line-height: 1; margin-bottom: 8px; }
-        .game-card h2 { font-size: 1.15em; margin: 0 0 8px; color: var(--cor-primaria); }
-        .game-card p { font-size: 0.8em; line-height: 1.4; color: #666; margin-bottom: 15px; flex-grow: 1; }
+        /* ATUALIZAÇÃO: Elementos internos do card redimensionados */
+        .game-card .icon { font-size: 2.2em; line-height: 1; margin-bottom: 5px; }
+        .game-card h2 { font-size: 1em; margin: 0 0 5px; color: var(--cor-primaria); font-weight: 700; }
+        .game-card p { font-size: 0.75em; line-height: 1.4; color: #666; margin-bottom: 10px; flex-grow: 1; }
         
         .play-button { 
             display: inline-block; 
             background: linear-gradient(45deg, var(--cor-primaria), var(--cor-secundaria)); 
             color: var(--cor-branco); 
-            padding: 8px 20px; 
-            font-size: 0.9em;
+            /* ATUALIZAÇÃO: Padding e fonte do botão reduzidos */
+            padding: 6px 16px; 
+            font-size: 0.8em;
             border-radius: 50px; 
             font-weight: 600;
             transition: transform 0.2s, box-shadow 0.2s;
@@ -132,12 +139,12 @@
         
         .game-card:hover .play-button {
             transform: scale(1.05);
-            box-shadow: 0 5px 15px rgba(74, 144, 226, 0.4);
+            box-shadow: 0 4px 12px rgba(74, 144, 226, 0.3);
         }
 
         @media (max-width: 768px) { 
             body { overflow-y: auto; } 
-            .portal-header h1 { font-size: 2.5em; } 
+            .portal-header h1 { font-size: 2.2em; } 
             .portal-header p { font-size: 1em; } 
         }
     </style>
@@ -153,59 +160,69 @@
             <a href="analise_gramatical.html" class="game-card">
                 <div class="icon">📝</div>
                 <h2>Análise Gramatical</h2>
-                <p>Identifique verbos, substantivos e adjetivos em manchetes de notícias e veja seu relatório.</p>
-                <div class="play-button">Analisar Agora</div>
+                <p>Classifique verbos, substantivos e adjetivos em manchetes de jornais.</p>
+                <div class="play-button">Analisar</div>
             </a>
             <a href="desafio-eca.html" target="_blank" rel="noopener noreferrer" class="game-card">
                 <div class="icon">🛡️</div>
                 <h2>Desafio ECA</h2>
-                <p>Teste os seus conhecimentos sobre os direitos e deveres das crianças e adolescentes.</p>
-                <div class="play-button">Jogar Agora</div>
+                <p>Teste seus conhecimentos sobre o Estatuto da Criança e do Adolescente.</p>
+                <div class="play-button">Jogar</div>
             </a>
             <a href="civitas.html" class="game-card">
                 <div class="icon">⚖️</div>
                 <h2>Projeto Civitas</h2>
-                <p>Analise casos complexos baseados no ECA e tome decisões que impactam a sociedade.</p>
-                <div class="play-button">Iniciar Projeto</div>
+                <p>Analise casos baseados no ECA e tome decisões de grande impacto social.</p>
+                <div class="play-button">Iniciar</div>
             </a>
             <a href="https://oficina-de-rimas-emefrincao.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
                 <div class="icon">✒️</div>
                 <h2>Oficina de Poemas</h2>
-                <p>Crie poemas incríveis com um assistente de IA e solte a sua criatividade literária.</p>
-                <div class="play-button">Entrar na Oficina</div>
+                <p>Use IA para criar poemas e soltar sua criatividade literária.</p>
+                <div class="play-button">Criar</div>
             </a>
             <a href="https://oficinadenoticia-emefrincao.streamlit.app/" target="_blank" rel="noopener noreferrer" class="game-card">
                 <div class="icon">📰</div>
                 <h2>Oficina de Notícias</h2>
-                <p>Aprenda a criar uma notícia do zero, desde o título até à imagem da reportagem.</p>
-                <div class="play-button">Entrar na Oficina</div>
+                <p>Aprenda a criar uma notícia completa, do título à imagem.</p>
+                <div class="play-button">Criar</div>
             </a>
             <a href="https://williamnoal.github.io/narrativas/" target="_blank" rel="noopener noreferrer" class="game-card">
                 <div class="icon">📚</div>
                 <h2>Fábrica de Histórias</h2>
-                <p>Crie as suas próprias histórias interativas! Escolha os caminhos e veja a sua aventura a desdobrar-se.</p>
-                <div class="play-button">Jogar Agora</div>
+                <p>Crie histórias interativas escolhendo os rumos da sua aventura.</p>
+                <div class="play-button">Jogar</div>
             </a>
-            
             <a href="mediador_debates.html" class="game-card">
                 <div class="icon">💬</div>
                 <h2>Mediador de Debates</h2>
-                <p>Analise temas polêmicos como o uso de uniformes e celulares na escola. Classifique os argumentos como 'a favor' ou 'contra' para mediar o debate.</p>
-                <div class="play-button">Iniciar Debate</div>
+                <p>Classifique argumentos como 'a favor' ou 'contra' em temas polêmicos.</p>
+                <div class="play-button">Debater</div>
             </a>
             <a href="arquiteto_sentido.html" class="game-card">
                 <div class="icon">🧱</div>
                 <h2>Arquiteto de Sentido</h2>
-                <p>Complete frases sobre temas como democracia e sustentabilidade. Escolha as palavras e conectivos corretos para construir o sentido de cada sentença.</p>
-                <div class="play-button">Construir Ideias</div>
+                <p>Complete frases sobre democracia e sustentabilidade com as palavras certas.</p>
+                <div class="play-button">Construir</div>
             </a>
             <a href="analista_argumentos.html" class="game-card">
                 <div class="icon">🔎</div>
                 <h2>Analista de Argumentos</h2>
-                <p>Aprenda a identificar as partes de um argumento: a tese, a premissa e a conclusão. Desafie-se a encontrar falácias em diferentes textos.</p>
-                <div class="play-button">Analisar Agora</div>
+                <p>Identifique a tese, a premissa e a conclusão em diferentes argumentos.</p>
+                <div class="play-button">Analisar</div>
             </a>
-            
+            <a href="fato-opiniao.html" class="game-card">
+                <div class="icon">🎯</div>
+                <h2>Fato vs. Opinião</h2>
+                <p>Diferencie informações prováveis (fatos) de pontos de vista (opiniões).</p>
+                <div class="play-button">Detectar</div>
+            </a>
+            <a href="arena-debate.html" class="game-card">
+                <div class="icon">🏛️</div>
+                <h2>Arena do Debate</h2>
+                <p>Arraste argumentos para os lados 'A FAVOR' ou 'CONTRA' de uma tese.</p>
+                <div class="play-button">Entrar</div>
+            </a>
         </div>
     </div>
 </body>
