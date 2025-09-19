@@ -10,8 +10,8 @@
             --cor-fundo: #f0f8ff;
             --cor-texto: #333;
             --cor-primaria: #007bff;
-            --cor-favor: #d1fae5; /* Verde claro */
-            --cor-contra: #fee2e2; /* Vermelho claro */
+            --cor-favor: #d1fae5;
+            --cor-contra: #fee2e2;
             --cor-card: #ffffff;
             --sombra-card: 0 4px 6px rgba(0, 0, 0, 0.1);
         }
@@ -28,9 +28,8 @@
             overflow: hidden; /* Garante a ausência de barra de rolagem */
         }
         
-        /* Botão Voltar (ATUALIZADO) */
+        /* Botões */
         .botao-voltar {
-            /* Posição agora é controlada pelo container pai */
             background-color: var(--cor-primaria);
             color: white;
             padding: 8px 18px;
@@ -40,67 +39,17 @@
             box-shadow: var(--sombra-card);
             transition: transform 0.2s;
             font-size: 1rem;
-            white-space: nowrap; /* Impede que o texto quebre */
+            white-space: nowrap;
         }
         .botao-voltar:hover {
             transform: scale(1.05);
         }
-        
-        /* Botão voltar para telas inicial/final */
         .botao-voltar-absoluto {
             position: absolute;
             top: 22px;
             left: 25px;
             z-index: 100;
         }
-
-
-        /* Estilos das Telas */
-        .tela {
-            width: 100%;
-            height: 100%;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            padding: 20px;
-            box-sizing: border-box;
-            position: relative;
-        }
-
-        .escondido {
-            display: none !important;
-        }
-        
-        /* Card para telas inicial e final */
-        .card-tela {
-            background-color: var(--cor-card);
-            padding: 30px 40px;
-            border-radius: 20px;
-            box-shadow: var(--sombra-card);
-            max-width: 800px;
-            width: 100%;
-            text-align: center;
-        }
-
-        /* Tela Inicial */
-        #tela-inicial h1 {
-            font-size: 3rem;
-            color: var(--cor-primaria);
-            margin-top: 0;
-        }
-
-        #tela-inicial .explicacao {
-            max-width: 700px;
-            margin: 20px auto;
-            line-height: 1.6;
-            font-size: 1.1rem;
-        }
-
-        #tela-inicial .explicacao strong {
-            color: var(--cor-primaria);
-        }
-
         .botao-inicio {
             padding: 15px 30px;
             font-size: 1.2rem;
@@ -115,15 +64,45 @@
             transform: scale(1.05);
         }
 
-        /* Tela do Debate */
+        /* Estilos das Telas */
+        .tela {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            box-sizing: border-box;
+            position: relative;
+        }
+        .escondido { display: none !important; }
+        
+        /* Card genérico para telas inicial e final */
+        .card-tela {
+            background-color: var(--cor-card);
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: var(--sombra-card);
+            max-width: 800px;
+            width: 100%;
+            text-align: center;
+        }
+
+        /* Tela Inicial */
+        #tela-inicial h1 { font-size: 3rem; color: var(--cor-primaria); margin-top: 0; }
+        #tela-inicial .explicacao { max-width: 700px; margin: 20px auto; line-height: 1.6; font-size: 1.1rem; }
+        #tela-inicial .explicacao strong { color: var(--cor-primaria); }
+
+        /* --- NOVO LAYOUT DA TELA DE DEBATE --- */
         #tela-debate {
             display: grid;
             grid-template-areas:
                 "header header header"
-                "glossario arena banco"
+                "glossario arena argumento"
                 "footer footer footer";
             grid-template-rows: auto 1fr auto;
-            grid-template-columns: 200px 1fr 250px;
+            grid-template-columns: 220px 1fr 280px; /* Colunas: Glossário, Arena Central, Argumento Atual */
             gap: 20px;
             width: 100%;
             height: 100%;
@@ -134,73 +113,16 @@
             padding: 10px 20px;
             background-color: rgba(255, 255, 255, 0.7);
             border-radius: 12px;
-            /* ATUALIZAÇÕES PARA ALINHAMENTO */
             display: flex;
             align-items: center;
-            justify-content: space-between; /* Botão na esquerda, título no espaço restante */
+            justify-content: space-between;
         }
         #tese-container h1 {
             margin: 0;
             font-size: 1.5rem;
-            flex-grow: 1; /* Título ocupa o espaço restante */
-            text-align: center; /* Centraliza o título no espaço dele */
-            padding-right: 120px; /* Compensa o espaço do botão para melhor centralização */
-        }
-
-        .arena {
-            grid-area: arena;
-            display: flex;
-            justify-content: space-around;
-            gap: 20px;
-        }
-
-        .coluna {
-            width: 48%;
-            padding: 15px;
-            border-radius: 15px;
+            flex-grow: 1;
             text-align: center;
-            border: 3px dashed #ccc;
-            min-height: 300px;
-            transition: background-color 0.3s;
-        }
-        .coluna.drag-over {
-            background-color: #e0e0e0;
-        }
-
-        .coluna h2 { margin-top: 0; }
-        #favor { background-color: var(--cor-favor); }
-        #contra { background-color: var(--cor-contra); }
-
-        #banco-argumentos {
-            grid-area: banco;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            gap: 10px;
-            padding: 10px;
-            background-color: #e9ecef;
-            border-radius: 15px;
-        }
-        
-        .carta-argumento {
-            background-color: var(--cor-card);
-            border: 1px solid #ddd;
-            padding: 12px;
-            border-radius: 10px;
-            cursor: grab;
-            width: 90%;
-            box-shadow: var(--sombra-card);
-            text-align: left;
-            font-size: 0.9rem;
-            transition: transform 0.2s;
-        }
-        .carta-argumento:hover {
-            transform: scale(1.05);
-        }
-        .carta-argumento .emoji {
-            font-size: 1.5rem;
-            margin-right: 10px;
-            vertical-align: middle;
+            padding-right: 120px; /* Compensa espaço do botão para centralizar */
         }
 
         #glossario {
@@ -213,6 +135,70 @@
         #glossario h3 { margin-top: 0; }
         #glossario p { margin-bottom: 10px; font-size: 0.9rem;}
         #glossario p strong { color: var(--cor-primaria); }
+        
+        .arena {
+            grid-area: arena;
+            display: flex;
+            justify-content: center; /* Centraliza as colunas */
+            align-items: stretch;
+            gap: 20px;
+        }
+        .coluna {
+            flex: 1;
+            max-width: 300px; /* Largura máxima das colunas */
+            padding: 15px;
+            border-radius: 15px;
+            text-align: center;
+            border: 3px dashed #ccc;
+            transition: background-color 0.3s;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        .coluna.drag-over { background-color: #e0e0e0; }
+        .coluna h2 { margin-top: 0; }
+        #favor { background-color: var(--cor-favor); }
+        #contra { background-color: var(--cor-contra); }
+
+        #argumento-atual-container {
+            grid-area: argumento;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 10px;
+            background-color: #e9ecef;
+            border-radius: 15px;
+            height: 100%;
+        }
+        
+        .carta-argumento {
+            background-color: var(--cor-card);
+            border: 1px solid #ddd;
+            padding: 20px; /* Maior para destaque */
+            border-radius: 10px;
+            cursor: grab;
+            width: 95%;
+            box-shadow: var(--sombra-card);
+            text-align: left;
+            font-size: 1rem; /* Maior para leitura */
+            transition: transform 0.2s, opacity 0.3s;
+            opacity: 1;
+        }
+        .carta-argumento.arrastando {
+            opacity: 0.5;
+        }
+        .carta-argumento .emoji {
+            font-size: 1.5rem;
+            margin-right: 10px;
+            vertical-align: middle;
+        }
+        /* Estilo para a carta dentro da coluna após ser arrastada */
+        .coluna .carta-argumento {
+             font-size: 0.9rem;
+             padding: 12px;
+             cursor: default;
+        }
+
 
         #footer-container {
             grid-area: footer;
@@ -221,38 +207,20 @@
         }
         
         /* Tela Final */
-        #tela-final h2 {
-            color: var(--cor-primaria);
-            font-size: 2.5rem;
-            margin-top: 0;
-        }
-        #resumo-erros ul {
-            list-style: none;
-            padding: 0;
-            max-width: 600px;
-            text-align: left;
-            margin: 20px auto;
-        }
-        #resumo-erros li {
-            background-color: #fff5f5;
-            border: 1px solid #fecaca;
-            padding: 10px;
-            margin-bottom: 10px;
-            border-radius: 8px;
-        }
+        #tela-final h2 { color: var(--cor-primaria); font-size: 2.5rem; margin-top: 0; }
+        #resumo-erros ul { list-style: none; padding: 0; max-width: 600px; text-align: left; margin: 20px auto; }
+        #resumo-erros li { background-color: #fff5f5; border: 1px solid #fecaca; padding: 10px; margin-bottom: 10px; border-radius: 8px; }
 
     </style>
 </head>
 <body>
     
     <div id="tela-inicial" class="tela">
-        <a href="anos-finais.html" class="botao-voltar botao-voltar-absoluto">&lt; Voltar</a>
         <div class="card-tela">
             <h1>Arena do Debate 🏛️</h1>
             <div class="explicacao">
                 <p>Olá! Prepare-se para se tornar um mestre da argumentação!</p>
-                <p>Neste desafio, você vai analisar um tema polêmico, chamado de <strong>tese</strong>. Uma tese é uma ideia principal que pode ser defendida ou criticada. </p>
-                <p>Sua missão é ler várias frases, chamadas de <strong>argumentos</strong>, e decidir se cada uma delas apoia a tese (A FAVOR) ou vai contra ela (CONTRA). Arraste cada argumento para o lado correto da arena!</p>
+                <p>Sua missão é analisar uma <strong>tese</strong> (um tema polêmico) e classificar os <strong>argumentos</strong>. Um argumento por vez aparecerá à direita. Arraste-o para a coluna <strong>A FAVOR</strong> ou <strong>CONTRA</strong>.</p>
             </div>
             <button id="btn-iniciar" class="botao-inicio">Começar o Desafio!</button>
         </div>
@@ -260,7 +228,7 @@
 
     <div id="tela-debate" class="tela escondido">
         <header id="tese-container">
-            <a href="anos-finais.html" class="botao-voltar">&lt; Voltar</a>
+            <a href="#" class="botao-voltar" onclick="location.reload()">&lt; Voltar ao Início</a>
             <h1 id="tese-atual"></h1>
         </header>
         
@@ -274,7 +242,7 @@
             <div id="contra" class="coluna"><h2>❌ CONTRA</h2></div>
         </main>
         
-        <aside id="banco-argumentos"></aside>
+        <aside id="argumento-atual-container"></aside>
 
         <footer id="footer-container">
             <button id="btn-proximo" class="botao-inicio escondido">Próxima Tese</button>
@@ -282,13 +250,10 @@
     </div>
 
     <div id="tela-final" class="tela escondido">
-        <a href="anos-finais.html" class="botao-voltar botao-voltar-absoluto">&lt; Voltar</a>
         <div class="card-tela">
             <h2>Desafio Concluído!</h2>
             <p>Parabéns por chegar até o final! Veja alguns argumentos que talvez precisem de uma segunda olhada:</p>
-            <div id="resumo-erros">
-                <ul></ul>
-            </div>
+            <div id="resumo-erros"><ul></ul></div>
             <button id="btn-reiniciar" class="botao-inicio">Jogar Novamente</button>
         </div>
     </div>
@@ -296,7 +261,7 @@
     <script>
         // --- BANCO DE DADOS DAS TESES ---
         const dadosDebate = [
-            {
+             {
                 tese: "Videogames são mais benéficos do que maléficos.",
                 argumentos: [
                     { texto: "Desenvolvem o raciocínio lógico e a resolução de problemas.", tipo: "pro", emoji: "🧠" },
@@ -311,7 +276,6 @@
                 glossario: [
                     { termo: "Benéficos", definicao: "Que fazem bem, trazem vantagens." },
                     { termo: "Maléficos", definicao: "Que fazem mal, trazem desvantagens." },
-                    { termo: "Raciocínio lógico", definicao: "Capacidade de pensar de forma organizada para resolver um problema." }
                 ]
             },
             {
@@ -479,19 +443,19 @@
         const btnReiniciar = document.getElementById('btn-reiniciar');
 
         const teseAtualEl = document.getElementById('tese-atual');
-        const bancoArgumentosEl = document.getElementById('banco-argumentos');
+        const argumentoAtualContainer = document.getElementById('argumento-atual-container');
+        const colunas = document.querySelectorAll('.coluna');
         const colunaFavor = document.getElementById('favor');
         const colunaContra = document.getElementById('contra');
         const listaGlossarioEl = document.getElementById('lista-glossario');
         const resumoErrosEl = document.querySelector('#resumo-erros ul');
 
         let teseIndex = 0;
-        let argumentosArrastados = 0;
+        let argumentosDaTeseAtual = [];
         let errosGlobais = [];
         let draggedItem = null;
 
         // --- FUNÇÕES DE LÓGICA ---
-
         function iniciarJogo() {
             teseIndex = 0;
             errosGlobais = [];
@@ -504,12 +468,10 @@
 
         function carregarTese(index) {
             // Limpa o estado anterior
-            bancoArgumentosEl.innerHTML = '';
             colunaFavor.innerHTML = '<h2>✅ A FAVOR</h2>';
             colunaContra.innerHTML = '<h2>❌ CONTRA</h2>';
             listaGlossarioEl.innerHTML = '';
             btnProximo.classList.add('escondido');
-            argumentosArrastados = 0;
 
             const dados = dadosDebate[index];
             teseAtualEl.textContent = dados.tese;
@@ -519,37 +481,36 @@
                 listaGlossarioEl.innerHTML += `<p><strong>${item.termo}:</strong> ${item.definicao}</p>`;
             });
 
-            // Embaralha e cria os cards de argumentos
-            const argumentosEmbaralhados = [...dados.argumentos].sort(() => Math.random() - 0.5);
+            // Prepara a lista de argumentos para a rodada
+            argumentosDaTeseAtual = [...dados.argumentos].sort(() => Math.random() - 0.5);
+            mostrarProximoArgumento();
+        }
 
-            argumentosEmbaralhados.forEach((arg, i) => {
+        function mostrarProximoArgumento() {
+            argumentoAtualContainer.innerHTML = ''; // Limpa o argumento anterior
+            const argumento = argumentosDaTeseAtual.shift(); // Pega e remove o primeiro argumento da lista
+
+            if (argumento) {
                 const carta = document.createElement('div');
-                carta.id = `arg-${i}`;
                 carta.className = 'carta-argumento';
                 carta.draggable = true;
-                carta.dataset.tipo = arg.tipo; // Guarda a resposta correta
-                carta.innerHTML = `<span class="emoji">${arg.emoji}</span> ${arg.texto}`;
-                bancoArgumentosEl.appendChild(carta);
-            });
-            
-            adicionarEventListenersDragDrop();
+                carta.dataset.tipo = argumento.tipo;
+                carta.innerHTML = `<span class="emoji">${argumento.emoji}</span> ${argumento.texto}`;
+                
+                adicionarEventListenersCarta(carta);
+                argumentoAtualContainer.appendChild(carta);
+            } else {
+                // Acabaram os argumentos
+                btnProximo.classList.remove('escondido');
+            }
         }
-        
-        function verificarRespostas() {
-            const dados = dadosDebate[teseIndex];
-            
-            // Verifica a coluna A FAVOR
-            colunaFavor.querySelectorAll('.carta-argumento').forEach(carta => {
-                if (carta.dataset.tipo !== 'pro') {
-                    errosGlobais.push(carta.textContent.trim());
-                }
-            });
 
-            // Verifica a coluna CONTRA
+        function verificarRespostas() {
+            colunaFavor.querySelectorAll('.carta-argumento').forEach(carta => {
+                if (carta.dataset.tipo !== 'pro') errosGlobais.push(carta.textContent.trim());
+            });
             colunaContra.querySelectorAll('.carta-argumento').forEach(carta => {
-                if (carta.dataset.tipo !== 'contra') {
-                    errosGlobais.push(carta.textContent.trim());
-                }
+                if (carta.dataset.tipo !== 'contra') errosGlobais.push(carta.textContent.trim());
             });
         }
 
@@ -571,8 +532,7 @@
             if (errosGlobais.length === 0) {
                 resumoErrosEl.innerHTML = "<p>Uau! Você acertou tudo! Parabéns, grande debatedor! 🏆</p>";
             } else {
-                const errosParaMostrar = errosGlobais.slice(0, 5); // Mostra no máximo 5 erros
-                errosParaMostrar.forEach(erro => {
+                errosGlobais.forEach(erro => {
                     const li = document.createElement('li');
                     li.textContent = erro;
                     resumoErrosEl.appendChild(li);
@@ -581,51 +541,40 @@
         }
 
         // --- LÓGICA DE DRAG & DROP ---
-        function adicionarEventListenersDragDrop() {
-            const cartas = document.querySelectorAll('.carta-argumento');
-            const colunas = document.querySelectorAll('.coluna');
-
-            cartas.forEach(carta => {
-                carta.addEventListener('dragstart', (e) => {
-                    draggedItem = e.target;
-                    setTimeout(() => e.target.style.display = 'none', 0);
-                });
-                carta.addEventListener('dragend', (e) => {
-                    setTimeout(() => {
-                        draggedItem.style.display = 'block';
-                        draggedItem = null;
-                    }, 0);
-                });
+        function adicionarEventListenersCarta(carta) {
+            carta.addEventListener('dragstart', (e) => {
+                draggedItem = e.target;
+                draggedItem.classList.add('arrastando');
             });
-
-            colunas.forEach(coluna => {
-                coluna.addEventListener('dragover', (e) => {
-                    e.preventDefault();
-                    coluna.classList.add('drag-over');
-                });
-                coluna.addEventListener('dragenter', (e) => e.preventDefault());
-                coluna.addEventListener('dragleave', (e) => {
-                    coluna.classList.remove('drag-over');
-                });
-                coluna.addEventListener('drop', (e) => {
-                    e.preventDefault();
-                    if (e.currentTarget.classList.contains('coluna')) {
-                        e.currentTarget.appendChild(draggedItem);
-                        argumentosArrastados++;
-                        if (argumentosArrastados === 8) {
-                            btnProximo.classList.remove('escondido');
-                        }
-                    }
-                    coluna.classList.remove('drag-over');
-                });
+            carta.addEventListener('dragend', () => {
+                draggedItem.classList.remove('arrastando');
+                draggedItem = null;
             });
         }
+
+        colunas.forEach(coluna => {
+            coluna.addEventListener('dragover', (e) => {
+                e.preventDefault();
+                coluna.classList.add('drag-over');
+            });
+            coluna.addEventListener('dragleave', () => {
+                coluna.classList.remove('drag-over');
+            });
+            coluna.addEventListener('drop', (e) => {
+                e.preventDefault();
+                if (draggedItem) {
+                    draggedItem.draggable = false; // Impede que seja arrastado novamente
+                    e.currentTarget.appendChild(draggedItem);
+                    mostrarProximoArgumento(); // Mostra o próximo argumento
+                }
+                coluna.classList.remove('drag-over');
+            });
+        });
 
         // --- INICIALIZAÇÃO ---
         btnIniciar.addEventListener('click', iniciarJogo);
         btnProximo.addEventListener('click', proximaTese);
         btnReiniciar.addEventListener('click', iniciarJogo);
-
     </script>
 </body>
 </html>
