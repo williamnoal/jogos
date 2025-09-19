@@ -87,12 +87,21 @@
             gap: 24px;
             width: 100%;
             height: 100%;
+            align-items: stretch; /* Garante que as áreas preencham a altura */
         }
         #tese-container { grid-area: header; text-align: center; }
         #tese-container h1 { font-size: 1.5rem; font-weight: 700; }
         
-        #glossario-container { grid-area: glossario; }
-        #glossario-container h3 { color: var(--cor-primaria); }
+        #glossario-container { 
+            grid-area: glossario;
+            background-color: #fff;
+            border: 1px solid var(--cor-borda);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+        }
+        #glossario-container h3 { margin-top: 0; color: var(--cor-primaria); text-align: center;}
         #lista-glossario p { margin: 0 0 15px 0; font-size: 0.9rem; line-height: 1.6; }
         #lista-glossario strong { font-weight: 600; display: block; }
         
@@ -126,6 +135,7 @@
             display: flex;
             flex-direction: column;
             gap: 10px;
+            transition: all 0.2s ease-in-out;
         }
         .sub-coluna h3 { margin: 0 0 10px 0; text-align: center; font-size: 1rem; color: #555; }
         
@@ -185,7 +195,7 @@
         .carta-argumento.arrastando { opacity: 0.5; transform: scale(1.05) rotate(3deg); }
         .carta-argumento .emoji { font-size: 1.3rem; margin-right: 8px; }
         
-        #footer-container { grid-area: footer; text-align: center; height: 60px; }
+        #footer-container { grid-area: footer; text-align: center; height: 60px; display: flex; align-items: center; justify-content: center; }
         
         #feedback-modal {
             position: fixed;
@@ -228,7 +238,7 @@
     <div id="tela-debate" class="tela escondido">
         <header id="tese-container"><h1 id="tese-atual"></h1></header>
         
-        <aside id="glossario-container" class="drop-zone">
+        <aside id="glossario-container">
             <h3>📖 Glossário</h3>
             <div id="lista-glossario"></div>
         </aside>
@@ -349,6 +359,66 @@
                 { id: 30, texto: "Acho que os animais seriam mais felizes vivendo na natureza.", tipo: "contra", emoji: "🏞️", forca: "fraco" }
             ],
             glossario: [ { termo: "Conservação", definicao: "Ato de proteger para evitar a destruição." }, { termo: "Cativeiro", definicao: "Lugar onde um animal vive preso." } ]
+        },
+        {
+            tese: "Dever de casa deveria ser opcional.",
+            argumentos: [
+                { id: 31, texto: "Estudos sobre bem-estar infantil mostram que o tempo livre para brincadeiras é essencial para o desenvolvimento da criatividade.", tipo: "pro", emoji: "🪁", forca: "forte" },
+                { id: 32, texto: "Eu fico muito cansado depois da escola e não tenho vontade de fazer lição.", tipo: "pro", emoji: "😌", forca: "fraco" },
+                { id: 33, texto: "Se não tivesse dever, eu poderia usar o tempo para estudar só o que eu gosto mais.", tipo: "pro", emoji: "🔬", forca: "fraco" },
+                { id: 34, texto: "Dados de avaliações indicam que a revisão do conteúdo, como a do dever de casa, reforça a memorização em até 40%.", tipo: "contra", emoji: "🧠", forca: "forte" },
+                { id: 35, texto: "Minha mãe sempre diz que quem não faz dever de casa fica preguiçoso.", tipo: "contra", emoji: "👨‍👩‍👧‍👦", forca: "fraco" },
+                { id: 36, texto: "Se for opcional, ninguém vai fazer e a turma toda vai tirar nota baixa.", tipo: "contra", emoji: "📉", forca: "fraco" }
+            ],
+            glossario: [ { termo: "Opcional", definicao: "Algo que pode ser escolhido." }, { termo: "Memorização", definicao: "Ato de fixar algo na memória." } ]
+        },
+        {
+            tese: "Ler livros é mais divertido do que assistir a filmes ou séries.",
+            argumentos: [
+                { id: 37, texto: "Pesquisas em neurociência mostram que a leitura ativa mais áreas do cérebro ligadas à imaginação e linguagem.", tipo: "pro", emoji: "🌈", forca: "forte" },
+                { id: 38, texto: "Eu acho muito mais legal imaginar os personagens do meu jeito.", tipo: "pro", emoji: "🎨", forca: "fraco" },
+                { id: 39, texto: "Livros não precisam de bateria nem de internet, dá pra levar pra qualquer lugar.", tipo: "pro", emoji: "🌳", forca: "fraco" },
+                { id: 40, texto: "A indústria cinematográfica combina múltiplas artes (visual, sonora, atuação) para criar uma experiência sensorial completa.", tipo: "contra", emoji: "🎬", forca: "forte" },
+                { id: 41, texto: "É muito chato ter que ler um livro gigante, um filme acaba em duas horas.", tipo: "contra", emoji: "⏩", forca: "fraco" },
+                { id: 42, texto: "Meus amigos todos preferem ver séries, aí a gente pode conversar sobre os episódios.", tipo: "contra", emoji: "👨‍👩‍👧‍👦", forca: "fraco" }
+            ],
+            glossario: [ { termo: "Neurociência", definicao: "Estudo científico do cérebro." }, { termo: "Sensorial", definicao: "Relacionado aos cinco sentidos." } ]
+        },
+        {
+            tese: "As aulas deveriam começar mais tarde, às 9h da manhã.",
+            argumentos: [
+                { id: 43, texto: "A Associação Americana de Pediatria afirma que o ciclo de sono dos adolescentes melhora com aulas após as 8:30.", tipo: "pro", emoji: "😴", forca: "forte" },
+                { id: 44, texto: "Eu sempre chego na escola com sono e não consigo prestar atenção na primeira aula.", tipo: "pro", emoji: "😵", forca: "fraco" },
+                { id: 45, texto: "Se a aula começasse mais tarde, o trânsito seria bem melhor.", tipo: "pro", emoji: "🚗", forca: "fraco" },
+                { id: 46, texto: "A logística de transporte escolar e o horário de trabalho dos pais são planejados para o início atual das aulas.", tipo: "contra", emoji: "⏰", forca: "forte" },
+                { id: 47, texto: "Se a aula terminar mais tarde, não vai sobrar tempo para eu jogar bola com meus amigos.", tipo: "contra", emoji: "⚽", forca: "fraco" },
+                { id: 48, texto: "A gente sempre estudou de manhã, não tem por que mudar agora.", tipo: "contra", emoji: "📅", forca: "fraco" }
+            ],
+            glossario: [ { termo: "Logística", definicao: "A organização de um processo complexo." }, { termo: "Desempenho", definicao: "O resultado do trabalho/estudo." } ]
+        },
+        {
+            tese: "Deveria ser permitido usar o celular durante o recreio na escola.",
+            argumentos: [
+                { id: 49, texto: "Relatórios sobre inclusão digital apontam que o uso controlado ensina os alunos a equilibrarem o mundo digital e o real.", tipo: "pro", emoji: "🎓", forca: "forte" },
+                { id: 50, texto: "No recreio eu quero relaxar vendo meus vídeos, não sou obrigado a conversar.", tipo: "pro", emoji: "🎧", forca: "fraco" },
+                { id: 51, texto: "É bom pra gente poder combinar as coisas com nossos pais se precisar.", tipo: "pro", emoji: "📞", forca: "fraco" },
+                { id: 52, texto: "Psicólogos afirmam que o recreio é crucial para desenvolver a socialização, que é prejudicada pelo isolamento em telas.", tipo: "contra", emoji: "🗣️", forca: "forte" },
+                { id: 53, texto: "Com certeza alguém vai ficar tirando foto dos outros sem permissão e vai dar briga.", tipo: "contra", emoji: "📸", forca: "fraco" },
+                { id: 54, texto: "Recreio é pra correr e brincar, não pra ficar parado olhando pro celular.", tipo: "contra", emoji: "🏃", forca: "fraco" }
+            ],
+            glossario: [ { termo: "Inclusão digital", definicao: "Garantir que todos possam usar tecnologias." }, { termo: "Socialização", definicao: "Processo de interagir com outros." } ]
+        },
+        {
+            tese: "A escola deveria avaliar os alunos apenas por projetos, sem provas.",
+            argumentos: [
+                { id: 55, texto: "Sistemas de avaliação contínua baseados em projetos permitem medir habilidades como colaboração e criatividade.", tipo: "pro", emoji: "🤝", forca: "forte" },
+                { id: 56, texto: "Eu fico muito nervoso na hora da prova e sempre tiro nota baixa, mesmo sabendo a matéria.", tipo: "pro", emoji: "😥", forca: "fraco" },
+                { id: 57, texto: "Fazer trabalho em grupo é muito mais legal do que fazer prova sozinho.", tipo: "pro", emoji: "🎨", forca: "fraco" },
+                { id: 58, texto: "Provas individuais e padronizadas são o método mais objetivo para verificar o conhecimento fundamental de cada aluno.", tipo: "contra", emoji: "📝", forca: "forte" },
+                { id: 59, texto: "Nos trabalhos em grupo, sempre tem alguém que não faz nada e ganha nota igual.", tipo: "contra", emoji: "😴", forca: "fraco" },
+                { id: 60, texto: "Prova é mais rápido, é só estudar um dia antes. Projeto dá muito trabalho.", tipo: "contra", emoji: "📚", forca: "fraco" }
+            ],
+            glossario: [ { termo: "Avaliação contínua", definicao: "Avaliar o aluno ao longo do tempo." }, { termo: "Objetivo (método)", definicao: "Que é imparcial, baseado em fatos." } ]
         }
     ];
 
@@ -383,14 +453,12 @@
     }
 
     function carregarTese(index) {
-        // Limpa a arena
         document.querySelectorAll('.sub-coluna').forEach(subColuna => {
             Array.from(subColuna.children).forEach(child => {
                 if (child.tagName !== 'H3') subColuna.removeChild(child);
             });
         });
 
-        // Reseta visibilidade dos containers
         listaGlossarioEl.innerHTML = '';
         btnProximo.classList.add('escondido');
         opiniaoInicialContainer.classList.remove('escondido');
@@ -402,7 +470,7 @@
         teseAtualEl.textContent = dados.tese;
 
         dados.glossario.forEach(item => {
-            listaGlossarioEl.innerHTML += `<p><strong>${item.termo}:</strong> ${item.definicao}</p>`;
+            listaGlossarioEl.innerHTML += `<p><strong>${item.termo}</strong> ${item.definicao}</p>`;
         });
 
         argumentosDaTeseAtual = [...dados.argumentos].sort(() => Math.random() - 0.5);
@@ -503,11 +571,13 @@
             draggedItem = null;
         });
     }
-
+    
     document.querySelectorAll('.drop-zone').forEach(zone => {
         zone.addEventListener('dragover', e => {
             e.preventDefault();
-            if (zone.id !== 'glossario-container') zone.classList.add('drag-over');
+            if (zone.id !== 'glossario-container') {
+                zone.classList.add('drag-over');
+            }
         });
         zone.addEventListener('dragleave', () => {
             zone.classList.remove('drag-over');
@@ -516,16 +586,11 @@
             e.preventDefault();
             zone.classList.remove('drag-over');
             if (draggedItem && zone.id !== 'glossario-container') {
+                const isNewCard = draggedItem.parentElement.id === 'argumento-atual-container';
                 zone.appendChild(draggedItem);
-                
-                // Permite que o card solto seja arrastado novamente para edição
                 adicionarEventListenersCarta(draggedItem);
-                
-                // Se o card veio do container inicial, mostra o próximo
-                const veioDoContainerInicial = !draggedItem.parentElement.classList.contains('sub-coluna');
-
-                if (argumentoAtualContainer.contains(draggedItem) || veioDoContainerInicial) {
-                   mostrarProximoArgumento();
+                if (isNewCard) {
+                    mostrarProximoArgumento();
                 }
             }
         });
