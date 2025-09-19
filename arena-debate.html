@@ -78,7 +78,7 @@
             grid-template-columns: 280px 1fr 300px;
             grid-template-areas:
                 "header header header"
-                "glossario arena banco"
+                "glossario arena argumento"
                 "footer footer footer";
             gap: 24px;
             width: 100%;
@@ -86,7 +86,7 @@
         }
         #tese-container { grid-area: header; text-align: center; }
         #tese-container h1 { font-size: 1.7rem; font-weight: 700; }
-
+        
         .drop-zone {
             padding: 20px;
             border-radius: 16px;
@@ -105,7 +105,7 @@
 
         #glossario-container {
             grid-area: glossario;
-            overflow: hidden; /* Garante que não haja barra de rolagem */
+            overflow: hidden;
         }
         #glossario-container h3 { color: var(--cor-primaria); }
         #lista-glossario p { margin: 0 0 15px 0; font-size: 0.9rem; line-height: 1.6; }
@@ -116,7 +116,16 @@
         #favor { background-color: var(--cor-favor-fundo); }
         #contra { background-color: var(--cor-contra-fundo); }
 
-        #banco-argumentos { grid-area: banco; }
+        #argumento-atual-container {
+            grid-area: argumento;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            border-radius: 16px;
+            background-color: #f9fafb;
+            border: 1px solid var(--cor-borda);
+        }
         
         .carta-argumento {
             background-color: var(--cor-card);
@@ -129,7 +138,8 @@
             align-items: center;
             font-size: 0.95rem;
             transition: transform 0.2s ease, box-shadow 0.2s ease;
-            word-break: break-word; /* Garante que o texto quebre e não exceda a caixa */
+            word-break: break-word;
+            width: 100%;
         }
         .carta-argumento:hover {
             transform: translateY(-2px);
@@ -142,7 +152,7 @@
             box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
         }
         .carta-argumento .emoji { font-size: 1.4rem; margin-right: 10px; }
-
+        
         #footer-container { grid-area: footer; text-align: center; height: 60px; }
 
         #tela-final h2 { color: var(--cor-primaria); font-size: 2.5rem; }
@@ -155,7 +165,7 @@
     <div id="tela-inicial" class="tela">
         <div class="card-tela">
             <h1>Arena do Debate 🏛️</h1>
-            <p>Arraste os argumentos do banco para as colunas "A FAVOR" ou "CONTRA". Você pode mudar de ideia e trocar os cards de lugar a qualquer momento!</p>
+            <p>Um argumento por vez aparecerá. Arraste-o para a coluna correta. Você pode trocar os cards de lugar entre as colunas antes de avançar.</p>
             <button id="btn-iniciar" class="botao">Começar</button>
         </div>
     </div>
@@ -173,9 +183,7 @@
             <div id="contra" class="coluna drop-zone"><h2>❌ CONTRA</h2></div>
         </main>
         
-        <aside id="banco-argumentos" class="drop-zone">
-            <h3>🤔 Banco de Argumentos</h3>
-        </aside>
+        <aside id="argumento-atual-container"></aside>
 
         <footer id="footer-container">
             <button id="btn-proximo" class="botao escondido">Próxima Tese</button>
@@ -196,12 +204,12 @@
         {
             tese: "Videogames são mais benéficos do que maléficos.",
             argumentos: [
-                { texto: "Desenvolvem o raciocínio lógico e a resolução de problemas.", tipo: "pro", emoji: "🧠" },
-                { texto: "Melhoram a coordenação motora e os reflexos.", tipo: "pro", emoji: "🖐️" },
-                { texto: "Permitem socializar com amigos em jogos online.", tipo: "pro", emoji: "🧑‍🤝‍🧑" },
-                { texto: "Podem causar isolamento social se jogados em excesso.", tipo: "contra", emoji: "🏠" },
-                { texto: "Alguns jogos podem ser muito violentos e inadequados.", tipo: "contra", emoji: "😠" },
-                { texto: "Distraem dos estudos e de outras responsabilidades.", tipo: "contra", emoji: "📚" }
+                { id: 1, texto: "Desenvolvem o raciocínio lógico e a resolução de problemas.", tipo: "pro", emoji: "🧠" },
+                { id: 2, texto: "Melhoram a coordenação motora e os reflexos.", tipo: "pro", emoji: "🖐️" },
+                { id: 3, texto: "Permitem socializar com amigos em jogos online.", tipo: "pro", emoji: "🧑‍🤝‍🧑" },
+                { id: 4, texto: "Podem causar isolamento social se jogados em excesso.", tipo: "contra", emoji: "🏠" },
+                { id: 5, texto: "Alguns jogos podem ser muito violentos e inadequados.", tipo: "contra", emoji: "😠" },
+                { id: 6, texto: "Distraem dos estudos e de outras responsabilidades.", tipo: "contra", emoji: "📚" }
             ],
             glossario: [
                 { termo: "Benéfico", definicao: "Aquilo que faz bem, que traz vantagens." },
@@ -212,12 +220,12 @@
         {
             tese: "A tecnologia na sala de aula sempre melhora o aprendizado.",
             argumentos: [
-                { texto: "Facilita o acesso a uma quantidade infinita de informações.", tipo: "pro", emoji: "🌐" },
-                { texto: "Torna as aulas mais dinâmicas e interativas.", tipo: "pro", emoji: "✨" },
-                { texto: "Prepara os alunos para o mundo de trabalho digital.", tipo: "pro", emoji: "💼" },
-                { texto: "Pode ser uma grande fonte de distração, como redes sociais.", tipo: "contra", emoji: "딴" },
-                { texto: "Aumenta a desigualdade se nem todos os alunos têm acesso.", tipo: "contra", emoji: "💔" },
-                { texto: "Problemas técnicos, como falta de internet, podem atrapalhar.", tipo: "contra", emoji: "🔌" },
+                { id: 7, texto: "Facilita o acesso a uma quantidade infinita de informações.", tipo: "pro", emoji: "🌐" },
+                { id: 8, texto: "Torna as aulas mais dinâmicas e interativas.", tipo: "pro", emoji: "✨" },
+                { id: 9, texto: "Prepara os alunos para o mundo de trabalho digital.", tipo: "pro", emoji: "💼" },
+                { id: 10, texto: "Pode ser uma grande fonte de distração, como redes sociais.", tipo: "contra", emoji: "딴" },
+                { id: 11, texto: "Aumenta a desigualdade se nem todos os alunos têm acesso.", tipo: "contra", emoji: "💔" },
+                { id: 12, texto: "Problemas técnicos, como falta de internet, podem atrapalhar.", tipo: "contra", emoji: "🔌" },
             ],
             glossario: [
                 { termo: "Dinâmico", definicao: "Algo cheio de energia, movimento e atividade." },
@@ -235,11 +243,12 @@
     const btnReiniciar = document.getElementById('btn-reiniciar');
     const teseAtualEl = document.getElementById('tese-atual');
     const listaGlossarioEl = document.getElementById('lista-glossario');
+    const argumentoAtualContainer = document.getElementById('argumento-atual-container');
+    const colunas = document.querySelectorAll('.coluna');
     const resumoErrosEl = document.querySelector('#resumo-erros ul');
-    const bancoArgumentosEl = document.getElementById('banco-argumentos');
-    const dropZones = document.querySelectorAll('.drop-zone');
     
     let teseIndex = 0;
+    let argumentosDaTeseAtual = [];
     let errosGlobais = [];
     let draggedItem = null;
 
@@ -253,10 +262,9 @@
     }
 
     function carregarTese(index) {
-        // Limpa áreas
-        dropZones.forEach(zone => {
-            Array.from(zone.children).forEach(child => {
-                if (child.tagName !== 'H2' && child.tagName !== 'H3') zone.removeChild(child);
+        colunas.forEach(coluna => {
+            Array.from(coluna.children).forEach(child => {
+                if (child.tagName !== 'H2') coluna.removeChild(child);
             });
         });
         listaGlossarioEl.innerHTML = '';
@@ -269,22 +277,26 @@
             listaGlossarioEl.innerHTML += `<p><strong>${item.termo}</strong> ${item.definicao}</p>`;
         });
 
-        [...dados.argumentos].sort(() => Math.random() - 0.5).forEach(arg => {
+        argumentosDaTeseAtual = [...dados.argumentos].sort(() => Math.random() - 0.5);
+        mostrarProximoArgumento();
+    }
+
+    function mostrarProximoArgumento() {
+        argumentoAtualContainer.innerHTML = '';
+        const argumento = argumentosDaTeseAtual.shift();
+
+        if (argumento) {
             const carta = document.createElement('div');
             carta.className = 'carta-argumento';
             carta.draggable = true;
-            carta.dataset.tipo = arg.tipo;
-            carta.innerHTML = `<span class="emoji">${arg.emoji}</span><span>${arg.texto}</span>`;
-            bancoArgumentosEl.appendChild(carta);
+            carta.dataset.tipo = argumento.tipo;
+            carta.id = 'arg-' + argumento.id;
+            carta.innerHTML = `<span class="emoji">${argumento.emoji}</span><span>${argumento.texto}</span>`;
             adicionarEventListenersCarta(carta);
-        });
-    }
-
-    function verificarConclusao() {
-        if (bancoArgumentosEl.children.length <= 1) { // <= 1 por causa do H3
-            btnProximo.classList.remove('escondido');
+            argumentoAtualContainer.appendChild(carta);
         } else {
-            btnProximo.classList.add('escondido');
+            argumentoAtualContainer.innerHTML = '<p style="text-align:center; color:#888;">Classifique todos os argumentos para continuar.</p>';
+            btnProximo.classList.remove('escondido');
         }
     }
 
@@ -330,21 +342,33 @@
         });
     }
 
-    dropZones.forEach(zone => {
+    document.querySelectorAll('.drop-zone').forEach(zone => {
         zone.addEventListener('dragover', e => {
             e.preventDefault();
-            if (zone.id !== 'glossario-container') zone.classList.add('drag-over');
+            zone.classList.add('drag-over');
         });
         zone.addEventListener('dragleave', () => {
             zone.classList.remove('drag-over');
         });
         zone.addEventListener('drop', e => {
             e.preventDefault();
-            if (draggedItem && zone.id !== 'glossario-container') {
-                zone.appendChild(draggedItem);
-                verificarConclusao();
-            }
             zone.classList.remove('drag-over');
+            if (draggedItem) {
+                // Adiciona o card à nova zona
+                zone.appendChild(draggedItem);
+                
+                // Se o card veio do container inicial, mostra o próximo
+                if (draggedItem.parentElement.id !== 'argumento-atual-container') {
+                     // Permite que o card solto seja arrastado novamente
+                    adicionarEventListenersCarta(draggedItem);
+                }
+                
+                if (argumentosDaTeseAtual.length > 0 && argumentoAtualContainer.children.length === 0) {
+                    mostrarProximoArgumento();
+                } else if (argumentosDaTeseAtual.length === 0 && argumentoAtualContainer.children.length === 0){
+                    mostrarProximoArgumento(); // Chamada final para mostrar mensagem e botão
+                }
+            }
         });
     });
 
