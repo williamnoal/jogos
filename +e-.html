@@ -18,7 +18,21 @@
             margin: 0;
             color: #333;
         }
-
+        
+        .back-button {
+            position: absolute;
+            top: 30px;
+            left: 30px;
+            font-size: 1.2em;
+            color: var(--cor-primaria);
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s;
+        }
+        
+        .back-button:hover {
+            transform: scale(1.1);
+        }
         #game-container {
             background-color: #ffffff;
             padding: 30px 40px;
@@ -82,7 +96,7 @@
     </style>
 </head>
 <body>
-
+    <a href="index.html" class="back-button" title="Voltar ao Portal Principal">‹ Voltar</a>
     <div id="game-container">
         <h1>⭐ Desafio dos Números! ⭐</h1>
         <p>Resolva a continha e clique na resposta certa!</p>
@@ -190,4 +204,5 @@
     </script>
 
 </body>
+
 </html>
