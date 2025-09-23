@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Desafio dos Números! (2º Ano)</title>
+    <style>
+        /* Estilos para deixar o jogo bonito e colorido */
+        @import url('https://fonts.googleapis.com/css2?family=Nunito:wght@700&display=swap');
+
+        body {
+            font-family: 'Nunito', sans-serif;
+            background-color: #f0f9ff; /* Azul bem clarinho */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            color: #333;
+        }
+
+        #game-container {
+            background-color: #ffffff;
+            padding: 30px 40px;
+            border-radius: 20px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+            text-align: center;
+            width: 90%;
+            max-width: 500px;
+        }
+
+        h1 {
+            color: #007bff; /* Azul */
+        }
+
+        #question-area {
+            font-size: 3rem; /* Tamanho grande para a conta */
+            font-weight: bold;
+            color: #ff6347; /* Tomate */
+            margin: 20px 0;
+            padding: 15px;
+            background-color: #fff8e1;
+            border-radius: 10px;
+        }
+
+        #options-container {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-top: 25px;
+        }
+
+        .option-btn {
+            background-color: #4CAF50; /* Verde */
+            color: white;
+            border: none;
+            border-radius: 10px;
+            padding: 20px;
+            font-size: 2rem;
+            cursor: pointer;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+
+        .option-btn:hover {
+            background-color: #45a049; /* Verde mais escuro */
+            transform: scale(1.05);
+        }
+
+        #feedback {
+            font-size: 1.5rem;
+            font-weight: bold;
+            margin-top: 20px;
+            min-height: 30px; /* Para não "pular" a tela */
+        }
+
+        #score-area {
+            font-size: 1.2rem;
+            color: #555;
+            margin-top: 20px;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div id="game-container">
+        <h1>⭐ Desafio dos Números! ⭐</h1>
+        <p>Resolva a continha e clique na resposta certa!</p>
+        
+        <div id="question-area">
+            </div>
+
+        <div id="options-container">
+            </div>
+
+        <div id="feedback">
+            </div>
+
+        <div id="score-area">
+            Pontos: <span id="score">0</span>
+        </div>
+    </div>
+
+    <script>
+        // A lógica (cérebro) do nosso jogo
+
+        // Pegando os elementos da tela para poder mudar eles
+        const questionArea = document.getElementById('question-area');
+        const optionsContainer = document.getElementById('options-container');
+        const feedback = document.getElementById('feedback');
+        const scoreDisplay = document.getElementById('score');
+
+        let score = 0;
+        let correctAnswer;
+
+        // Função para gerar um número aleatório
+        function randomNumber(max) {
+            return Math.floor(Math.random() * max) + 1;
+        }
+
+        // Função principal para criar uma nova pergunta
+        function generateQuestion() {
+            feedback.textContent = ''; // Limpa o feedback anterior
+            optionsContainer.innerHTML = ''; // Limpa os botões antigos
+
+            const num1 = randomNumber(10); // Número aleatório de 1 a 10
+            const num2 = randomNumber(10);
+            const isAddition = Math.random() > 0.5; // Decide se a conta é de mais ou de menos
+
+            if (isAddition) {
+                // É uma conta de SOMAR
+                correctAnswer = num1 + num2;
+                questionArea.textContent = `${num1} + ${num2} = ?`;
+            } else {
+                // É uma conta de SUBTRAIR
+                // Para não dar número negativo, colocamos o maior na frente
+                if (num1 < num2) {
+                    correctAnswer = num2 - num1;
+                    questionArea.textContent = `${num2} - ${num1} = ?`;
+                } else {
+                    correctAnswer = num1 - num2;
+                    questionArea.textContent = `${num1} - ${num2} = ?`;
+                }
+            }
+
+            // Criar uma lista de opções de resposta
+            const options = [correctAnswer];
+            while (options.length < 4) {
+                let wrongAnswer = correctAnswer + randomNumber(5) - 3;
+                if (wrongAnswer < 0) wrongAnswer = 0; // Não deixa ter resposta negativa
+                if (!options.includes(wrongAnswer)) {
+                    options.push(wrongAnswer);
+                }
+            }
+
+            // Misturar as opções para a resposta certa não ficar sempre no mesmo lugar
+            options.sort(() => Math.random() - 0.5);
+
+            // Criar os botões com as opções na tela
+            options.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.className = 'option-btn';
+                button.onclick = () => checkAnswer(option);
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        // Função para checar se a resposta clicada está certa
+        function checkAnswer(selectedOption) {
+            if (selectedOption === correctAnswer) {
+                // Se a resposta ESTÁ CERTA
+                feedback.textContent = 'Muito bem! Certa resposta! 😄';
+                feedback.style.color = '#28a745'; // Verde
+                score++; // Aumenta a pontuação
+                scoreDisplay.textContent = score;
+            } else {
+                // Se a resposta ESTÁ ERRADA
+                feedback.textContent = `Ops! A resposta era ${correctAnswer}. Tente a próxima! 😉`;
+                feedback.style.color = '#dc3545'; // Vermelho
+            }
+
+            // Espera um pouquinho e gera uma nova pergunta
+            setTimeout(generateQuestion, 1500); // 1500ms = 1.5 segundos
+        }
+
+        // Começa o jogo pela primeira vez!
+        generateQuestion();
+
+    </script>
+
+</body>
+</html>

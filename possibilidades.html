@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ferramenta de Aprendizagem - Combinações (EF03MA29)</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #F0F8FF;
+            color: #333;
+            line-height: 1.6;
+            padding: 20px;
+        }
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: #fff;
+            padding: 25px;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+        h1, h2 {
+            color: #FF6347;
+            text-align: center;
+        }
+        .problem-section, .strategy-section, .practice-section {
+            margin-bottom: 30px;
+            padding: 15px;
+            border: 2px solid #FFDAB9;
+            border-radius: 8px;
+        }
+        .choices {
+            display: flex;
+            justify-content: space-around;
+            text-align: center;
+            margin: 20px 0;
+        }
+        .choice-category h3 {
+            margin-top: 0;
+        }
+        .choice-item {
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            cursor: pointer;
+            margin: 5px;
+            transition: background-color 0.3s, transform 0.2s;
+        }
+        .choice-item:hover {
+            background-color: #FFFACD;
+            transform: scale(1.05);
+        }
+        .preview {
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            color: #008080;
+            min-height: 30px;
+        }
+        .hidden {
+            display: none;
+        }
+        button {
+            display: inline-block;
+            margin: 10px;
+            padding: 12px 25px;
+            font-size: 1em;
+            background-color: #FF6347;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        button:hover {
+            background-color: #E5533D;
+        }
+        #show-strategies-btn, #show-practice-btn {
+            display: block;
+            margin: 20px auto;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 15px;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: center;
+        }
+        th {
+            background-color: #FFF0E1;
+        }
+        #tree-diagram {
+            list-style-type: none;
+            padding-left: 20px;
+        }
+        #tree-diagram ul {
+            list-style-type: none;
+            padding-left: 30px;
+            border-left: 2px dashed #FF6347;
+        }
+        .multiplication-principle {
+            text-align: center;
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-top: 20px;
+        }
+        #practice-choices {
+            text-align: center;
+        }
+        .feedback {
+            text-align: center;
+            font-weight: bold;
+            margin-top: 10px;
+            min-height: 48px;
+            padding: 5px;
+            border-radius: 5px;
+        }
+        .correct { background-color: #E0F8E0; color: #2E8B57; }
+        .incorrect { background-color: #FFE0E0; color: #DC143C; }
+    </style>
+</head>
+<body>
+
+    <div class="container">
+        <h1>A Fantástica Fábrica de Sorvetes</h1>
+        <p style="text-align: center;">Uma atividade para aprender sobre <strong>possibilidades</strong>! (Habilidade EF03MA29)</p>
+
+        <div class="problem-section">
+            <h2>Nosso Desafio</h2>
+            <p>Você é o mestre sorveteiro! Sua sorveteria oferece as seguintes opções. Monte o seu sorvete e depois vamos descobrir quantas combinações são possíveis!</p>
+            <div class="choices">
+                <div class="choice-category" id="cones">
+                    <h3>1. Casquinhas (2)</h3>
+                </div>
+                <div class="choice-category" id="flavors">
+                    <h3>2. Sabores (3)</h3>
+                </div>
+                <div class="choice-category" id="toppings">
+                    <h3>3. Coberturas (2)</h3>
+                </div>
+            </div>
+            <p class="preview" id="ice-cream-preview">Seu Sorvete: (escolha os itens)</p>
+            <button id="show-strategies-btn">Pronto! Como podemos contar todas as combinações?</button>
+        </div>
+
+        <div id="strategies-container" class="strategy-section hidden">
+            <h2>Estratégias para Contar</h2>
+            <h3>Estratégia 1: Usando uma Tabela</h3>
+            <p>Podemos começar combinando as casquinhas e os sabores em uma tabela. Cada célula da tabela é uma combinação única!</p>
+            <div id="table-container"></div>
+            <p>Se para cada uma dessas combinações, adicionarmos as <strong>2 coberturas</strong>... teremos o dobro de possibilidades!</p>
+            <h3>Estratégia 2: O Diagrama de Árvore</h3>
+            <p>Outra forma de ver todas as opções é com um "Diagrama de Árvore". Cada "galho" nos leva a uma combinação final.</p>
+            <ul id="tree-diagram"></ul>
+            <h3>O Atalho: Princípio da Multiplicação</h3>
+            <p>Percebeu um padrão? Para encontrar o total de possibilidades, podemos simplesmente multiplicar o número de opções de cada etapa!</p>
+            <div class="multiplication-principle" id="multiplication-display"></div>
+            <button id="show-practice-btn">Entendi! Quero praticar!</button>
+        </div>
+
+        <div id="practice-container" class="practice-section hidden">
+            <h2>Vamos Praticar!</h2>
+            <div id="practice-problem" style="min-height: 60px;"></div>
+            <div id="practice-choices"></div>
+            <div id="practice-feedback" class="feedback"></div>
+        </div>
+    </div>
+
+    <script>
+        // Dados do problema principal
+        const cones = ['Casquinha Simples', 'Cestinha'];
+        const flavors = ['Chocolate', 'Morango', 'Baunilha'];
+        const toppings = ['Chocolate Granulado', 'Calda de Caramelo'];
+
+        let selectedCone = '', selectedFlavor = '', selectedTopping = '';
+
+        // Seleção de elementos do HTML
+        const conesDiv = document.getElementById('cones');
+        const flavorsDiv = document.getElementById('flavors');
+        const toppingsDiv = document.getElementById('toppings');
+        const previewP = document.getElementById('ice-cream-preview');
+        const showStrategiesBtn = document.getElementById('show-strategies-btn');
+        const strategiesContainer = document.getElementById('strategies-container');
+        const showPracticeBtn = document.getElementById('show-practice-btn');
+        const practiceContainer = document.getElementById('practice-container');
+
+        // Função para atualizar a prévia do sorvete escolhido
+        function updatePreview() {
+            previewP.textContent = `Seu Sorvete: ${selectedCone || '(casquinha)'}, ${selectedFlavor || '(sabor)'}, ${selectedTopping || '(cobertura)'}`;
+        }
+
+        // Popula as opções de escolha na tela
+        cones.forEach(cone => {
+            const item = document.createElement('div');
+            item.className = 'choice-item';
+            item.textContent = cone;
+            item.addEventListener('click', () => { selectedCone = cone; updatePreview(); });
+            conesDiv.appendChild(item);
+        });
+
+        flavors.forEach(flavor => {
+            const item = document.createElement('div');
+            item.className = 'choice-item';
+            item.textContent = flavor;
+            item.addEventListener('click', () => { selectedFlavor = flavor; updatePreview(); });
+            flavorsDiv.appendChild(item);
+        });
+        
+        toppings.forEach(topping => {
+            const item = document.createElement('div');
+            item.className = 'choice-item';
+            item.textContent = topping;
+            item.addEventListener('click', () => { selectedTopping = topping; updatePreview(); });
+            toppingsDiv.appendChild(item);
+        });
+
+        // Lógica para mostrar as seções
+        showStrategiesBtn.onclick = () => {
+            strategiesContainer.classList.remove('hidden');
+            generateTable();
+            generateTree();
+            showMultiplication();
+            showStrategiesBtn.disabled = true;
+        };
+
+        // Funções que geram as estratégias visuais
+        function generateTable(){
+            const tableContainer = document.getElementById('table-container');
+            let tableHTML = '<table><tr><th>Casquinha / Sabor</th>';
+            flavors.forEach(f => tableHTML += `<th>${f}</th>`);
+            tableHTML += '</tr>';
+            cones.forEach(c => {
+                tableHTML += `<tr><th>${c}</th>`;
+                flavors.forEach(f => tableHTML += `<td>🍦</td>`);
+                tableHTML += '</tr>';
+            });
+            tableHTML += '</table>';
+            tableContainer.innerHTML = tableHTML;
+        }
+        function generateTree(){
+            const treeContainer = document.getElementById('tree-diagram');
+            treeContainer.innerHTML = '';
+            cones.forEach(cone => {
+                const coneLi = document.createElement('li');
+                coneLi.innerHTML = `<strong>${cone}</strong>`;
+                const flavorUl = document.createElement('ul');
+                flavors.forEach(flavor => {
+                    const flavorLi = document.createElement('li');
+                    flavorLi.textContent = flavor;
+                    const toppingUl = document.createElement('ul');
+                    toppings.forEach(topping => {
+                        const toppingLi = document.createElement('li');
+                        toppingLi.textContent = `${topping}`;
+                        toppingUl.appendChild(toppingLi);
+                    });
+                    flavorLi.appendChild(toppingUl);
+                    flavorUl.appendChild(flavorLi);
+                });
+                coneLi.appendChild(flavorUl);
+                treeContainer.appendChild(coneLi);
+            });
+        }
+        function showMultiplication(){
+            const total = cones.length * flavors.length * toppings.length;
+            document.getElementById('multiplication-display').innerHTML = 
+                `${cones.length} Casquinhas × ${flavors.length} Sabores × ${toppings.length} Coberturas = <span style="color: #FF6347;">${total}</span> Combinações!`;
+        }
+        
+        // Banco de problemas refinado
+        const practiceProblems = [
+            { question: "Na lanchonete da escola, você pode escolher entre 2 tipos de pão (forma ou integral) e 3 recheios (queijo, frango ou presunto). Quantos lanches diferentes é possível criar?", options: [5, 6, 3, 2], answer: 6, factors: [2, 3], explanation: "tipos de pão × recheios" },
+            { question: "Ana vai a uma festa! Ela tem 4 blusas coloridas e 2 saias diferentes em seu armário. Quantas combinações de roupa ela consegue fazer?", options: [6, 8, 4, 2], answer: 8, factors: [4, 2], explanation: "blusas × saias" },
+            { question: "Você está em uma oficina de robôs! Para montar o seu, existem 3 tipos de cabeça e 3 tipos de corpo. Quantos robôs diferentes você pode construir?", options: [6, 9, 3, 1], answer: 9, factors: [3, 3], explanation: "tipos de cabeça × tipos de corpo" },
+            { question: "Sexta-feira é dia de pizza! Na pizzaria do bairro, há 2 tipos de massa (fina e grossa) e 4 sabores diferentes. Quantas pizzas de um sabor é possível pedir?", options: [6, 8, 4, 2], answer: 8, factors: [2, 4], explanation: "massas × sabores" },
+            { question: "Vamos criar um personagem para um jogo! Existem 2 formatos de cabelo, 3 tipos de olhos e 2 tipos de boca. Quantos rostos únicos você pode criar?", options: [7, 6, 5, 12], answer: 12, factors: [2, 3, 2], explanation: "cabelos × olhos × bocas" },
+            { question: "Um time de futebol tem 2 modelos de camisa (branca e azul) e 2 modelos de short (branco e azul). Quantos uniformes diferentes o time pode usar?", options: [2, 4, 6, 3], answer: 4, factors: [2, 2], explanation: "camisas × shorts" }
+        ];
+        let currentProblemIndex = 0;
+
+        function shuffleArray(array) {
+            for (let i = array.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [array[i], array[j]] = [array[j], array[i]];
+            }
+        }
+
+        showPracticeBtn.onclick = () => {
+            practiceContainer.classList.remove('hidden');
+            shuffleArray(practiceProblems); 
+            loadPracticeProblem();
+        };
+
+        function loadPracticeProblem() {
+            const problem = practiceProblems[currentProblemIndex];
+            document.getElementById('practice-problem').textContent = problem.question;
+            const choicesDiv = document.getElementById('practice-choices');
+            choicesDiv.innerHTML = '';
+            
+            const shuffledOptions = [...problem.options];
+            shuffleArray(shuffledOptions);
+
+            shuffledOptions.forEach(option => {
+                const button = document.createElement('button');
+                button.textContent = option;
+                button.onclick = () => checkAnswer(option, problem);
+                choicesDiv.appendChild(button);
+            });
+            const feedbackDiv = document.getElementById('practice-feedback');
+            feedbackDiv.textContent = '';
+            feedbackDiv.className = "feedback";
+        }
+        
+        function checkAnswer(selectedOption, problem) {
+            const feedbackDiv = document.getElementById('practice-feedback');
+            const choiceButtons = document.getElementById('practice-choices').querySelectorAll('button');
+            choiceButtons.forEach(btn => btn.disabled = true);
+
+            const calculation = problem.factors.join(' × ');
+
+            if (selectedOption === problem.answer) {
+                feedbackDiv.innerHTML = `<strong>Perfeito!</strong> A conta é ${calculation} = ${problem.answer}.`;
+                feedbackDiv.className = "feedback correct";
+                
+                setTimeout(() => {
+                    currentProblemIndex = (currentProblemIndex + 1) % practiceProblems.length;
+                    loadPracticeProblem();
+                }, 3000);
+            } else {
+                feedbackDiv.innerHTML = `<strong>Opa, não foi desta vez!</strong> A resposta certa é <strong>${problem.answer}</strong>, porque calculamos ${calculation}.`;
+                feedbackDiv.className = "feedback incorrect";
+
+                setTimeout(() => {
+                    currentProblemIndex = (currentProblemIndex + 1) % practiceProblems.length;
+                    loadPracticeProblem();
+                }, 4000);
+            }
+        }
+    </script>
+</body>
+</html>
