@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Jogos Steampunk de Matemática (BNCC)</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=IM+Fell+English+SC&family=Roboto+Slab:wght@400;700&display=swap" rel="stylesheet">
+
+    <style>
+        /* Estilos (CSS) - Nenhuma alteração aqui, o visual continua o mesmo */
+        :root {
+            --bg-color: #3b2a1a;
+            --primary-metal: #a67c52;
+            --secondary-metal: #8a6642;
+            --dark-metal: #2c2c2c;
+            --light-cream: #f5f5dc;
+            --green-accent: #5e8c61;
+            --red-accent: #a84232;
+        }
+        body {
+            font-family: 'Roboto Slab', serif;
+            background-color: var(--bg-color);
+            background-image: url('https://www.transparenttextures.com/patterns/wood-pattern.png');
+            background-attachment: fixed;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center;
+            color: var(--light-cream);
+            overflow: hidden;
+        }
+        .gears-background {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none;
+        }
+        .gear {
+            position: absolute;
+            background-image: url('https://pngimg.com/uploads/gear/gear_PNG13442.png');
+            background-size: contain; background-repeat: no-repeat;
+            opacity: 0.15; animation: spin infinite linear;
+        }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        .g1 { width: 250px; height: 250px; top: -50px; left: -80px; animation-duration: 40s; }
+        .g2 { width: 150px; height: 150px; top: 15%; right: -50px; animation-duration: 25s; animation-direction: reverse; }
+        .g3 { width: 200px; height: 200px; bottom: -70px; left: 20%; animation-duration: 30s; }
+        .g4 { width: 100px; height: 100px; bottom: 5%; right: 15%; animation-duration: 18s; animation-direction: reverse; }
+        .g5 { width: 300px; height: 300px; bottom: -100px; right: -100px; animation-duration: 55s; }
+        .container {
+            background-color: rgba(44, 44, 44, 0.9);
+            border: 5px solid var(--primary-metal);
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.7), inset 0 0 10px rgba(255,255,255,0.1);
+            padding: 30px 50px;
+            width: 90%;
+            max-width: 850px;
+            position: relative;
+            z-index: 1;
+        }
+        .game-screen { display: none; }
+        #intro-screen h1 { font-family: 'IM Fell English SC', serif; color: var(--primary-metal); font-size: 3.5em; text-shadow: 2px 2px 5px rgba(0,0,0,0.5); margin-bottom: 20px; }
+        #intro-screen p { font-size: 1.3em; color: var(--light-cream); margin-bottom: 30px; }
+        #menu-buttons { margin-top: 30px; display: flex; flex-direction: column; gap: 20px; }
+        .menu-btn, .option-btn, .back-btn { font-family: 'Roboto Slab', serif; border-radius: 10px; cursor: pointer; transition: transform 0.2s, box-shadow 0.2s; text-shadow: 1px 1px 3px rgba(0,0,0,0.7); }
+        .menu-btn { font-size: 1.8em; padding: 18px 25px; border: 3px outset var(--secondary-metal); background-color: var(--dark-metal); color: var(--light-cream); }
+        .menu-btn:hover { background-color: #424242; transform: translateY(-3px); }
+        .menu-btn:active { transform: translateY(3px); }
+        #btn-jogo1 { border-color: var(--green-accent); box-shadow: 0 6px 0 var(--green-accent); }
+        #btn-jogo1:active { box-shadow: 0 3px 0 var(--green-accent); }
+        #btn-jogo2 { border-color: var(--primary-metal); box-shadow: 0 6px 0 var(--primary-metal); }
+        #btn-jogo2:active { box-shadow: 0 3px 0 var(--primary-metal); }
+        #btn-jogo3 { border-color: var(--red-accent); box-shadow: 0 6px 0 var(--red-accent); }
+        #btn-jogo3:active { box-shadow: 0 3px 0 var(--red-accent); }
+        .game-screen h1 { font-family: 'IM Fell English SC', serif; font-size: 3em; color: var(--primary-metal); text-shadow: 1px 1px 3px rgba(0,0,0,0.6); margin-bottom: 20px; }
+        .instruction { font-size: 1.6em; color: var(--light-cream); margin-bottom: 25px; }
+        .options-container { display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-top: 30px; }
+        .option-btn { font-size: 2.2em; padding: 22px 35px; border: 3px outset var(--secondary-metal); background-color: var(--dark-metal); color: var(--light-cream); box-shadow: 0 5px 0 var(--primary-metal); }
+        .option-btn:hover { background-color: #424242; transform: translateY(-2px); box-shadow: 0 7px 0 var(--primary-metal); }
+        .option-btn:active { transform: translateY(2px); box-shadow: 0 3px 0 var(--primary-metal); }
+        .feedback { margin-top: 25px; font-size: 2em; font-weight: bold; height: 40px; text-shadow: 1px 1px 3px rgba(0,0,0,0.8); }
+        .correct { color: var(--green-accent); }
+        .incorrect { color: var(--red-accent); }
+        .back-btn { margin-top: 40px; padding: 12px 25px; font-size: 1.2em; background-color: var(--dark-metal); color: var(--light-cream); border: 2px outset #555; box-shadow: 0 3px 0 #333; }
+        .back-btn:hover { background-color: #555; transform: translateY(-1px); box-shadow: 0 4px 0 #333;}
+        .back-btn:active { transform: translateY(1px); box-shadow: 0 2px 0 #333;}
+        #animal-display { display: flex; flex-wrap: wrap; justify-content: center; align-items: center; min-height: 180px; padding: 25px; margin-bottom: 25px; background-color: rgba(30, 30, 30, 0.7); border-radius: 10px; border: 3px dashed var(--secondary-metal); box-shadow: inset 0 0 8px rgba(0,0,0,0.5); }
+        .animal { font-size: 4em; margin: 8px; user-select: none; }
+        #number-sequence-display { font-family: 'IM Fell English SC', serif; font-size: 5em; font-weight: bold; color: var(--primary-metal); margin: 50px 0; text-shadow: 2px 2px 5px rgba(0,0,0,0.7); }
+        #ruler-container { display: flex; align-items: center; justify-content: center; font-family: 'Roboto Slab', serif; font-size: 2em; margin: 50px 0; font-weight: bold; color: var(--light-cream); background-color: rgba(30, 30, 30, 0.6); padding: 15px; border-radius: 10px; border: 2px solid var(--secondary-metal); box-shadow: inset 0 0 5px rgba(0,0,0,0.5); }
+        .ruler-tick { display: inline-block; margin: 0 15px; padding: 5px 10px; background-color: var(--dark-metal); border: 1px solid var(--primary-metal); border-radius: 5px; box-shadow: inset 0 0 5px rgba(0,0,0,0.5); }
+        .ruler-blank { display: inline-block; width: 70px; height: 50px; border: 3px dashed var(--red-accent); border-radius: 8px; vertical-align: middle; background-color: rgba(100, 40, 30, 0.3); }
+    </style>
+</head>
+<body>
+
+    <div class="gears-background">
+        <span class="gear g1"></span>
+        <span class="gear g2"></span>
+        <span class="gear g3"></span>
+        <span class="gear g4"></span>
+        <span class="gear g5"></span>
+    </div>
+
+    <div id="intro-screen" class="container">
+        <h1>Máquina de Aprender</h1>
+        <p id="intro-instruction">Escolha um jogo para começar!</p>
+        <div id="menu-buttons">
+            <button id="btn-jogo1" class="menu-btn">1. Fazendinha dos Números</button>
+            <button id="btn-jogo2" class="menu-btn">2. Qual Número Vem Depois?</button>
+            <button id="btn-jogo3" class="menu-btn">3. Reta Numérica</button>
+        </div>
+    </div>
+
+    <div id="game1-screen" class="container game-screen">
+        <h1>Fazendinha dos Números</h1>
+        <p id="g1-instruction" class="instruction">Quantos animais você vê?</p>
+        <div id="animal-display"></div>
+        <div id="g1-options-container" class="options-container"></div>
+        <div id="g1-feedback" class="feedback"></div>
+        <button class="back-btn">Voltar ao Menu</button>
+    </div>
+
+    <div id="game2-screen" class="container game-screen">
+        <h1>Qual Número Vem Depois?</h1>
+        <p id="g2-instruction" class="instruction">Qual número vem depois do:</p>
+        <div id="number-sequence-display"></div>
+        <div id="g2-options-container" class="options-container"></div>
+        <div id="g2-feedback" class="feedback"></div>
+        <button class="back-btn">Voltar ao Menu</button>
+    </div>
+
+    <div id="game3-screen" class="container game-screen">
+        <h1>Reta Numérica</h1>
+        <p id="g3-instruction" class="instruction">Qual número está faltando na reta?</p>
+        <div id="ruler-container"></div>
+        <div id="g3-options-container" class="options-container"></div>
+        <div id="g3-feedback" class="feedback"></div>
+        <button class="back-btn">Voltar ao Menu</button>
+    </div>
+
+    <script>
+        // --- FUNÇÃO DE SÍNTESE DE VOZ ---
+        function falar(text) {
+            window.speechSynthesis.cancel();
+            const utterance = new SpeechSynthesisUtterance(text);
+            utterance.lang = 'pt-BR';
+            utterance.rate = 1.0; // Velocidade normal
+            utterance.pitch = 1.1; // Tom um pouco mais amigável
+            window.speechSynthesis.speak(utterance);
+        }
+
+        // --- CONTROLE GERAL DAS TELAS ---
+        const introScreen = document.getElementById('intro-screen');
+        const game1Screen = document.getElementById('game1-screen');
+        const game2Screen = document.getElementById('game2-screen');
+        const game3Screen = document.getElementById('game3-screen');
+        const btnJogo1 = document.getElementById('btn-jogo1');
+        const btnJogo2 = document.getElementById('btn-jogo2');
+        const btnJogo3 = document.getElementById('btn-jogo3');
+        const backButtons = document.querySelectorAll('.back-btn');
+        
+        window.onload = () => { setTimeout(() => falar(document.getElementById('intro-instruction').textContent), 500); };
+        function showScreen(screen) {
+            introScreen.style.display = 'none';
+            game1Screen.style.display = 'none';
+            game2Screen.style.display = 'none';
+            game3Screen.style.display = 'none';
+            screen.style.display = 'block';
+        }
+        btnJogo1.onclick = () => { showScreen(game1Screen); startGame1(); };
+        btnJogo2.onclick = () => { showScreen(game2Screen); startGame2(); };
+        btnJogo3.onclick = () => { showScreen(game3Screen); startGame3(); };
+        backButtons.forEach(btn => {
+            btn.onclick = () => {
+                window.speechSynthesis.cancel();
+                showScreen(introScreen);
+                falar(document.getElementById('intro-instruction').textContent);
+            };
+        });
+
+        // --- FUNÇÕES UTILITÁRIAS ---
+        function getRandomNumber(min, max) { return Math.floor(Math.random() * (max - min + 1)) + min; }
+        function shuffleArray(array) { for (let i = array.length - 1; i > 0; i--) { const j = Math.floor(Math.random() * (i + 1)); [array[i], array[j]] = [array[j], array[i]]; } return array; }
+        function generateUniqueOptions(correct, max) { let opts = [correct]; while (opts.length < 3) { let wrong = getRandomNumber(1, max); if (!opts.includes(wrong)) opts.push(wrong); } return shuffleArray(opts); }
+        function createOptionsButtons(container, opts, checkFunc) {
+            container.innerHTML = '';
+            opts.forEach(opt => { const btn = document.createElement('button'); btn.textContent = opt; btn.className = 'option-btn'; btn.onclick = (e) => checkFunc(opt, e.target); container.appendChild(btn); });
+        }
+        function showFeedback(el, msg, isCorrect) { el.textContent = msg; el.className = 'feedback ' + (isCorrect ? 'correct' : 'incorrect'); }
+
+        // --- LÓGICA DO JOGO 1: FAZENDINHA ---
+        const g1 = { animals: ['🐄', '🐑', '🐖', '🐓', '🦆', '🐎'], maxAnimals: 10, correctAnswer: 0, display: document.getElementById('animal-display'), options: document.getElementById('g1-options-container'), feedback: document.getElementById('g1-feedback'), instruction: document.getElementById('g1-instruction').textContent };
+        function startGame1() {
+            g1.feedback.textContent = ''; g1.display.innerHTML = ''; falar(g1.instruction);
+            const animal = g1.animals[getRandomNumber(0, g1.animals.length - 1)];
+            const count = getRandomNumber(1, g1.maxAnimals); g1.correctAnswer = count;
+            for (let i = 0; i < count; i++) { g1.display.innerHTML += `<span class="animal">${animal}</span>`; }
+            const opts = generateUniqueOptions(g1.correctAnswer, g1.maxAnimals);
+            createOptionsButtons(g1.options, opts, checkAnswer1);
+        }
+        function checkAnswer1(selected, button) {
+            let feedbackText = '';
+            if (selected === g1.correctAnswer) {
+                // MUDANÇA: Fala simplificada
+                feedbackText = 'Muito bem! Você acertou!';
+                showFeedback(g1.feedback, feedbackText, true);
+                button.style.backgroundColor = '#5e8c61';
+            } else {
+                // MUDANÇA: Fala simplificada
+                feedbackText = `Quase! A resposta certa era ${g1.correctAnswer}.`;
+                showFeedback(g1.feedback, feedbackText, false);
+                button.style.backgroundColor = '#a84232';
+            }
+            falar(feedbackText);
+            g1.options.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+            setTimeout(startGame1, 2500); // tempo de espera um pouco menor
+        }
+
+        // --- LÓGICA DO JOGO 2: QUAL NÚMERO VEM DEPOIS? ---
+        const g2 = { maxNumber: 19, correctAnswer: 0, display: document.getElementById('number-sequence-display'), options: document.getElementById('g2-options-container'), feedback: document.getElementById('g2-feedback'), instruction: document.getElementById('g2-instruction').textContent };
+        function startGame2() {
+            g2.feedback.textContent = '';
+            const numBefore = getRandomNumber(1, g2.maxNumber); g2.correctAnswer = numBefore + 1;
+            g2.display.textContent = numBefore; falar(`${g2.instruction} ${numBefore}`);
+            const opts = generateUniqueOptions(g2.correctAnswer, g2.maxNumber + 1);
+            createOptionsButtons(g2.options, opts, checkAnswer2);
+        }
+        function checkAnswer2(selected, button) {
+            let feedbackText = '';
+            if (selected === g2.correctAnswer) {
+                // MUDANÇA: Fala simplificada
+                feedbackText = 'Isso mesmo! Acertou!';
+                showFeedback(g2.feedback, feedbackText, true);
+                button.style.backgroundColor = '#5e8c61';
+            } else {
+                // MUDANÇA: Fala simplificada
+                feedbackText = `Ops! O número certo é ${g2.correctAnswer}.`;
+                showFeedback(g2.feedback, feedbackText, false);
+                button.style.backgroundColor = '#a84232';
+            }
+            falar(feedbackText);
+            g2.options.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+            setTimeout(startGame2, 2500);
+        }
+        
+        // --- LÓGICA DO JOGO 3: RETA NUMÉRICA ---
+        const g3 = { maxStartNumber: 15, correctAnswer: 0, display: document.getElementById('ruler-container'), options: document.getElementById('g3-options-container'), feedback: document.getElementById('g3-feedback'), instruction: document.getElementById('g3-instruction').textContent };
+        function startGame3() {
+            g3.feedback.textContent = ''; falar(g3.instruction);
+            const start = getRandomNumber(1, g3.maxStartNumber);
+            const nums = [start, start + 1, start + 2, start + 3];
+            const blankPos = getRandomNumber(0, 3); g3.correctAnswer = nums[blankPos];
+            let rulerHTML = '';
+            nums.forEach((num, index) => { rulerHTML += (index === blankPos) ? '<span class="ruler-blank"></span>' : `<span class="ruler-tick">${num}</span>`; });
+            g3.display.innerHTML = rulerHTML;
+            const opts = generateUniqueOptions(g3.correctAnswer, start + 5);
+            createOptionsButtons(g3.options, opts, checkAnswer3);
+        }
+        function checkAnswer3(selected, button) {
+            let feedbackText = '';
+            if (selected === g3.correctAnswer) {
+                // MUDANÇA: Fala simplificada
+                feedbackText = 'Perfeito! Você encontrou o número.';
+                showFeedback(g3.feedback, feedbackText, true);
+                button.style.backgroundColor = '#5e8c61';
+            } else {
+                // MUDANÇA: Fala simplificada
+                feedbackText = `Não foi dessa vez. O número que faltava era ${g3.correctAnswer}.`;
+                showFeedback(g3.feedback, feedbackText, false);
+                button.style.backgroundColor = '#a84232';
+            }
+            falar(feedbackText);
+            g3.options.querySelectorAll('.option-btn').forEach(btn => btn.disabled = true);
+            setTimeout(startGame3, 2500);
+        }
+    </script>
+</body>
+</html>
