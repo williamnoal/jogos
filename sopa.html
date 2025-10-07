@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sopa da Vovó</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Baloo+2:wght@700&display=swap" rel="stylesheet">
+
+    <style>
+        /* CSS EMBUTIDO - VERSÃO FINAL COMPACTA COM TODOS OS AJUSTES */
+        :root {
+            --cor-sopa: #ffca28; /* Amarelo-gema de sopa cremosa */
+            --cor-panela-borda: #757575; /* Cinza escuro metal */
+            --cor-panela-pegador: #37474f; /* Grafite */
+            --cor-macarrao: #f57f17; /* Laranja escuro de massa */
+            --cor-macarrao-sombra: #a1887f;
+            --cor-prato: #f5f5f5;
+            --cor-prato-borda: #d32f2f;
+            --cor-acerto: #4caf50;
+        }
+
+        body {
+            font-family: 'Baloo 2', cursive;
+            /* Fundo xadrez vermelho da vovó */
+            background-color: #ffebee;
+            background-image:
+                linear-gradient(to right, rgba(211, 47, 47, 0.2) 1px, transparent 1px),
+                linear-gradient(to bottom, rgba(211, 47, 47, 0.2) 1px, transparent 1px);
+            background-size: 25px 25px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            padding: 15px;
+            box-sizing: border-box;
+        }
+
+        #game-container {
+            text-align: center;
+            background: #fff;
+            padding: 20px;
+            border-radius: 20px;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+            max-width: 700px; /* Largura máxima BEM reduzida */
+            width: 100%;
+            border: 8px solid var(--cor-prato-borda);
+        }
+
+        h1 {
+            font-family: 'Pacifico', cursive;
+            color: var(--cor-prato-borda);
+            font-size: 2.8em;
+            margin: 0 0 10px 0;
+        }
+
+        #panela {
+            width: 340px; /* Panela BEM reduzida */
+            height: 340px; /* Panela BEM reduzida */
+            background: radial-gradient(circle, #ffd54f, var(--cor-sopa));
+            border: 12px solid var(--cor-panela-borda);
+            border-radius: 50%;
+            position: relative;
+            margin: 15px auto;
+            box-shadow: inset 0 0 20px rgba(0,0,0,0.3), 0 5px 10px rgba(0,0,0,0.2);
+        }
+
+        /* Pegadores nos "cantos" da panela */
+        #panela::before, #panela::after {
+            content: '';
+            position: absolute;
+            width: 20px;
+            height: 55px;
+            background-color: var(--cor-panela-pegador);
+            border-radius: 8px;
+            z-index: -1;
+        }
+
+        #panela::before {
+            top: 25%;
+            left: -28px;
+            transform: translateY(-50%) rotate(-30deg);
+        }
+
+        #panela::after {
+            top: 25%;
+            right: -28px;
+            transform: translateY(-50%) rotate(30deg);
+        }
+
+        /* --- Estilo das Letras de Massa (SEM FUNDO) --- */
+        .letra {
+            width: 45px; /* Letra BEM reduzida */
+            height: 45px; /* Letra BEM reduzida */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 3em; /* Fonte grande para a letra parecer "cheia" */
+            font-weight: 700;
+            
+            /* Efeito MÁGICO com text-shadow */
+            background: transparent;
+            color: transparent;
+            text-shadow: 
+                0 0 0 var(--cor-macarrao), 
+                1px 1px 0 #00000030, /* Sombra sutil */
+                -1px -1px 2px #ffffff50; /* Brilho sutil */
+
+            cursor: grab;
+            position: absolute;
+            user-select: none;
+            transition: transform 0.2s ease-out;
+        }
+
+        .letra:hover {
+            transform: scale(1.2) rotate(5deg);
+            z-index: 10;
+            text-shadow: 
+                0 0 0 var(--cor-macarrao), 
+                3px 3px 5px #00000050,
+                -1px -1px 2px #ffffff80;
+        }
+
+        /* --- Área do Alfabeto (Prato da Vovó) --- */
+        #ordem-alfabetica {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 5px;
+            margin-top: 20px;
+            padding: 12px;
+            background-color: var(--cor-prato);
+            border: 4px solid var(--cor-prato-borda);
+            border-radius: 12px;
+            box-shadow: inset 0 0 10px rgba(0,0,0,0.1);
+        }
+
+        .espaco-letra {
+            width: 42px; /* Espaço reduzido */
+            height: 42px; /* Espaço reduzido */
+            background-color: #fff;
+            border: 2px dashed #ccc;
+            border-radius: 8px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 1.8em;
+            color: var(--cor-prato-borda);
+            transition: all 0.2s;
+        }
+
+        .espaco-letra.filled {
+            background-color: var(--cor-acerto);
+            border-color: var(--cor-acerto);
+            color: white;
+            font-size: 2em;
+        }
+
+        #instrucao {
+            margin: 10px 0;
+            font-size: 1.2em;
+            font-weight: 700;
+            color: #333;
+            height: 30px;
+        }
+
+        #start-button {
+            padding: 8px 25px;
+            font-size: 1.1em;
+            cursor: pointer;
+            background-color: #ffca28;
+            color: var(--cor-macarrao-texto);
+            border: none;
+            border-bottom: 4px solid #ff8f00;
+            border-radius: 10px;
+            transition: all 0.15s ease-in-out;
+        }
+        
+        #start-button:active {
+            transform: translateY(4px);
+            border-bottom: 0px;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Sopa da Vovó</h1>
+        <div id="panela">
+            </div>
+        <div id="ordem-alfabetica"></div>
+        <div id="instrucao">
+            <p>Vamos organizar as letrinhas!</p>
+        </div>
+        <button id="start-button">Jogar</button>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const panela = document.getElementById('panela');
+            const ordemAlfabeticaContainer = document.getElementById('ordem-alfabetica');
+            const startButton = document.getElementById('start-button');
+            const instrucaoP = document.querySelector('#instrucao p');
+
+            const alfabeto = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+            let jogoIniciado = false;
+            let proximaLetraCorretaIndex = 0;
+            
+            const synth = window.speechSynthesis;
+            let vozesPtBr = [];
+
+            function carregarVozes() {
+                vozesPtBr = synth.getVoices().filter(voice => voice.lang.startsWith('pt-BR'));
+                vozesPtBr.sort((a,b) => a.name.includes('Google') ? -1 : 1);
+            }
+            
+            carregarVozes();
+            if (speechSynthesis.onvoiceschanged !== undefined) {
+                speechSynthesis.onvoiceschanged = carregarVozes;
+            }
+
+            startButton.addEventListener('click', iniciarJogo);
+
+            function iniciarJogo() {
+                if (jogoIniciado) return;
+                jogoIniciado = true;
+                
+                proximaLetraCorretaIndex = 0;
+                panela.innerHTML = '';
+                ordemAlfabeticaContainer.innerHTML = '';
+                
+                const letrasEmbaralhadas = [...alfabeto].sort(() => Math.random() - 0.5);
+                
+                const letterPositions = [];
+                const letraSize = 45; // ATUALIZADO para novo tamanho da letra
+                const panelaPadding = 10;
+                const panelaRadius = panela.clientWidth / 2 - letraSize / 2 - panelaPadding;
+                const panelaCenterX = panela.clientWidth / 2;
+                const panelaCenterY = panela.clientHeight / 2;
+
+                letrasEmbaralhadas.forEach(letra => {
+                    const letraDiv = document.createElement('div');
+                    letraDiv.textContent = letra;
+                    letraDiv.classList.add('letra');
+                    letraDiv.id = `letra-${letra}`;
+                    letraDiv.setAttribute('draggable', true);
+
+                    let newPos;
+                    let hasCollision;
+                    let tries = 0;
+                    
+                    do {
+                        hasCollision = false;
+                        tries++;
+                        const angle = Math.random() * 2 * Math.PI;
+                        const radius = Math.sqrt(Math.random()) * panelaRadius;
+                        const left = panelaCenterX + radius * Math.cos(angle) - letraSize / 2;
+                        const top = panelaCenterY + radius * Math.sin(angle) - letraSize / 2;
+
+                        newPos = { left, top, width: letraSize, height: letraSize };
+                        
+                        for (const pos of letterPositions) {
+                            if (newPos.left < pos.left + pos.width && newPos.left + newPos.width > pos.left && newPos.top < pos.top + pos.height && newPos.top + newPos.height > pos.top) {
+                                hasCollision = true;
+                                break;
+                            }
+                        }
+                    } while (hasCollision && tries < 100);
+
+                    letterPositions.push(newPos);
+                    letraDiv.style.left = `${newPos.left}px`;
+                    letraDiv.style.top = `${newPos.top}px`;
+                    
+                    panela.appendChild(letraDiv);
+                    
+                    letraDiv.addEventListener('dragstart', (e) => {
+                        e.dataTransfer.setData('text/plain', letra);
+                        e.currentTarget.style.transform = 'scale(0.8)';
+                    });
+                    letraDiv.addEventListener('dragend', (e) => {
+                        e.currentTarget.style.transform = 'scale(1)';
+                    });
+                });
+
+                alfabeto.forEach(letra => {
+                    const espacoDiv = document.createElement('div');
+                    espacoDiv.classList.add('espaco-letra');
+                    espacoDiv.dataset.letra = letra;
+                    ordemAlfabeticaContainer.appendChild(espacoDiv);
+                    espacoDiv.addEventListener('dragover', (e) => { e.preventDefault(); });
+                    espacoDiv.addEventListener('drop', (e) => onDropLetra(e, espacoDiv));
+                });
+
+                darInstrucao();
+                startButton.style.display = 'none';
+            }
+
+            function onDropLetra(e, espacoDiv) {
+                e.preventDefault();
+                const letraArrastada = e.dataTransfer.getData('text/plain');
+                const letraCorretaEsperada = alfabeto[proximaLetraCorretaIndex];
+                
+                if (letraArrastada === letraCorretaEsperada && espacoDiv.dataset.letra === letraCorretaEsperada) {
+                    espacoDiv.textContent = letraArrastada;
+                    espacoDiv.classList.add('filled');
+                    
+                    const letraOriginal = document.getElementById(`letra-${letraArrastada}`);
+                    if (letraOriginal) letraOriginal.style.display = 'none';
+                    
+                    tocarSomLetra(letraArrastada);
+                    proximaLetraCorretaIndex++;
+
+                    if (proximaLetraCorretaIndex < alfabeto.length) {
+                        setTimeout(darInstrucao, 1000);
+                    } else {
+                        instrucaoP.textContent = "Parabéns! A sopa está pronta!";
+                        falar("Parabéns! Você fez uma deliciosa sopa de letrinhas!");
+                        startButton.textContent = "Jogar Novamente";
+                        startButton.style.display = 'block';
+                        jogoIniciado = false;
+                    }
+                } else {
+                    tocarSomErro();
+                    falar("Opa! Essa letrinha não vai aí.");
+                }
+            }
+
+            function darInstrucao() {
+                const proximaLetra = alfabeto[proximaLetraCorretaIndex];
+                const textoInstrucao = `Pegue a letra ${proximaLetra}`;
+                instrucaoP.textContent = textoInstrucao;
+                falar(textoInstrucao);
+            }
+
+            function tocarSomLetra(letra) {
+                const audio = new Audio(`audio/${letra.toUpperCase()}.mp3`);
+                audio.play().catch(e => console.error("Erro ao tocar áudio da letra:", e));
+            }
+
+            function tocarSomErro() {
+                const audio = new Audio(`audio/erro.mp3`);
+                audio.play().catch(e => console.error("Erro ao tocar áudio de erro:", e));
+            }
+
+            function falar(texto) {
+                synth.cancel();
+                const utterance = new SpeechSynthesisUtterance(texto);
+                utterance.lang = 'pt-BR';
+                if (vozesPtBr.length > 0) utterance.voice = vozesPtBr[0];
+                utterance.pitch = 1.1;
+                utterance.rate = 1.0;
+                synth.speak(utterance);
+            }
+        });
+    </script>
+</body>
+</html>
