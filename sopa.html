@@ -36,6 +36,22 @@
             padding: 15px;
             box-sizing: border-box;
         }
+        
+        .back-button {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            font-size: 1em;
+            color: var(--cor-primaria);
+            text-decoration: none;
+            font-weight: 700;
+            transition: transform 0.3s;
+            z-index: 10;
+        }
+
+         .back-button:hover {
+            transform: scale(1.1);
+        }
 
         #game-container {
             text-align: center;
@@ -184,6 +200,7 @@
     </style>
 </head>
 <body>
+    <a href="anos-iniciais.html" class="back-button" title="Voltar ao Portal Principal">‹ Voltar</a>
     <div id="game-container">
         <h1>Sopa da Vovó</h1>
         <div id="panela">
@@ -354,4 +371,5 @@
         });
     </script>
 </body>
+
 </html>
