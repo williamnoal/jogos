@@ -28,6 +28,7 @@
             align-items: center;
             justify-content: center;
             background-color: var(--cor-fundo);
+            overflow-y: auto; /* Permite rolagem em telas menores */
         }
 
         .back-button {
@@ -39,6 +40,7 @@
             text-decoration: none;
             font-weight: 700;
             transition: transform 0.3s;
+            z-index: 10;
         }
         
         .back-button:hover {
@@ -53,6 +55,7 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
+            padding: 80px 0; /* Espaçamento para o botão de voltar e final da página */
         }
         
         .portal-header {
@@ -117,7 +120,10 @@
         .play-button { display: inline-block; background-color: var(--cor-secundaria); color: var(--cor-branco); padding: 12px 30px; border-radius: 50px; font-weight: 600; }
         .game-card:hover .play-button { background-color: #F4511E; }
 
-        @media (max-width: 768px) { body { overflow-y: auto; } .portal-header h1 { font-size: 2.5em; } .portal-header p { font-size: 1em; } }
+        @media (max-width: 768px) { 
+            .portal-header h1 { font-size: 2.5em; } 
+            .portal-header p { font-size: 1em; } 
+        }
     </style>
 </head>
 <body>
@@ -160,6 +166,20 @@
                 <div class="icon">🧮</div>
                 <h2>Desafio dos Números</h2>
                 <p>Resolva continhas de somar e subtrair! Clique na resposta certa e some pontos neste desafio rápido.</p>
+                <div class="play-button">Jogar Agora</div>
+            </a>
+
+            <a href="mat1.html" class="game-card">
+                <div class="icon">⚙️</div>
+                <h2>Máquina de Aprender</h2>
+                <p>Conte, complete sequências e encontre os números na reta numérica nesta aventura steampunk.</p>
+                <div class="play-button">Jogar Agora</div>
+            </a>
+
+            <a href="sopa.html" class="game-card">
+                <div class="icon">🍲</div>
+                <h2>Sopa da Vovó</h2>
+                <p>Ajude a vovó a organizar a sopa de letrinhas, colocando o alfabeto na ordem correta.</p>
                 <div class="play-button">Jogar Agora</div>
             </a>
             
